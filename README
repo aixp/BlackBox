@@ -53,7 +53,6 @@ Files:
 			Dev/Docu/ElfLinker.odc
 			Lin/Mod/Console.odc
 			System/Mod/Console.odc
-			Lindev/*
 			Docu/OpenBUGS-License.odc
 		oberoncore.ru:
 			Lin/Mod/Kernel_so_init.odc
@@ -72,10 +71,13 @@ Files:
 		Lin/Mod/Obsd.Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
-		LindevCompiler.odc:
-			modified original BlackBox Dev/Mod/Compiler.odc
-		LindevElfLinker16.odc:
-			modified OpenBUGS Dev/Mod/ElfLinker16.odc
+		Lindev/Mod
+			CP*
+				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.
+			Compiler.odc:
+				modified original BlackBox Dev/Mod/Compiler.odc
+			ElfLinker16.odc:
+				modified OpenBUGS Dev/Mod/ElfLinker16.odc
 	new:
 		Interp.odc: simple console interpreter
 		libBB.so: compiled and linked OpenBSD shared library to run BlackBox
@@ -83,7 +85,6 @@ Files:
 
 Notes:
 	Lindev:
-		OpenBUGS/Lindev compiler outdated, not in sync with original BlackBox/Dev compiler
-		Lindev* is temporary solution until TextModels ported
+		Lindev is temporary solution until TextModels ported?
 
 A. V. Shiryaev, 2012

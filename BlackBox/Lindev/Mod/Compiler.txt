@@ -1,6 +1,6 @@
 MODULE LindevCompiler;
 
-	(* THIS IS TEXT COPY OF LindevCompiler.odc *)
+	(* THIS IS TEXT COPY OF Compiler.odc *)
 	(* DO NOT EDIT *)
 
 	(*

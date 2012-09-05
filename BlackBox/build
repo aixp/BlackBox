@@ -50,8 +50,8 @@ LindevCompiler.Compile('Lindev/Mod', 'CPL486.txt')
 LindevCompiler.Compile('Lindev/Mod', 'CPC486.txt')
 LindevCompiler.Compile('Lindev/Mod', 'CPV486.txt')
 
-LindevCompiler.Compile('', 'LindevCompiler.txt')
-LindevCompiler.Compile('', 'LindevElfLinker16.txt')
+LindevCompiler.Compile('Lindev/Mod', 'Compiler.txt')
+LindevCompiler.Compile('Lindev/Mod', 'ElfLinker16.txt')
 
 ### simple dev interpreter (include LindevCompiler and LindevElfLinker)
 

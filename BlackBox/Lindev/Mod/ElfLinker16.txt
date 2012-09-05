@@ -1,6 +1,6 @@
 MODULE LindevElfLinker;
 
-	(* THIS IS TEXT COPY OF LindevElfLinker16.odc *)
+	(* THIS IS TEXT COPY OF ElfLinker16.odc *)
 	(* DO NOT EDIT *)
 
 (*

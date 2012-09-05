@@ -1,9 +1,9 @@
 MODULE LindevCPM;
 
-	(* THIS IS TEXT COPY PF CPM.odc *)
+	(* THIS IS TEXT COPY OF CPM.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT SYSTEM, Kernel, Files(*, Stores, Models, Views, TextModels, TextMappers, StdLog, DevMarkers*);
+	IMPORT SYSTEM, Kernel, Files (* , Stores, Models, Views, TextModels, TextMappers, StdLog, DevMarkers *);
 
 	CONST
 		ProcSize* = 4;	(* PROCEDURE type *)
@@ -108,9 +108,10 @@ TYPE
 		file*: Files.File;	(* used for sym file import *)
 		codeDir*: ARRAY 16 OF CHAR;
 		symDir*: ARRAY 16 OF CHAR;
-		
+		checksum*: INTEGER;	(* symbol file checksum *)
+
 		errorMes*: ARRAY 4096 OF CHAR;
-		
+
 		lastpos: INTEGER;
 		realpat: INTEGER;
 		lrealpat: RECORD H, L: INTEGER END;
@@ -167,6 +168,20 @@ TYPE
 		Get(sCh);
 		ch := sCh
 	END GetL;
+	
+(*
+	PROCEDURE LineOf* (pos: INTEGER): INTEGER;
+		VAR ch: CHAR;
+	BEGIN
+		IF lineReader = NIL THEN lineReader := in.Base().NewReader(NIL); lineReader.SetPos(0); lineNum := 0 END;
+		IF lineReader.Pos() > pos THEN lineReader.SetPos(0); lineNum := 0 END;
+		WHILE lineReader.Pos() < pos DO
+			lineReader.ReadChar(ch);
+			IF ch = 0DX THEN INC(lineNum) END
+		END;
+		RETURN lineNum
+	END LineOf;
+*)
 
 	PROCEDURE LoWord (r: REAL): INTEGER;
 		VAR x: INTEGER;
@@ -403,7 +418,7 @@ TYPE
 			ch := str[idx]; INC(idx); val := val * 64 + ORD(ch) - 128
 		END
 	END GetUtf8;
-	
+
 	PROCEDURE Mark* (n, pos: INTEGER);
 	BEGIN
 		IF (n >= 0) & ~((oberon IN options) & (n >= 181) & (n <= 190)) THEN
@@ -449,7 +464,7 @@ TYPE
 	END InitCrcTab;
 	
 	PROCEDURE FPrint* (VAR fp: INTEGER; val: INTEGER);
-		VAR c, i: INTEGER;
+		VAR c: INTEGER;
 	BEGIN
 (*
 		fp := SYSTEM.ROT(ORD(BITS(fp) / BITS(val)), 1)	(* bad collision detection *)
@@ -475,15 +490,25 @@ TYPE
 		FPrint(fp, LoWord(lr)); FPrint(fp, HiWord(lr))
 	END FPrintLReal;
 
+	PROCEDURE ChkSum (VAR fp: INTEGER; val: INTEGER);	(* symbolfile checksum *)
+	BEGIN
+		(* same as FPrint, 8 bit only *)
+		fp := ORD(BITS(fp * 256) / BITS(crc32tab[ORD(BITS(fp DIV 1000000H) / BITS(val)) MOD 256]))
+	END ChkSum;
+
 
 
 	(* compact format *)
 	
 	PROCEDURE WriteLInt (w: Files.Writer; i: INTEGER);
 	BEGIN
+		ChkSum(checksum, i);
 		w.WriteByte(SHORT(SHORT(i MOD 256))); i := i DIV 256;
+		ChkSum(checksum, i);
 		w.WriteByte(SHORT(SHORT(i MOD 256))); i := i DIV 256;
+		ChkSum(checksum, i);
 		w.WriteByte(SHORT(SHORT(i MOD 256))); i := i DIV 256;
+		ChkSum(checksum, i);
 		w.WriteByte(SHORT(SHORT(i MOD 256)))
 	END WriteLInt;
 
@@ -491,14 +516,19 @@ TYPE
 		VAR b: BYTE; x: INTEGER;
 	BEGIN
 		r.ReadByte(b); x := b MOD 256;
+		ChkSum(checksum, b);
 		r.ReadByte(b); x := x + 100H * (b MOD 256);
+		ChkSum(checksum, b);
 		r.ReadByte(b); x := x + 10000H * (b MOD 256);
-		r.ReadByte(b); i := x + 1000000H * b
+		ChkSum(checksum, b);
+		r.ReadByte(b); i := x + 1000000H * b;
+		ChkSum(checksum, b)
 	END ReadLInt;
 
 	PROCEDURE WriteNum (w: Files.Writer; i: INTEGER);
 	BEGIN	(* old format of Oberon *)
-		WHILE (i < -64) OR (i > 63) DO w.WriteByte(SHORT(SHORT(i MOD 128 - 128))); i := i DIV 128 END;
+		WHILE (i < -64) OR (i > 63) DO ChkSum(checksum, i MOD 128 - 128); w.WriteByte(SHORT(SHORT(i MOD 128 - 128))); i := i DIV 128 END;
+		ChkSum(checksum, i MOD 128);
 		w.WriteByte(SHORT(SHORT(i MOD 128)))
 	END WriteNum;
 
@@ -506,8 +536,9 @@ TYPE
 		VAR b: BYTE; s, y: INTEGER;
 	BEGIN
 		s := 0; y := 0; r.ReadByte(b);
-		WHILE b < 0 DO INC(y, ASH(b + 128, s)); INC(s, 7); r.ReadByte(b) END;
-		i := ASH((b + 64) MOD 128 - 64, s) + y
+		IF ~r.eof THEN ChkSum(checksum, b) END;
+		WHILE b < 0 DO INC(y, ASH(b + 128, s)); INC(s, 7); r.ReadByte(b); ChkSum(checksum, b) END;
+		i := ASH((b + 64) MOD 128 - 64, s) + y;
 	END ReadNum;
 	
 	PROCEDURE WriteNumSet (w: Files.Writer; x: SET);
@@ -549,7 +580,8 @@ TYPE
 	PROCEDURE SymRCh* (VAR ch: SHORTCHAR);
 		VAR b: BYTE;
 	BEGIN
-		inSym.ReadByte(b); ch := SHORT(CHR(b))
+		inSym.ReadByte(b); ch := SHORT(CHR(b));
+		ChkSum(checksum, b)
 	END SymRCh;
 	
 	PROCEDURE SymRInt* (): INTEGER;
@@ -613,6 +645,7 @@ TYPE
 
 	PROCEDURE SymWCh* (ch: SHORTCHAR);
 	BEGIN
+		ChkSum(checksum, ORD(ch));
 		outSym.WriteByte(SHORT(ORD(ch)))
 	END SymWCh;
 
@@ -646,7 +679,7 @@ TYPE
 	BEGIN
 		ObjFName := modName$; Kernel.SplitName(ObjFName, dir, ObjFName);
 		loc := Files.dir.This(dir); loc := loc.This(symDir);
-		symFile := Files.dir.New(loc, Files.dontAsk);
+		symFile := Files.dir.New(loc, Files.ask);
 		IF symFile # NIL THEN
 			outSym := symFile.NewWriter(NIL);
 			WriteLInt(outSym, SFtag)
@@ -661,7 +694,7 @@ TYPE
 		IF symFile # NIL THEN
 			name := ObjFName$;
 			Kernel.MakeFileName(name, Kernel.symType);
-			symFile.Register(name, Kernel.symType, Files.dontAsk, res);
+			symFile.Register(name, Kernel.symType, Files.ask, res);
 			symFile := NIL
 		END
 	END RegisterNewSym;
@@ -720,7 +753,7 @@ TYPE
 		errpos := 0;
 		ObjFName := modName$; Kernel.SplitName(ObjFName, dir, ObjFName);
 		loc := Files.dir.This(dir); loc := loc.This(codeDir);
-		objFile := Files.dir.New(loc, Files.dontAsk);
+		objFile := Files.dir.New(loc, Files.ask);
 		IF objFile # NIL THEN
 			outObj := objFile.NewWriter(NIL);
 			WriteLInt(outObj, OFtag)
@@ -735,7 +768,7 @@ TYPE
 		IF objFile # NIL THEN
 			name := ObjFName$;
 			Kernel.MakeFileName(name, Kernel.objType);
-			objFile.Register(name, Kernel.objType, Files.dontAsk, res);
+			objFile.Register(name, Kernel.objType, Files.ask, res);
 			objFile := NIL; outObj := NIL
 		END
 	END RegisterObj;

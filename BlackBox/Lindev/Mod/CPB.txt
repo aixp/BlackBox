@@ -331,18 +331,22 @@ MODULE LindevCPB;
 			Prepare(x); Prepare(y);
 			z.intval := x.intval + y.intval; z.realval := x.realval + y.realval
 		ELSIF type.form IN realSet THEN
-			IF ABS(x.realval) = DevCPM.InfReal THEN
-				IF y.realval # -x.realval THEN z.realval := x.realval ELSE err(212) END
-			ELSIF ABS(y.realval) = DevCPM.InfReal THEN z.realval := y.realval
-			ELSIF (y.realval >= 0) & (x.realval <= MAX(REAL) - y.realval)
-					OR (y.realval < 0) & (x.realval >= -MAX(REAL) - y.realval) THEN
-				z.realval := x.realval + y.realval
-			ELSE err(206)
+			IF (ABS(x.realval) = DevCPM.InfReal) & (x.realval = - y.realval) THEN err(212)
+			ELSE z.realval := x.realval + y.realval
 			END
 		ELSE HALT(100)
 		END;
 		GetConstType(z, type.form, 206, type)
 	END AddConst;
+	
+	PROCEDURE NegateConst (y, z: DevCPT.Const; VAR type: DevCPT.Struct);	(* z := - y *)
+	BEGIN
+		IF type.form IN intSet THEN Prepare(y); z.intval :=  -y.intval; z.realval := -y.realval
+		ELSIF type.form IN realSet THEN z.realval := -y.realval
+		ELSE HALT(100)
+		END;
+		GetConstType(z, type.form, 207, type)
+	END NegateConst;
 	
 	PROCEDURE SubConst (x, y, z: DevCPT.Const; VAR type: DevCPT.Struct);	(* z := x - y *)
 	BEGIN
@@ -350,13 +354,8 @@ MODULE LindevCPB;
 			Prepare(x); Prepare(y);
 			z.intval := x.intval - y.intval; z.realval := x.realval - y.realval
 		ELSIF type.form IN realSet THEN
-			IF ABS(x.realval) = DevCPM.InfReal THEN
-				IF y.realval # x.realval THEN z.realval := x.realval ELSE err(212) END
-			ELSIF ABS(y.realval) = DevCPM.InfReal THEN z.realval := -y.realval
-			ELSIF (y.realval >= 0) & (x.realval >= -MAX(REAL) + y.realval)
-					OR (y.realval < 0) & (x.realval <= MAX(REAL) + y.realval) THEN
-				z.realval := x.realval - y.realval
-			ELSE err(207)
+			IF (ABS(x.realval) = DevCPM.InfReal) & (x.realval =  y.realval) THEN err(212)
+			ELSE z.realval := x.realval - y.realval
 			END
 		ELSE HALT(100)
 		END;
@@ -370,19 +369,9 @@ MODULE LindevCPB;
 			z.realval := x.realval * y.realval + x.intval * y.realval + x.realval * y.intval;
 			z.intval := x.intval * y.intval
 		ELSIF type.form IN realSet THEN
-			IF ABS(x.realval) = DevCPM.InfReal THEN
-				IF y.realval > 0 THEN z.realval := x.realval
-				ELSIF y.realval < 0 THEN z.realval := -x.realval
-				ELSE err(212)
-				END
-			ELSIF ABS(y.realval) = DevCPM.InfReal THEN
-				IF x.realval > 0 THEN z.realval := y.realval
-				ELSIF x.realval < 0 THEN z.realval := -y.realval
-				ELSE err(212)
-				END
-			ELSIF (ABS(y.realval) <= 1) OR (ABS(x.realval) <= MAX(REAL) / ABS(y.realval)) THEN
-				z.realval := x.realval * y.realval
-			ELSE err(204)
+			IF (ABS(x.realval) = DevCPM.InfReal) & ( y.realval = 0.0) THEN err(212)
+			ELSIF (ABS(y.realval) = DevCPM.InfReal) & (x.realval = 0.0) THEN err(212)
+			ELSE z.realval := x.realval * y.realval
 			END
 		ELSE HALT(100)
 		END;
@@ -392,18 +381,9 @@ MODULE LindevCPB;
 	PROCEDURE DivConst (x, y, z: DevCPT.Const; VAR type: DevCPT.Struct);	(* z := x / y *)
 	BEGIN
 		IF type.form IN realSet THEN
-			IF y.realval # 0.0 THEN
-				IF ABS(x.realval) = DevCPM.InfReal THEN
-					IF ABS(y.realval) = DevCPM.InfReal THEN err(212)
-					ELSIF y.realval >= 0 THEN z.realval := x.realval
-					ELSE z.realval := -x.realval
-					END
-				ELSIF ABS(y.realval) = DevCPM.InfReal THEN z.realval := 0
-				ELSIF (ABS(y.realval) >= 1) OR (ABS(x.realval) <= MAX(REAL) * ABS(y.realval)) THEN
-					z.realval := x.realval / y.realval
-				ELSE err(204)
-				END
-			ELSE err(205)
+			IF (x.realval = 0.0) & (y.realval = 0.0) THEN err(212)
+			ELSIF (ABS(x.realval) =  DevCPM.InfReal) & (ABS(y.realval) =  DevCPM.InfReal) THEN err(212)
+			ELSE z.realval := x.realval / y.realval
 			END
 		ELSE HALT(100)
 		END;
@@ -464,6 +444,17 @@ MODULE LindevCPB;
 		RETURN res
 	END LessConst;
 	
+	PROCEDURE IsNegConst (x: DevCPT.Const; form: INTEGER): BOOLEAN;	(* x < 0  OR x = (-0.0) *)
+		VAR res: BOOLEAN;
+	BEGIN
+		CASE form OF
+		| Int8..Int32: res := x.intval < 0
+		| Int64: Prepare(x); res := x.realval + x.intval < 0
+		| Real32, Real64: res := (x.realval <= 0.) & (1. / x.realval <= 0.)
+		END;
+		RETURN res
+	END IsNegConst;
+
 
 	PROCEDURE NewIntConst*(intval: INTEGER): DevCPT.Node;
 		VAR x: DevCPT.Node;
@@ -847,7 +838,7 @@ MODULE LindevCPB;
 				IF f IN intSet + realSet + {Set} THEN
 					IF z.class = Nconst THEN
 						IF f = Set THEN z.conval.setval := -z.conval.setval
-						ELSE SubConst(zero, z.conval, z.conval, z.typ)
+						ELSE NegateConst(z.conval, z.conval, z.typ)
 						END;
 						z.obj := NIL
 					ELSE
@@ -859,7 +850,7 @@ MODULE LindevCPB;
 			| abs:
 				IF f IN intSet + realSet THEN
 					IF z.class = Nconst THEN
-						IF LessConst(z.conval, zero, f) THEN SubConst(zero, z.conval, z.conval, z.typ) END;
+						IF IsNegConst(z.conval, f) THEN NegateConst(z.conval, z.conval, z.typ) END;
 						z.obj := NIL
 					ELSE
 						IF f < Int32 THEN Convert(z, DevCPT.int32typ) END;
@@ -1030,8 +1021,7 @@ MODULE LindevCPB;
 					END ;
 					IF do THEN NewOp(op, typ, z, y) END;
 				| slash:
-					IF f IN realSet THEN
-						IF (y.class = Nconst) & (y.conval.realval = 0) THEN err(205) END
+					IF f IN realSet THEN (* OK *)
 					ELSIF (f # Set) & (f # Undef) THEN err(102); typ := DevCPT.undftyp
 					END ;
 					NewOp(op, typ, z, y)

@@ -3,7 +3,7 @@ MODULE LindevCPE;
 	(* THIS IS TEXT COPY OF CPE.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT SYSTEM, (*Dates,*) DevCPM := LindevCPM, DevCPT := LindevCPT;
+	IMPORT SYSTEM, (* Dates, *) DevCPM := LindevCPM, DevCPT := LindevCPT;
 
 
 	CONST
@@ -123,6 +123,11 @@ MODULE LindevCPE;
 		IF DevCPM.LEHost THEN hi := a[1]; low := a[0] ELSE hi := a[0]; low := a[1] END
 	END GetRealWords;
 		
+	PROCEDURE IsSame (x, y: REAL): BOOLEAN;
+	BEGIN
+		RETURN  (x = y) & ((x #  0.) OR (1. / x = 1. / y))
+	END IsSame;
+	
 	PROCEDURE AllocConst* (con: DevCPT.Const; form: BYTE; VAR obj: DevCPT.Object; VAR adr: INTEGER);
 		VAR c: DevCPT.Const;
 	BEGIN
@@ -144,11 +149,11 @@ MODULE LindevCPE;
 			IF c = NIL THEN con.intval2 := con.intval; adr := idx64; INC(idx64, 8) END
 		| Real32:
 			obj := Const32; c := obj.conval;
-			WHILE (c # NIL) & ((con.setval # c.setval) OR (con.realval # c.realval)) DO c := c.link END;
+			WHILE (c # NIL) & ((con.setval # c.setval) OR ~IsSame(con.realval, c.realval)) DO c := c.link END;
 			IF c = NIL THEN adr := idx32; INC(idx32, 4) END
 		| Real64:
 			obj := Const64; c := obj.conval;
-			WHILE (c # NIL) & ((con.setval # c.setval) OR (con.realval # c.realval)) DO c := c.link END;
+			WHILE (c # NIL) & ((con.setval # c.setval) OR ~IsSame(con.realval, c.realval)) DO c := c.link END;
 			IF c = NIL THEN adr := idx64; INC(idx64, 8) END
 		| Guid:
 			obj := Const32; c := obj.conval;
@@ -642,7 +647,7 @@ MODULE LindevCPE;
 		ELSE n := NameIdx(desc.strobj)
 		END;
 		IF desc.form # ProcTyp THEN b := desc.BaseTyp;
-			IF (b # NIL) & (b # DevCPT.anytyp) & (b # DevCPT.anyptrtyp) & (b.form IN {Pointer, Comp})
+			IF (b # NIL) & (b # DevCPT.anytyp) & (b # DevCPT.anyptrtyp) & (b.form IN {Pointer, Comp, ProcTyp})
 					& (b.sysflag # interface) & (b # DevCPT.guidtyp)
 					& (~b.untagged OR outURef & (b.form = Comp)) THEN
 				l := OffsetLink(TypeObj(b), 0)
@@ -730,14 +735,14 @@ MODULE LindevCPE;
 	END OutDesc;
 
 	PROCEDURE OutModDesc (nofptr, refSize, namePos, ptrPos, expPos, impPos: INTEGER);
-		VAR i: INTEGER; (*t: Dates.Time; d: Dates.Date;*)
+		VAR i: INTEGER; (* t: Dates.Time; d: Dates.Date; *)
 	BEGIN
 		Out4(0);	(* link *)
 		Out4(ORD(options));	(* opts *)
 		Out4(0);	(* refcnt *)
-		(*Dates.GetDate(d); Dates.GetTime(t); 	(* compile time *)
+		(* Dates.GetDate(d); Dates.GetTime(t); 	(* compile time *)
 		Out2(d.year); Out2(d.month); Out2(d.day);
-		Out2(t.hour); Out2(t.minute); Out2(t.second);*)
+		Out2(t.hour); Out2(t.minute); Out2(t.second); *)
 		Out2(2007); Out2(5); Out2(25);
 		Out2(0); Out2(0); Out2(0);
 		Out4(0); Out4(0); Out4(0); 	(* load time *)
