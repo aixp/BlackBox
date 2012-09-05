@@ -16,27 +16,47 @@ How to build:
 Files:
 	original:
 		BlackBox:
-			Std/Mod/Loader.*
-			Std/Mod/Interpreter.*
+			Std/Mod/Loader.odc
+			Std/Mod/Interpreter.odc
 			Dev/Rsrc/Errors.odc
 			Docu/BB-License.odc
 			Docu/BB-Licensing-Policy.odc
 			Docu/BB-Open-Source-License.odc
 			System/Mod/
-				Dialog.*
-				Files.*
-				Math.*
-				Meta.*
-				Strings.*
+				Containers.odc
+				Controllers.odc
+				Converters.odc
+				Dates.odc
+				Dialog.odc
+				Documents.odc
+				Files.odc
+				Fonts.odc
+				Integers.odc
+				Log.odc
+				Math.odc
+				Mechanisms.odc
+				Meta.odc
+				Models.odc
+				Ports.odc
+				Printers.odc
+				Printing.odc
+				Properties.odc
+				SMath.odc
+				Sequencers.odc
+				Services.odc
+				Stores.odc
+				Strings.odc
+				Views.odc
+				Windows.odc
 		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
-			Lin/Mod/Console.*
-			System/Mod/Console.*
+			Lin/Mod/Console.odc
+			System/Mod/Console.odc
 			Lindev/*
 			Docu/OpenBUGS-License.odc
 		oberoncore.ru:
-			Lin/Mod/Kernel_so_init.*
+			Lin/Mod/Kernel_so_init.odc
 	modified:
 		Lin/Mod/Obsd.linKernel.odc:
 			OpenBUGS Lin/Mod/linKernel.odc modified with OpenBSD specific:
@@ -61,3 +81,5 @@ Notes:
 	Lindev:
 		OpenBUGS/Lindev compiler outdated, not in sync with original BlackBox/Dev compiler
 		Lindev* is temporary solution until TextModels ported
+
+A. V. Shiryaev, 2012
