@@ -16,38 +16,14 @@ How to build:
 Files:
 	original:
 		BlackBox:
-			Std/Mod/Loader.odc
-			Std/Mod/Interpreter.odc
+			Std/*
+			Text/*
 			Dev/Rsrc/Errors.odc
 			Docu/BB-License.odc
 			Docu/BB-Licensing-Policy.odc
 			Docu/BB-Open-Source-License.odc
 			System/Mod/
-				Containers.odc
-				Controllers.odc
-				Converters.odc
-				Dates.odc
-				Dialog.odc
-				Documents.odc
-				Files.odc
-				Fonts.odc
-				Integers.odc
-				Log.odc
-				Math.odc
-				Mechanisms.odc
-				Meta.odc
-				Models.odc
-				Ports.odc
-				Printers.odc
-				Printing.odc
-				Properties.odc
-				SMath.odc
-				Sequencers.odc
-				Services.odc
-				Stores.odc
-				Strings.odc
-				Views.odc
-				Windows.odc
+				all except Console
 		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
