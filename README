@@ -1,6 +1,8 @@
 Oberon Microsystems BlackBox Component Builder (http://www.oberon.ch/)
 Port for OpenBSD/i386
 
+Some significant parts taken from OpenBUGS (http://www.openbugs.info/)
+
 How to build:
 	compile loader executable (BlackBox itself and simple interpreter):
 		libBB*.so must be present (can be cross-linked from Windows)
@@ -46,13 +48,13 @@ Files:
 				Strings.odc
 				Views.odc
 				Windows.odc
-		OpenBUGS (http://www.openbugs.info/):
+		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
 			Lin/Mod/Console.odc
 			System/Mod/Console.odc
 			Docu/OpenBUGS-License.odc
-		oberoncore.ru:
+		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
 			Lin/Mod/Kernel_so_init.odc
 	modified:
 		Lin/Mod/Obsd.linKernel.odc:
@@ -84,5 +86,8 @@ Files:
 Notes:
 	Lindev:
 		Lindev is temporary solution until TextModels ported?
+	Kernel_so_init.SetKernelBaseStack:
+		required only in case of .so shared library dynamic loading
+			(at run-time via dlopen, not on link-time)
 
 A. V. Shiryaev, 2012
