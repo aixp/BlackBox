@@ -1,0 +1,103 @@
+MODULE Console;
+
+	(* THIS IS TEXT COPY OF OpenBUGS System/Mod/Console.odc *)
+	(* DO NOT EDIT *)
+
+	TYPE
+		Console* = POINTER TO ABSTRACT RECORD END;
+
+		Process* = POINTER TO ABSTRACT RECORD END;
+
+	VAR
+		cons-, stdCon-: Console;
+		version-: INTEGER;
+		maintainer-: ARRAY 40 OF CHAR;
+
+	PROCEDURE (console: Console) WriteStr- (IN text: ARRAY OF CHAR), NEW, ABSTRACT;
+
+	PROCEDURE (console: Console) WriteChar- (c: CHAR), NEW, ABSTRACT;
+
+	PROCEDURE (console: Console) WriteLn-, NEW, ABSTRACT;
+
+	PROCEDURE (console: Console) ReadLn- (OUT text: ARRAY OF CHAR), NEW, ABSTRACT;
+
+	PROCEDURE (console: Console) Open-, NEW, ABSTRACT;
+
+	PROCEDURE (console: Console) Close-, NEW, ABSTRACT;
+
+	PROCEDURE (console: Console) CreateProcess- (cmdLine: ARRAY OF CHAR): Process, NEW, ABSTRACT;
+
+	PROCEDURE (console: Console) CommandLine- (OUT cmdLine: ARRAY OF CHAR), NEW, ABSTRACT;
+
+	PROCEDURE (p: Process) Terminate-, NEW, ABSTRACT;
+
+	PROCEDURE WriteStr* (IN text: ARRAY OF CHAR);
+	BEGIN
+		cons.WriteStr(text)
+	END WriteStr;
+
+	PROCEDURE WriteChar* (c: CHAR);
+	BEGIN
+		cons.WriteChar(c)
+	END WriteChar;
+
+	PROCEDURE WriteLn*;
+	BEGIN
+		cons.WriteLn
+	END WriteLn;
+
+	PROCEDURE ReadLn* (OUT text: ARRAY OF CHAR);
+	BEGIN
+		cons.ReadLn(text)
+	END ReadLn;
+
+	PROCEDURE Open*;
+	BEGIN
+		cons.Open
+	END Open;
+
+	PROCEDURE Close*;
+	BEGIN
+		cons.Close
+	END Close;
+
+	PROCEDURE CreateProcess* (cmdLine: ARRAY OF CHAR): Process;
+		VAR
+			p: Process;
+	BEGIN
+		p := cons.CreateProcess(cmdLine);
+		RETURN p
+	END CreateProcess;
+
+	PROCEDURE CommandLine* (OUT cmdLine: ARRAY OF CHAR);
+	BEGIN
+		cons.CommandLine(cmdLine)
+	END CommandLine;
+
+	PROCEDURE TerminateProcess* (p: Process);
+	BEGIN
+		p.Terminate
+	END TerminateProcess;
+
+	PROCEDURE SetConsole* (console: Console);
+	BEGIN
+		cons := console;
+		IF stdCon = NIL THEN stdCon := console END
+	END SetConsole;
+
+	PROCEDURE Maintainer;
+	BEGIN
+		version := 310;
+		maintainer := "A.Thomas"
+	END Maintainer;
+
+	PROCEDURE Init;
+	BEGIN
+		Maintainer;
+		cons := NIL;
+		stdCon := NIL
+	END Init;
+
+BEGIN
+	Init
+END Console.

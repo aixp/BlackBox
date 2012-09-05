@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# env LD_LIBRARY_PATH=. env LD_DEBUG=1 ./interp
+env LD_LIBRARY_PATH=. ./interp

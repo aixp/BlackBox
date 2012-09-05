@@ -1,0 +1,63 @@
+Oberon Microsystems BlackBox Component Builder (http://www.oberon.ch/)
+Port for OpenBSD/i386
+
+Port based on OpenBUGS (http://www.openbugs.info/)
+
+How to build:
+	compile loader executable (BlackBox itself and simple interpreter):
+		libBB*.so must be present (can be cross-linked from Windows)
+
+		cd c; make
+
+	compile self:
+
+		cd BlackBox; ./clean; ./build
+
+Files:
+	original:
+		BlackBox:
+			Std/Mod/Loader.*
+			Std/Mod/Interpreter.*
+			Dev/Rsrc/Errors.odc
+			Docu/BB-License.odc
+			Docu/BB-Licensing-Policy.odc
+			Docu/BB-Open-Source-License.odc
+			System/Mod/
+				Dialog.*
+				Files.*
+				Math.*
+				Meta.*
+				Strings.*
+		OpenBUGS:
+			Dev/Mod/ElfLinker16.odc
+			Dev/Docu/ElfLinker.odc
+			Lin/Mod/Console.*
+			System/Mod/Console.*
+			Lindev/*
+			Docu/OpenBUGS-License.odc
+		oberoncore.ru:
+			Lin/Mod/Kernel_so_init.*
+	modified:
+		Lin/Mod/Obsd.linKernel.odc:
+			OpenBUGS Lin/Mod/linKernel.odc modified with OpenBSD specific:
+				Kernel.TrapHandler
+					OpenBSD sigcontext related
+				Kernel.Time
+					CLOCKS_PER_SEC related
+				Kernel.InitModule
+					mprotect added
+		Lin/Mod/Obsd.linHostFiles.odc:
+			OpenBUGS Lin/Mod/linHostFiles.odc:
+				size_t specific
+		Lin/Mod/Obsd.Libc.txt:
+			OpenBUGS Lin/Mod/Libc.odc:
+				OpenBSD-specific
+		LindevCompiler.odc:
+			modified original BlackBox Dev/Mod/Compiler.odc
+		LindevElfLinker16.odc:
+			modified OpenBUGS Dev/Mod/ElfLinker16.odc
+
+Notes:
+	Lindev:
+		OpenBUGS/Lindev compiler outdated, not in sync with original BlackBox/Dev compiler
+		Lindev* is temporary solution until TextModels ported

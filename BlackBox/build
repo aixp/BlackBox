@@ -1,0 +1,41 @@
+#!/bin/sh
+
+./run-interp <<DATA
+LindevCompiler.Compile('Lin/Mod', 'Obsd.Dl.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.Libc.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.linKernel.txt')
+LindevCompiler.Compile('System/Mod', 'Files.txt')
+LindevCompiler.Compile('System/Mod', 'Dialog.txt')
+LindevCompiler.Compile('System/Mod', 'Math.txt')
+LindevCompiler.Compile('System/Mod', 'Strings.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.linHostFiles.txt')
+LindevCompiler.Compile('System/Mod', 'Meta.txt')
+LindevCompiler.Compile('Std/Mod', 'Loader.txt')
+LindevCompiler.Compile('System/Mod', 'Console.txt')
+LindevCompiler.Compile('Lin/Mod', 'Console.txt')
+LindevCompiler.Compile('Lin/Mod', 'Kernel_so_init.txt')
+LindevCompiler.Compile('', 'Views.txt')
+LindevCompiler.Compile('Std/Mod', 'Interpreter.txt')
+
+LindevCompiler.Compile('Lindev/Mod', 'CPM.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPT.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPS.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPH.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPB.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPP.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPE.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPL486.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPC486.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPV486.txt')
+
+LindevCompiler.Compile('', 'LindevCompiler.txt')
+LindevCompiler.Compile('', 'LindevElfLinker16.txt')
+
+LindevCompiler.Compile('', 'Interp.txt')
+LindevCompiler.Compile('', 'Init-Interp.txt')
+
+LindevElfLinker.LinkDll('libBB.so := Kernel+ Files HostFiles StdLoader')
+
+# LindevElfLinker.LinkDll('libBBInterp.so := Kernel+ Kernel_so_init# Console Math Strings LinConsole Files HostFiles LindevCPM LindevCPT LindevCPS LindevCPH LindevCPB LindevCPP LindevCPE LindevCPL486 LindevCPC486 LindevCPV486 LindevCompiler LindevElfLinker Dialog Meta Views StdInterpreter Interp#')
+LindevElfLinker.LinkDll('libBBInterp.so := Kernel+ Console Math Strings LinConsole Files HostFiles LindevCPM LindevCPT LindevCPS LindevCPH LindevCPB LindevCPP LindevCPE LindevCPL486 LindevCPC486 LindevCPV486 LindevCompiler LindevElfLinker Dialog Meta Views StdInterpreter Interp#')
+DATA

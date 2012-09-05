@@ -1,0 +1,12 @@
+By priority:
+	Converters: odc -> txt
+		simple TextModels; HostTexts
+
+	original Dev compiler instead of Lindev:
+		simple TextModels
+		...
+
+	Services
+
+	GUI:
+		...

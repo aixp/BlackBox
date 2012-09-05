@@ -1,0 +1,7 @@
+MODULE Init;
+
+	IMPORT Interp;
+
+BEGIN
+	Interp.Init
+END Init.
