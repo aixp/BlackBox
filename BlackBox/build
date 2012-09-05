@@ -4,18 +4,40 @@
 LindevCompiler.Compile('Lin/Mod', 'Obsd.Dl.txt')
 LindevCompiler.Compile('Lin/Mod', 'Obsd.Libc.txt')
 LindevCompiler.Compile('Lin/Mod', 'Obsd.linKernel.txt')
+
 LindevCompiler.Compile('System/Mod', 'Files.txt')
 LindevCompiler.Compile('System/Mod', 'Dialog.txt')
 LindevCompiler.Compile('System/Mod', 'Math.txt')
 LindevCompiler.Compile('System/Mod', 'Strings.txt')
-LindevCompiler.Compile('Lin/Mod', 'Obsd.linHostFiles.txt')
 LindevCompiler.Compile('System/Mod', 'Meta.txt')
+
+LindevCompiler.Compile('System/Mod', 'Stores.txt')
+LindevCompiler.Compile('System/Mod', 'Converters.txt')
+LindevCompiler.Compile('System/Mod', 'Dates.txt')
+LindevCompiler.Compile('System/Mod', 'Integers.txt')
+LindevCompiler.Compile('System/Mod', 'Sequencers.txt')
+LindevCompiler.Compile('System/Mod', 'Services.txt')
+LindevCompiler.Compile('System/Mod', 'Log.txt')
+LindevCompiler.Compile('System/Mod', 'SMath.txt')
+
+LindevCompiler.Compile('System/Mod', 'Fonts.txt')
+LindevCompiler.Compile('System/Mod', 'Ports.txt')
+LindevCompiler.Compile('System/Mod', 'Printers.txt')
+LindevCompiler.Compile('System/Mod', 'Models.txt')
+LindevCompiler.Compile('System/Mod', 'Views.txt')
+LindevCompiler.Compile('System/Mod', 'Printing.txt')
+LindevCompiler.Compile('System/Mod', 'Mechanisms.txt')
+LindevCompiler.Compile('System/Mod', 'Controllers.txt')
+LindevCompiler.Compile('System/Mod', 'Properties.txt')
+LindevCompiler.Compile('System/Mod', 'Containers.txt')
+LindevCompiler.Compile('System/Mod', 'Documents.txt')
+LindevCompiler.Compile('System/Mod', 'Windows.txt')
+
+LindevCompiler.Compile('Lin/Mod', 'Obsd.linHostFiles.txt')
 LindevCompiler.Compile('Std/Mod', 'Loader.txt')
 LindevCompiler.Compile('System/Mod', 'Console.txt')
 LindevCompiler.Compile('Lin/Mod', 'Console.txt')
 LindevCompiler.Compile('Lin/Mod', 'Kernel_so_init.txt')
-LindevCompiler.Compile('', 'Views.txt')
-LindevCompiler.Compile('Std/Mod', 'Interpreter.txt')
 
 LindevCompiler.Compile('Lindev/Mod', 'CPM.txt')
 LindevCompiler.Compile('Lindev/Mod', 'CPT.txt')
@@ -31,11 +53,21 @@ LindevCompiler.Compile('Lindev/Mod', 'CPV486.txt')
 LindevCompiler.Compile('', 'LindevCompiler.txt')
 LindevCompiler.Compile('', 'LindevElfLinker16.txt')
 
+### simple dev interpreter (include LindevCompiler and LindevElfLinker)
+
+LindevCompiler.Compile('', 'Views.txt')
+LindevCompiler.Compile('Std/Mod', 'Interpreter.txt')
+
 LindevCompiler.Compile('', 'Interp.txt')
 LindevCompiler.Compile('', 'Init-Interp.txt')
 
-LindevElfLinker.LinkDll('libBB.so := Kernel+ Files HostFiles StdLoader')
-
 # LindevElfLinker.LinkDll('libBBInterp.so := Kernel+ Kernel_so_init# Console Math Strings LinConsole Files HostFiles LindevCPM LindevCPT LindevCPS LindevCPH LindevCPB LindevCPP LindevCPE LindevCPL486 LindevCPC486 LindevCPV486 LindevCompiler LindevElfLinker Dialog Meta Views StdInterpreter Interp#')
 LindevElfLinker.LinkDll('libBBInterp.so := Kernel+ Console Math Strings LinConsole Files HostFiles LindevCPM LindevCPT LindevCPS LindevCPH LindevCPB LindevCPP LindevCPE LindevCPL486 LindevCPC486 LindevCPV486 LindevCompiler LindevElfLinker Dialog Meta Views StdInterpreter Interp#')
+
+### BlackBox
+
+LindevCompiler.Compile('System/Mod', 'Views.txt')
+LindevCompiler.Compile('Std/Mod', 'Interpreter.txt')
+
+LindevElfLinker.LinkDll('libBB.so := Kernel+ Files HostFiles StdLoader')
 DATA
