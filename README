@@ -76,6 +76,10 @@ Files:
 			modified original BlackBox Dev/Mod/Compiler.odc
 		LindevElfLinker16.odc:
 			modified OpenBUGS Dev/Mod/ElfLinker16.odc
+	new:
+		Interp.odc: simple console interpreter
+		libBB.so: compiled and linked OpenBSD shared library to run BlackBox
+		libBBInterp.so: compiled and linked OpenBSD shared library to run development interpreter
 
 Notes:
 	Lindev:
