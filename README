@@ -1,8 +1,6 @@
 Oberon Microsystems BlackBox Component Builder (http://www.oberon.ch/)
 Port for OpenBSD/i386
 
-Port based on OpenBUGS (http://www.openbugs.info/)
-
 How to build:
 	compile loader executable (BlackBox itself and simple interpreter):
 		libBB*.so must be present (can be cross-linked from Windows)
@@ -48,7 +46,7 @@ Files:
 				Strings.odc
 				Views.odc
 				Windows.odc
-		OpenBUGS:
+		OpenBUGS (http://www.openbugs.info/):
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
 			Lin/Mod/Console.odc
