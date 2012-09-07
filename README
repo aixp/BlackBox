@@ -16,14 +16,18 @@ How to build:
 Files:
 	original:
 		BlackBox:
-			Std/*
-			Text/*
-			Dev/Rsrc/Errors.odc
+			Dev/Mod/*
+				all except ElfLinker16
+			Dev/Rsrc/*
 			Docu/BB-License.odc
 			Docu/BB-Licensing-Policy.odc
 			Docu/BB-Open-Source-License.odc
+			Obx/*
+			Std/*
 			System/Mod/
 				all except Console
+			System/Rsrc/*
+			Text/*
 		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
@@ -47,6 +51,8 @@ Files:
 		Lin/Mod/Obsd.Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
+		Lin/Mod/Dates.odc:
+			HostDates, thanks to Trurl@oberoncore.ru
 		Lindev/Mod
 			CP*
 				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.
@@ -58,6 +64,10 @@ Files:
 		Interp.odc: simple console interpreter
 		libBB.so: compiled and linked OpenBSD shared library to run BlackBox
 		libBBInterp.so: compiled and linked OpenBSD shared library to run development interpreter
+
+		Views.odc: minimal Views implementation required for StdInterpreter
+		StdLog.odc: alternative StdLog implementation to not depend on GUI
+		HostFonts.odc, HostDialog.odc, HostWindows.odc: simple implementation
 
 Notes:
 	Lindev:
