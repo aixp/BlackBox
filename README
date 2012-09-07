@@ -65,9 +65,9 @@ Files:
 		libBB.so: compiled and linked OpenBSD shared library to run BlackBox
 		libBBInterp.so: compiled and linked OpenBSD shared library to run development interpreter
 
-		Views.odc: minimal Views implementation required for StdInterpreter
+		Views.odc: minimal Views implementation required to compile StdInterpreter
 		StdLog.odc: alternative StdLog implementation to not depend on GUI
-		HostFonts.odc, HostDialog.odc, HostWindows.odc: simple implementation
+		HostFonts.odc, HostDialog.odc, HostWindows.odc: simple Hosts implementation
 
 Notes:
 	Lindev:
