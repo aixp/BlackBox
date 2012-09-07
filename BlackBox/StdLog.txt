@@ -1,0 +1,29 @@
+MODULE StdLog;
+
+	(* for Dev *)
+
+	IMPORT Console, Strings;
+
+	PROCEDURE Char* (c: CHAR);
+	BEGIN
+		Console.WriteChar(c)
+	END Char;
+
+	PROCEDURE String* (IN s: ARRAY OF CHAR);
+	BEGIN
+		Console.WriteStr(s)
+	END String;
+
+	PROCEDURE Int* (x: LONGINT);
+		VAR s: ARRAY 32 OF CHAR;
+	BEGIN
+		Strings.IntToString(x, s);
+		Console.WriteStr(s)
+	END Int;
+
+	PROCEDURE Ln*;
+	BEGIN
+		Console.WriteLn
+	END Ln;
+
+END StdLog.

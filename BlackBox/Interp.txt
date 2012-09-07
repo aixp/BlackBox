@@ -26,11 +26,11 @@ MODULE Interp;
 		IF (i < LEN(s)) & (s[i] # 0X) THEN
 			IF (i > 0) & (s[0] # '#') THEN
 				s[i] := 0X;
-				Dialog.Call(s, "", i);
+				Dialog.Call(s, " ", i);
 				IF i = 0 THEN
 					res := TRUE
 				ELSE
-					WriteInt(i); Console.WriteLn;
+					(* WriteInt(i); Console.WriteLn; *)
 					res := FALSE (* stop on Dialog.Call error *)
 				END
 			ELSE (* skip empty strings and comments *)

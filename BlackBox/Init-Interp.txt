@@ -1,7 +1,9 @@
 MODULE Init;
 
-	IMPORT Interp;
+	IMPORT Interp, HostFonts (* required for Texts *), HostWindows (* required for Windows *), HostDates (* for Dates.SetHook *), HostDialog (* required for Dialog.SetShowHook *), StdLog, StdDialog (* required for Views *), Converters (* .odc *);
 
 BEGIN
+	(* StdLog.Open; *)
+	Converters.Register("Documents.ImportDocument", "Documents.ExportDocument", "", "odc", {});
 	Interp.Init
 END Init.

@@ -1,0 +1,72 @@
+MODULE HostFonts;
+
+	(* for Texts *)
+
+	IMPORT Fonts;
+
+	CONST
+		defTypeface = "*";
+		defSize = 12 * Fonts.point;
+		defW = 161925;
+		defAsc = 142875;
+		defDsc = 28575;
+
+	TYPE
+		Font = POINTER TO RECORD (Fonts.Font) END;
+
+		Directory = POINTER TO RECORD (Fonts.Directory) END;
+
+	VAR
+		f: Font;
+		ti: Fonts.TypefaceInfo;
+		dir: Directory;
+
+	PROCEDURE (f: Font) GetBounds (OUT asc, dsc, w: INTEGER);
+	BEGIN
+		asc := defAsc;
+		dsc := defDsc;
+		w := defW
+	END GetBounds;
+
+	PROCEDURE (f: Font) StringWidth (IN s: ARRAY OF CHAR): INTEGER;
+	BEGIN
+		RETURN LEN(s$) * defW
+	END StringWidth;
+
+	PROCEDURE (f: Font) SStringWidth (IN s: ARRAY OF SHORTCHAR): INTEGER;
+	BEGIN
+		RETURN LEN(s$) * defW
+	END SStringWidth;
+
+	PROCEDURE (f: Font) IsAlien (): BOOLEAN;
+	BEGIN
+		RETURN TRUE
+	END IsAlien;
+
+	PROCEDURE (d: Directory) This (typeface: Fonts.Typeface; size: INTEGER; style: SET; weight: INTEGER): Font;
+	BEGIN
+		RETURN f
+	END This;
+
+	PROCEDURE (d: Directory) Default (): Font;
+	BEGIN
+		RETURN f
+	END Default;
+
+	PROCEDURE (d: Directory) TypefaceList (): Fonts.TypefaceInfo;
+	BEGIN
+		RETURN ti
+	END TypefaceList;
+
+	PROCEDURE Init;
+	BEGIN
+		NEW(f);
+		f.Init(defTypeface, defSize, {}, Fonts.normal);
+		NEW(ti);
+		ti.typeface := defTypeface;
+		NEW(dir); Fonts.SetDir(dir)
+	END Init;
+
+BEGIN
+	Init
+END HostFonts.
