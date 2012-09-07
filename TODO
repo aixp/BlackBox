@@ -1,12 +1,13 @@
 By priority:
-	Converters: odc -> txt
-		simple TextModels; HostTexts
-
 	original Dev compiler instead of Lindev:
-		simple TextModels
-		...
+		console interface to DevElfLinker16
+		console interface to compiler
 
 	Services
+
+	Comm
+
+	Xhtml
 
 	GUI:
 		...
