@@ -1,0 +1,41 @@
+#!/bin/sh
+
+./run-lindev <<DATA
+LindevCompiler.Compile('Lin/Mod', 'Obsd.Dl.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.Libc.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.linKernel.txt')
+
+LindevCompiler.Compile('System/Mod', 'Files.txt')
+LindevCompiler.Compile('System/Mod', 'Console.txt')
+LindevCompiler.Compile('System/Mod', 'Math.txt')
+LindevCompiler.Compile('System/Mod', 'Strings.txt')
+LindevCompiler.Compile('System/Mod', 'Meta.txt')
+LindevCompiler.Compile('System/Mod', 'Dialog.txt')
+
+LindevCompiler.Compile('Lindev/Mod', 'CPM.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPT.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPS.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPH.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPB.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPP.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPE.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPL486.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPC486.txt')
+LindevCompiler.Compile('Lindev/Mod', 'CPV486.txt')
+
+LindevCompiler.Compile('Lindev/Mod', 'Compiler.txt')
+LindevCompiler.Compile('Lindev/Mod', 'ElfLinker16.txt')
+
+LindevCompiler.Compile('Lin/Mod', 'Console.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.linHostFiles.txt')
+
+### simple dev interpreter (include LindevCompiler and LindevElfLinker)
+
+LindevCompiler.Compile('', 'Views.txt')
+LindevCompiler.Compile('Std/Mod', 'Interpreter.txt')
+
+LindevCompiler.Compile('Lindev/Mod', 'Interp.txt')
+
+# LindevElfLinker.LinkDll('libBBInterp.so := Kernel+ Kernel_so_init# Console Math Strings LinConsole Files HostFiles LindevCPM LindevCPT LindevCPS LindevCPH LindevCPB LindevCPP LindevCPE LindevCPL486 LindevCPC486 LindevCPV486 LindevCompiler LindevElfLinker Dialog Meta Views StdInterpreter Interp#')
+LindevElfLinker.LinkDll('libBB0.so := Kernel+ Console Math Strings LinConsole Files HostFiles LindevCPM LindevCPT LindevCPS LindevCPH LindevCPB LindevCPP LindevCPE LindevCPL486 LindevCPC486 LindevCPV486 LindevCompiler LindevElfLinker Dialog Meta Views StdInterpreter LindevInterp#')
+DATA

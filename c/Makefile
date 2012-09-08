@@ -1,10 +1,10 @@
-all: interp BlackBox
+all: lindev BlackBox
 
 BlackBox: BlackBox.c openbsd.c
 	${CC} ${CFLAGS} -O0 -g -o ${.TARGET} ${.ALLSRC} -L. -lBB -Wl,-E
 
-interp: BlackBox1.c openbsd.c
-	${CC} ${CFLAGS} -O0 -g -o ${.TARGET} ${.ALLSRC} -L . -lBBInterp
+lindev: BlackBox1.c openbsd.c
+	${CC} ${CFLAGS} -O0 -g -o ${.TARGET} ${.ALLSRC} -L . -lBB0
 
 clean:
-	rm -f interp BlackBox
+	rm -f lindev BlackBox

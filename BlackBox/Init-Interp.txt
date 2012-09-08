@@ -1,10 +1,30 @@
 MODULE Init;
 
-	IMPORT Interp, HostFonts (* required for Texts *), HostWindows (* required for Windows *), HostDates (* for Dates.SetHook *), HostDialog (* required for Dialog.SetShowHook *), StdLog, StdDialog (* required for Views *), Converters (* .odc *);
+	IMPORT
+		LinConsole,
+
+		HostFonts (* Fonts.SetHook; required for Texts *),
+		HostWindows (* Windows.SetHook *),
+		HostDates (* Dates.SetHook *),
+		HostDialog (* Dialog.SetShowHook *),
+		StdLog,
+		StdInterpreter, (* Dialog.SetCallHook *)
+		StdDialog (* Views.SetViewHook *),
+
+		Converters (* .odc *),
+		Dialog,
+
+		TextViews, TextControllers;
+
+	PROCEDURE Init*;
+		VAR res: INTEGER;
+	BEGIN
+		(* StdLog.Open; *)
+		Converters.Register("Documents.ImportDocument", "Documents.ExportDocument", "", "odc", {});
+		(* Converters.Register("StdETHConv.ImportETHDoc", "", "TextViews.View", "eth", {Converters.importAll}); *)
+		Dialog.Call("Interp.Run", " ", res)
+	END Init;
 
 BEGIN
-	(* StdLog.Open; *)
-	Converters.Register("Documents.ImportDocument", "Documents.ExportDocument", "", "odc", {});
-	Converters.Register("StdETHConv.ImportETHDoc", "", "TextViews.View", "eth", {Converters.importAll});
-	Interp.Init
+	Init
 END Init.
