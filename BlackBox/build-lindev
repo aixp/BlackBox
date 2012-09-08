@@ -36,6 +36,6 @@ LindevCompiler.Compile('Std/Mod', 'Interpreter.txt')
 
 LindevCompiler.Compile('Lindev/Mod', 'Interp.txt')
 
-# LindevElfLinker.LinkDll('libBBInterp.so := Kernel+ Kernel_so_init# Console Math Strings LinConsole Files HostFiles LindevCPM LindevCPT LindevCPS LindevCPH LindevCPB LindevCPP LindevCPE LindevCPL486 LindevCPC486 LindevCPV486 LindevCompiler LindevElfLinker Dialog Meta Views StdInterpreter Interp#')
+# LindevElfLinker.LinkDll('libBBInterp.so := Kernel+ Kernel_so_init# Console Math Strings LinConsole Files HostFiles LindevCPM LindevCPT LindevCPS LindevCPH LindevCPB LindevCPP LindevCPE LindevCPL486 LindevCPC486 LindevCPV486 LindevCompiler LindevElfLinker Dialog Meta Views StdInterpreter LindevInterp#')
 LindevElfLinker.LinkDll('libBB0.so := Kernel+ Console Math Strings LinConsole Files HostFiles LindevCPM LindevCPT LindevCPS LindevCPH LindevCPB LindevCPP LindevCPE LindevCPL486 LindevCPC486 LindevCPV486 LindevCompiler LindevElfLinker Dialog Meta Views StdInterpreter LindevInterp#')
 DATA
