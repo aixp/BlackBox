@@ -73,7 +73,7 @@ Files:
 
 Notes:
 	Lindev:
-		I will not remove Lindev because I can not link .so library based on ConsInerp and Dev
+		I will not remove Lindev because I can not link .so library based on ConsInterp and Dev
 	Kernel_so_init.SetKernelBaseStack:
 		required only in case of .so shared library dynamic loading
 			(at run-time via dlopen, not on link-time)
