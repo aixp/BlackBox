@@ -12,9 +12,7 @@ MODULE Init;
 		StdDialog (* Views.SetViewHook *),
 
 		Converters (* .odc *),
-		Dialog,
-
-		TextViews, TextControllers;
+		Dialog;
 
 	PROCEDURE Init;
 		VAR res: INTEGER;
