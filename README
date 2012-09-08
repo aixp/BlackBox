@@ -60,12 +60,10 @@ Files:
 				modified original BlackBox Dev/Mod/Compiler.odc
 			ElfLinker16.odc:
 				modified OpenBUGS Dev/Mod/ElfLinker16.odc
-		Cons/Mod
-			Compiler.odc:
-				modified original BlackBox Dev/Mod/Compiler.odc
 	new:
 		Cons/Mod
 			Interp.odc: console interpreter
+			Compiler.odc
 		libBB.so: compiled and linked OpenBSD shared library to run BlackBox
 		libBB0.so: compiled and linked OpenBSD shared library to run simple development interpreter
 
