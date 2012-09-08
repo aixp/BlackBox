@@ -1,11 +1,12 @@
 #!/bin/sh
 
 ./run-BlackBox <<DATA
-DevCompiler.CompileThis ObxHello0
+DevCompiler.CompileThis ObxHello0 ObxPi
 ObxHello0.Do
-DevCompiler.CompileThis ObxPi
 ObxPi.WritePi(1000)
 
 ConsCompiler.Compile('Obx/Mod', 'Hello0.odc')
 ConsCompiler.Compile('Obx/Mod', 'Pi.odc')
+
+DevElfLinker.LinkDll libBB.so := Kernel+ Files HostFiles StdLoader
 DATA
