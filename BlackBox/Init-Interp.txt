@@ -16,13 +16,13 @@ MODULE Init;
 
 		TextViews, TextControllers;
 
-	PROCEDURE Init*;
+	PROCEDURE Init;
 		VAR res: INTEGER;
 	BEGIN
 		(* StdLog.Open; *)
 		Converters.Register("Documents.ImportDocument", "Documents.ExportDocument", "", "odc", {});
 		(* Converters.Register("StdETHConv.ImportETHDoc", "", "TextViews.View", "eth", {Converters.importAll}); *)
-		Dialog.Call("Interp.Run", " ", res)
+		Dialog.Call("ConsInterp.Run", " ", res)
 	END Init;
 
 BEGIN

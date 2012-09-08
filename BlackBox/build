@@ -89,7 +89,7 @@ LindevCompiler.Compile('Dev/Mod', 'CPL486.txt')
 LindevCompiler.Compile('Dev/Mod', 'CPC486.txt')
 LindevCompiler.Compile('Dev/Mod', 'CPV486.txt')
 LindevCompiler.Compile('Dev/Mod', 'Compiler.txt')
-LindevCompiler.Compile('Dev/Mod', 'ElfLinker16.txt')
+# LindevCompiler.Compile('Dev/Mod', 'ElfLinker16.txt')
 
 LindevCompiler.Compile('Std/Mod', 'Interpreter.txt')
 
@@ -101,9 +101,14 @@ LindevCompiler.Compile('', 'HostWindows.txt')
 # HostDates:
 LindevCompiler.Compile('Lin/Mod', 'Dates.txt')
 
-LindevCompiler.Compile('', 'Interp.txt')
+LindevCompiler.Compile('Cons/Mod', 'Interp.txt')
 
 LindevCompiler.Compile('', 'Init-Interp.txt')
 
 LindevElfLinker.LinkDll('libBB.so := Kernel+ Files HostFiles StdLoader')
+DATA
+
+./run-BlackBox <<DATA
+DevCompiler.CompileThis DevElfLinker16
+DevCompiler.CompileThis ConsCompiler
 DATA

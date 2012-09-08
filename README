@@ -11,7 +11,7 @@ How to build:
 
 	compile self:
 
-		cd BlackBox; ./clean; ./build
+		cd BlackBox; ./clean; ./build-lindev; ./build
 
 Files:
 	original:
@@ -60,10 +60,14 @@ Files:
 				modified original BlackBox Dev/Mod/Compiler.odc
 			ElfLinker16.odc:
 				modified OpenBUGS Dev/Mod/ElfLinker16.odc
+		Cons/Mod
+			Compiler.odc:
+				modified original BlackBox Dev/Mod/Compiler.odc
 	new:
-		Interp.odc: simple console interpreter
+		Cons/Mod
+			Interp.odc: console interpreter
 		libBB.so: compiled and linked OpenBSD shared library to run BlackBox
-		libBBInterp.so: compiled and linked OpenBSD shared library to run development interpreter
+		libBB0.so: compiled and linked OpenBSD shared library to run simple development interpreter
 
 		Views.odc: minimal Views implementation required to compile StdInterpreter
 		StdLog.odc: alternative StdLog implementation to not depend on GUI
@@ -71,7 +75,7 @@ Files:
 
 Notes:
 	Lindev:
-		Lindev is temporary solution until TextModels ported?
+		I will not remove Lindev because I can not link .so library based on ConsInerp and Dev
 	Kernel_so_init.SetKernelBaseStack:
 		required only in case of .so shared library dynamic loading
 			(at run-time via dlopen, not on link-time)

@@ -1,4 +1,4 @@
-MODULE Interp;
+MODULE ConsInterp;
 
 	(*
 		A. V. Shiryaev, 2012.09
@@ -100,4 +100,4 @@ MODULE Interp;
 		END
 	END Run;
 
-END Interp.
+END ConsInterp.

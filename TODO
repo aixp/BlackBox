@@ -1,7 +1,7 @@
 By priority:
-	original Dev compiler instead of Lindev:
-		console interface to DevElfLinker16
-		console interface to compiler
+	simplify ConsCompiler?
+		IMPORT DevCompiler;
+		DevCompiler.CompileText
 
 	Services
 
