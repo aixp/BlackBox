@@ -1,4 +1,6 @@
 By priority:
+	ConsCompiler can not compile HostFonts.txt
+		?????
 	simplify ConsCompiler?
 		IMPORT DevCompiler;
 		DevCompiler.CompileText
