@@ -1,0 +1,13 @@
+MODULE ObxHello0;
+
+	(* THIS IS TEXT COPY OF BlackBox 1.6-rc6 Obx/Mod/Hello0.odc *)
+	(* DO NOT EDIT *)
+
+	IMPORT StdLog;
+
+	PROCEDURE Do*;
+	BEGIN
+		StdLog.String("Hello World"); StdLog.Ln	(* write string and 0DX into log *)
+	END Do;
+
+END ObxHello0.

@@ -1,6 +1,9 @@
 #!/bin/sh
 
 ./run-BlackBox <<DATA
+LindevCompiler.Compile('Obx/Mod', 'Hello0.txt')
+ObxHello0.Do
+
 LindevCompiler.Compile('Obx/Mod', 'Pi.txt')
 ObxPi.WritePi(1000)
 DATA
