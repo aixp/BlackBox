@@ -23,10 +23,6 @@ int __xstat (int version, const char *path, struct stat *sb)
 	return stat(path, sb); /* XXX */
 }
 
-int * __errno_location () {
-	return __errno();
-}
-
 #undef stdin
 void * stdin = (&__sF[0]);
 

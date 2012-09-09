@@ -106,6 +106,7 @@ LindevCompiler.Compile('Cons/Mod', 'Interp.txt')
 LindevCompiler.Compile('', 'Init-Interp.txt')
 
 LindevElfLinker.LinkDll('libBB.so := Kernel+ Files HostFiles StdLoader')
+# LindevElfLinker.LinkDll('libBB.so := Kernel+ Kernel_so_init# Files HostFiles StdLoader')
 DATA
 
 ./run-BlackBox <<DATA

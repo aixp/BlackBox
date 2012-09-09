@@ -522,8 +522,8 @@ MODULE LinLibc ["libc.so.66.0"];
 	PROCEDURE [ccall] strftime* (s: PtrSTR; max: size_t; format: PtrSTR; ptm: tm): size_t;
 	PROCEDURE [ccall] time* (VAR [nil] t: time_t): time_t;
 
-	(* OpenBSD: wrapper *)
-	PROCEDURE [ccall] __errno_location*(): INTEGER;
+	(* PROCEDURE [ccall] __errno_location*(): INTEGER; *)
+	PROCEDURE [ccall] __errno_location* ["__errno"] (): INTEGER; (* OpenBSD *)
 
 	(* OpenBSD *)
 	PROCEDURE [ccall] mprotect* (addr: PtrVoid; len: size_t; prot: SET): INTEGER;
