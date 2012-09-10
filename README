@@ -31,7 +31,6 @@ Files:
 		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
-			Lin/Mod/Console.odc
 			System/Mod/Console.odc
 			Docu/OpenBUGS-License.odc
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
@@ -46,8 +45,12 @@ Files:
 				Kernel.InitModule
 					mprotect added
 		Lin/Mod/Obsd.linHostFiles.odc:
-			OpenBUGS Lin/Mod/linHostFiles.odc:
+			OpenBUGS Lin/Mod/linHostFiles.odc: 
 				size_t specific
+				__xstat -> stat
+		Lin/Mod/Obsd.Console.odc:
+			OpenBUGS Lin/Mod/Console.odc:
+				stdin -> SYSTEM.ADR(__sF[0])
 		Lin/Mod/Obsd.Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific

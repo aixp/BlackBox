@@ -12,7 +12,7 @@ LindevCompiler.Compile('System/Mod', 'Strings.txt')
 LindevCompiler.Compile('System/Mod', 'Meta.txt')
 LindevCompiler.Compile('System/Mod', 'Dialog.txt')
 
-LindevCompiler.Compile('Lin/Mod', 'Console.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.Console.txt')
 LindevCompiler.Compile('Lin/Mod', 'Obsd.linHostFiles.txt')
 
 LindevCompiler.Compile('System/Mod', 'Stores.txt')
@@ -65,10 +65,7 @@ LindevCompiler.Compile('Std/Mod', 'ETHConv.txt')
 LindevCompiler.Compile('Std/Mod', 'Headers.txt')
 LindevCompiler.Compile('Std/Mod', 'Links.txt')
 
-LindevCompiler.Compile('Lin/Mod', 'Obsd.linHostFiles.txt')
 LindevCompiler.Compile('Std/Mod', 'Loader.txt')
-LindevCompiler.Compile('System/Mod', 'Console.txt')
-LindevCompiler.Compile('Lin/Mod', 'Console.txt')
 LindevCompiler.Compile('Lin/Mod', 'Kernel_so_init.txt')
 
 # LindevCompiler.Compile('Std/Mod', 'Log.txt')

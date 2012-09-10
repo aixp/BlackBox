@@ -197,7 +197,7 @@ MODULE HostFiles;
 		VAR s: ShortName;
 	BEGIN
 		s := SHORT(fname);
-		res := LinLibc.__xstat(3, s, buf); (* macro expansion of "stat" *)
+		res := LinLibc.stat(s, buf); (* Shiryaev A. V.: OpenBSD *)
 	END Stat;
 	
 	PROCEDURE ModeToAttr (mode: SET; OUT attr: SET; OUT isDir: BOOLEAN);
@@ -1002,7 +1002,7 @@ MODULE HostFiles;
 				WHILE dp # NIL DO
 					IF (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dp.d_name$) < LEN(info.name)) THEN
 						fname := ss + "/" + dp.d_name;
-						res := LinLibc.__xstat(3, fname, buf); (* macro expansion of "stat" *)
+						res := LinLibc.stat(fname, buf); (* Shiryaev A. V.: OpenBSD *)
 						ModeToAttr(buf.st_mode, attr, isDir);
 						IF ~isDir THEN	
 							info := first; last := NIL; s := dp.d_name$;
@@ -1039,7 +1039,7 @@ MODULE HostFiles;
 					WHILE dp # NIL DO
 						IF (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dp.d_name$) < LEN(info.name)) THEN
 							fname := ss + "/" + dp.d_name;
-							res := LinLibc.__xstat(3, fname, buf); (* macro expansion of "stat" *)
+							res := LinLibc.stat(fname, buf); (* Shiryaev A. V.: OpenBSD *)
 							ModeToAttr(buf.st_mode, attr, isDir);
 							IF ~isDir THEN	
 								info := first; last := NIL; s := dp.d_name$;
@@ -1093,7 +1093,7 @@ MODULE HostFiles;
 				WHILE dp # NIL DO
 					IF (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dp.d_name$) < LEN(info.name)) THEN
 						fname := ss + "/" + dp.d_name;
-						res := LinLibc.__xstat(3, fname, buf); (* macro expansion of "stat" *)
+						res := LinLibc.stat(fname, buf); (* Shiryaev A. V.: OpenBSD *)
 						ModeToAttr(buf.st_mode, attr, isDir);
 						IF isDir THEN	
 							info := first; last := NIL; s := dp.d_name$;
@@ -1119,7 +1119,7 @@ MODULE HostFiles;
 					WHILE dp # NIL DO
 						IF (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dp.d_name$) < LEN(info.name)) THEN
 							fname := ss + "/" + dp.d_name;
-							res := LinLibc.__xstat(3, fname, buf); (* macro expansion of "stat" *)
+							res := LinLibc.stat(fname, buf); (* Shiryaev A. V.: OpenBSD *)
 							ModeToAttr(buf.st_mode, attr, isDir);
 							IF isDir THEN	
 								info := first; last := NIL; s := dp.d_name$;

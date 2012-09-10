@@ -1,6 +1,6 @@
 MODULE LinConsole;
 
-	(* THIS IS TEXT COPY OF OpenBUGS Lin/Mod/Console.odc *)
+	(* THIS IS TEXT COPY OF Obsd.Console.odc *)
 	(* DO NOT EDIT *)
 
 	IMPORT
@@ -28,7 +28,7 @@ MODULE LinConsole;
 			i: INTEGER;
 			str: POINTER TO ARRAY [untagged] OF SHORTCHAR; 
 	BEGIN
-		str := LinLibc.fgets(ss, strLen, LinLibc.stdin);
+		str := LinLibc.fgets(ss, strLen, SYSTEM.ADR(LinLibc.__sF[0])); (* Shiryaev A. V.: OpenBSD *)
 		IF (str = NIL) THEN 
 			(* if end of file, then ss is not changed by fgets and NIL is returned. 
 			    We return an empty string here *)

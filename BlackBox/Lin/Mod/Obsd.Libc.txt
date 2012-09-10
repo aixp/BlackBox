@@ -453,9 +453,19 @@ MODULE LinLibc ["libc.so.66.0"];
 
 		time_t* = INTEGER; (* OpenBSD 5.2 /usr/include/i386/_types.h: 32-bit *)
 
+		FILE = ARRAY [untagged] 88 OF BYTE; (* OpenBSD 5.2 /usr/include/stdio.h *)
+
 	VAR
-		(* timezone*: INTEGER; (* seconds from GMT *) *) (* OpenBSD *)
-		stdin*, stdout*, stderr* : PtrFILE; (* OpenBSD: wrapper *)
+		(* timezone*: INTEGER; (* seconds from GMT *) *) (* OpenBSD: not present *)
+		(* stdin*, stdout*, stderr* : PtrFILE; (* OpenBSD: not present *) *)
+
+		(* OpenBSD: stdin, stdout, stderr *)
+			__sF*: ARRAY [untagged] 3 OF FILE; (* OpenBSD 5.2 /usr/include/stdio.h *)
+			(*
+				stdin = SYSTEM.ADR(__sF[0])
+				stdout = SYSTEM.ADR(__sF[1])
+				stderr = SYSTEM.ADR(__sF[2])
+			*)
 
 	PROCEDURE [ccall] calloc* (nmemb, size: size_t): PtrVoid;
 	PROCEDURE [ccall] clock* (): clock_t;
@@ -513,11 +523,11 @@ MODULE LinLibc ["libc.so.66.0"];
 	(* PROCEDURE [ccall] sigsetjmp* ["__sigsetjmp"] (VAR env: sigjmp_buf; savemask: INTEGER): INTEGER; *)
 	PROCEDURE [ccall] sigsetjmp* (VAR env: sigjmp_buf; savemask: INTEGER): INTEGER; (* OpenBSD *)
 
-(*
-	PROCEDURE [ccall] stat* (filename: PtrSTR; VAR buf: stat_t): INTEGER;   stat is a macro and expands to __xstat(3, filename, buf)
-*)
-	(* OpenBSD: wrapper *)
+	(* OpenBSD *)
+	PROCEDURE [ccall] stat* (filename: PtrSTR; VAR buf: stat_t): INTEGER;  (* stat is a macro and expands to __xstat(3, filename, buf) *)
+(* OpenBSD: __xstat not present
 	PROCEDURE [ccall] __xstat* (version: INTEGER; filename: PtrSTR; VAR buf: stat_t): INTEGER;
+*)
 
 	PROCEDURE [ccall] strftime* (s: PtrSTR; max: size_t; format: PtrSTR; ptm: tm): size_t;
 	PROCEDURE [ccall] time* (VAR [nil] t: time_t): time_t;
