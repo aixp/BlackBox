@@ -1,10 +1,10 @@
-all: lindev BlackBox libdlobsdwrap.so
+all: libdlobsdwrap.so lindev BlackBox
 
 BlackBox: BlackBox.c
-	${CC} ${CFLAGS} -O0 -g -o ${.TARGET} ${.ALLSRC} -L. -lBB -Wl,-E -pthread
+	${CC} ${CFLAGS} -O0 -g -o ${.TARGET} ${.ALLSRC} -L. -lBB -Wl,-E -pthread -ldlobsdwrap
 
 lindev: BlackBox1.c
-	${CC} ${CFLAGS} -O0 -g -o ${.TARGET} ${.ALLSRC} -L . -lBB0
+	${CC} ${CFLAGS} -O0 -g -o ${.TARGET} ${.ALLSRC} -L . -lBB0 -ldlobsdwrap
 
 libdlobsdwrap.so: libdlobsdwrap.c
 	${CC} ${CFLAGS} -O0 -g -o ${.TARGET} ${.ALLSRC} -fPIC -shared
