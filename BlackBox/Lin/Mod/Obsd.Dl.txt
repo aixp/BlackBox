@@ -1,4 +1,4 @@
-MODULE LinDl ["libc.so.66.0"];
+MODULE LinDl ["libdlobsdwrap.so"];
 
 	(*
 		A. V. Shiryaev, 2012.09
@@ -26,10 +26,10 @@ MODULE LinDl ["libc.so.66.0"];
 		HANDLE* = PtrVoid;
 		PtrSTR* = POINTER TO ARRAY [untagged] OF SHORTCHAR;
 
-	PROCEDURE [ccall] dlopen* (file: PtrSTR; mode: INTEGER): HANDLE;
-	PROCEDURE [ccall] dlclose* (handle: HANDLE): INTEGER;
-	PROCEDURE [ccall] dlsym* (handle: HANDLE; symbol: PtrSTR): HANDLE;
+	PROCEDURE [ccall] dlopen* ["__dlopen"] (file: PtrSTR; mode: INTEGER): HANDLE;
+	PROCEDURE [ccall] dlclose* ["__dlclose"] (handle: HANDLE): INTEGER;
+	PROCEDURE [ccall] dlsym* ["__dlsym"] (handle: HANDLE; symbol: PtrSTR): HANDLE;
 
-	PROCEDURE [ccall] dlerror* (): PtrSTR;
+	PROCEDURE [ccall] dlerror* ["__dlerror"] (): PtrSTR;
 
 END LinDl.
