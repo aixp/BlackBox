@@ -2474,6 +2474,7 @@ L1:
 			IF (i # LinLibc.SIGKILL)
 				& (i # LinLibc.SIGSTOP)
 				& (i # LinLibc.SIGWINCH)
+				& (i # LinLibc.SIGTHR) (* A. V. Shiryaev: OpenBSD -pthread *)
 			THEN
 				IF LinLibc.sigaction(i, sa, old) # 0 THEN Msg("failed to install signal"); Int(i) END;
 			END

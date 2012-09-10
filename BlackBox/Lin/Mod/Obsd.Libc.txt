@@ -66,6 +66,7 @@ MODULE LinLibc ["libc.so.66.0"];
 		SIGUSR1* = 30; (* user defined signal 1 *)
 		SIGUSR2* = 31; (* user defined signal 2 *)
 		SIGWINCH* = 28; (* window size changes *)
+		SIGTHR* = 32; (* thread library AST *)
 
 
 		(* Bits in `sa_flags'.  *)

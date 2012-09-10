@@ -44,6 +44,8 @@ Files:
 					CLOCKS_PER_SEC related
 				Kernel.InitModule
 					mprotect added
+				Kernel.InstallSignals:
+					do not install signal handler for SIGTHR (when executable linked with -pthread)
 		Lin/Mod/Obsd.linHostFiles.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc: 
 				size_t specific
