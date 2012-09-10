@@ -1,4 +1,4 @@
-all: libdlobsdwrap.so lindev BlackBox
+all: libdlobsdwrap.so lindev BlackBox BlackBox-dl
 
 # libdlobsdwrap.so: universal method of correct access to dl* functions
 #	in case of dynamic loading of libBB*.so "ld.so" in LibDl may be used instead of "libc.so", but not in case of static linking
@@ -8,6 +8,9 @@ all: libdlobsdwrap.so lindev BlackBox
 BlackBox: BlackBox.c
 	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -L. -lBB -Wl,-E -pthread -ldlobsdwrap
 
+BlackBox-dl: BlackBox-dl.c
+	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -pthread
+
 lindev: BlackBox1.c
 	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -L . -lBB0 -ldlobsdwrap
 
@@ -15,4 +18,4 @@ libdlobsdwrap.so: libdlobsdwrap.c
 	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -fPIC -shared
 
 clean:
-	rm -f lindev BlackBox libdlobsdwrap.so
+	rm -f lindev BlackBox BlackBox-dl libdlobsdwrap.so

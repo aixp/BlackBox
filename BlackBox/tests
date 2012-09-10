@@ -11,7 +11,7 @@ ConsCompiler.Compile('Obx/Mod', 'Pi.odc')
 # what is source of errors???
 ConsCompiler.Compile('', 'HostFonts.txt')
 
-DevElfLinker.LinkDll libBB.so := Kernel+ Files HostFiles StdLoader
+DevElfLinker.LinkDll libBB.so := Kernel+ Kernel_so_init# Files HostFiles StdLoader
 DATA
 
 ./run-BlackBox <<DATA

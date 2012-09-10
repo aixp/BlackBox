@@ -1,4 +1,4 @@
-#include <stdio.h>
+// #include <stdio.h>
 
 // extern void SetKernelBaseStack (int);
 extern void Init (void);
