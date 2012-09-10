@@ -14,8 +14,7 @@ ConsCompiler.Compile('', 'HostFonts.txt')
 DevElfLinker.LinkDll libBB.so := Kernel+ Files HostFiles StdLoader
 DATA
 
-# what is source of TRAP???
 ./run-BlackBox <<DATA
 DevCompiler.CompileThis DevLinker
-#DevLinker.LinkDll BlackBox.exe := Kernel$+ Files HostFiles StdLoader
+DevLinker.LinkDll BlackBox.exe := Kernel$+ Files HostFiles StdLoader
 DATA
