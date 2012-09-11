@@ -68,7 +68,7 @@ Files:
 	new:
 		Cons/Mod
 			Interp.odc: console interpreter
-			Compiler.odc
+			Compiler.odc: console interface to Dev compiler
 		libBB.so: compiled and linked OpenBSD shared library to run BlackBox
 		libBB0.so: compiled and linked OpenBSD shared library to run simple development interpreter
 

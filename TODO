@@ -1,6 +1,7 @@
 By priority:
-	ConsCompiler can not compile HostFonts.txt
-		?????
+	ConsCompiler:
+		interface similar to DevCompiler
+		txt files Converter
 
 	Services
 
