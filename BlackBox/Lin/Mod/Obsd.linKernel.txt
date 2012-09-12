@@ -535,8 +535,12 @@ L1:
 		VAR t: INTEGER;
 	BEGIN
 		(* A. V. Shiryaev *)
-		(* processor time to milliseconds *)
-		t := (1000 * LinLibc.clock()) DIV LinLibc.CLOCKS_PER_SEC;
+			(* processor time to milliseconds *)
+				(* incorrect (integers overflows on multiplication) *)
+					(* t := (1000 * LinLibc.clock()) DIV LinLibc.CLOCKS_PER_SEC; *)
+				(* ok *)
+					ASSERT(LinLibc.CLOCKS_PER_SEC = 100);
+					t := 10 * LinLibc.clock();
 
 		IF t < told THEN INC(shift) END;
 		told := t;
@@ -2551,7 +2555,12 @@ BEGIN
 		IF bootInfo # NIL THEN
 			modList := bootInfo.modList; (* boot loader initializes the bootInfo struct *)
 			SYSTEM.GETREG(SP, baseStack); (* TODO: Check that this is ok. *)
-			SetOpts;
+			
+			(* A. V. Shiryaev, 2012.09 *)
+				(* SetOpts; *)
+				static := init IN modList.opts;
+				inDll := dll IN modList.opts;
+			
 			SetCmdLine
 		ELSE
 			SYSTEM.GETREG(ML, modList);	(* linker loads module list to BX *)
