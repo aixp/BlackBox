@@ -8,7 +8,6 @@ ObxPi.WritePi(1000)
 ConsCompiler.Compile('Obx/Mod', 'Hello0.odc')
 ConsCompiler.Compile('Obx/Mod', 'Pi.odc')
 
-# what is source of errors???
 ConsCompiler.Compile('', 'HostFonts.txt')
 
 DevElfLinker.LinkDll libBB.so := Kernel+ Kernel_so_init# Files HostFiles StdLoader
