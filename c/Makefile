@@ -6,13 +6,13 @@ all: libdlobsdwrap.so lindev BlackBox BlackBox-dl
 
 # -pthread required to dlopen libraries that depends on pthread
 BlackBox: BlackBox.c
-	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -L. -lBB -Wl,-E -pthread -ldlobsdwrap
+	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -L. -lBB -pthread
 
 BlackBox-dl: BlackBox-dl.c
 	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -pthread
 
 lindev: BlackBox1.c
-	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -L . -lBB0 -ldlobsdwrap
+	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -L . -lBB0
 
 libdlobsdwrap.so: libdlobsdwrap.c
 	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -fPIC -shared
