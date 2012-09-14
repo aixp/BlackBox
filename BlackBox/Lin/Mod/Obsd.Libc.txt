@@ -175,17 +175,29 @@ MODULE LinLibc ["libc.so.66.0"];
 		PROT_WRITE* = {1}; (* pages can be written *)
 		PROT_EXEC* = {2}; (* pages can be executed *)
 
+		(* OpenBSD 5.2 /usr/include/sys/mman.h *)
+		MAP_FILE* = {}; (* map from file (default) *)
+		MAP_ANON* = {12}; (* allocated from memory, swap space *)
+		MAP_FIXED* = {4}; (* map addr must be exactly as requested *)
+		MAP_HASSEMAPHORE* = {9}; (* region may contain semaphores *)
+		MAP_INHERIT* = {7}; (* region is retained after exec *)
+		MAP_PRIVATE* = {1}; (* changes are private *)
+		MAP_SHARED* = {0}; (* share changes *)
+		MAP_TRYFIXED* = {10}; (* attempt hint address, even within heap *)
+		MAP_COPY* = {2}; (* "copy" region at mmap time *)
+
 		(* OpenBSD 5.2 /usr/include/i386/param.h *)
 		PAGE_SHIFT* = 12;
 		PAGE_SIZE* = 4096; (* LSL(1, PAGE_SHIFT) *)
 		PAGE_MASK* = PAGE_SIZE - 1;
+
 
 	TYPE
 		(* OpenBSD OK *)
 		__ftw_func_t* = PROCEDURE (fileName: PtrSTR; VAR [nil] stat: stat_t; flag: INTEGER): INTEGER; (* OpenBSD 5.2: OK *)
 		PtrVoid* = INTEGER;
 		PtrSTR* = POINTER TO ARRAY [untagged] OF SHORTCHAR;
-		PtrWSTR* = POINTER TO ARRAY [untagged] OF CHAR;
+		(* PtrWSTR* = POINTER TO ARRAY [untagged] OF CHAR; *) (* OpenBSD *)
 		PtrInt* = INTEGER;
 		StrArray* = POINTER TO ARRAY [untagged] OF PtrSTR;
 		PtrFILE* = INTEGER;
@@ -203,6 +215,7 @@ MODULE LinLibc ["libc.so.66.0"];
 		CmpFunc* = PROCEDURE (VAR [nil] dirent1, dirent2: PtrDirent): INTEGER; (* OpenBSD 5.2: OK *)
 
 		size_t* = INTEGER; (* should be unsigned int *) (* OpenBSD 5.2: /usr/include/i386/_types.h: 32-bit *)
+		ssize_t* = INTEGER; (* signed int *) (* OpenBSD 5.2: /usr/include/i386/_types.h: 32-bit *)
 
 		sigjmp_buf* = RECORD [untagged] (* OpenBSD 5.2 *)
 			buf*: jmp_buf;
@@ -456,6 +469,9 @@ MODULE LinLibc ["libc.so.66.0"];
 
 		FILE = ARRAY [untagged] 88 OF BYTE; (* OpenBSD 5.2 /usr/include/stdio.h *)
 
+		wchar_t* = INTEGER; (* OpenBSD 5.2: 32-bit *)
+		PtrWSTR* = POINTER TO ARRAY [untagged] OF wchar_t;
+
 	VAR
 		(* timezone*: INTEGER; (* seconds from GMT *) *) (* OpenBSD: not present *)
 		(* stdin*, stdout*, stderr* : PtrFILE; (* OpenBSD: not present *) *)
@@ -538,5 +554,21 @@ MODULE LinLibc ["libc.so.66.0"];
 
 	(* OpenBSD *)
 	PROCEDURE [ccall] mprotect* (addr: PtrVoid; len: size_t; prot: SET): INTEGER;
+
+	PROCEDURE [ccall] open* (path: PtrSTR; flags: SET; mode: mode_t): INTEGER;
+	PROCEDURE [ccall] close* (d: INTEGER): INTEGER;
+	PROCEDURE [ccall] read* (d: INTEGER; buf: PtrVoid; nbytes: size_t): ssize_t;
+	PROCEDURE [ccall] write* (d: INTEGER; buf: PtrVoid; nBytes: size_t): ssize_t;
+
+	PROCEDURE [ccall] mmap* (addr: PtrVoid; len: size_t; prot: SET; flags: SET; fd: INTEGER; offset: off_t): PtrVoid;
+	PROCEDURE [ccall] munmap* (addr: PtrVoid; len: size_t): INTEGER;
+
+	PROCEDURE [ccall] getenv* (name: PtrSTR): PtrSTR;
+
+	(* OpenBSD 5.2: Ok *)
+	PROCEDURE [ccall] wctomb* (s: PtrSTR; wchar: wchar_t): INTEGER;
+	PROCEDURE [ccall] wcstombs* (s: PtrSTR; pwcs: PtrWSTR; n: size_t): size_t;
+	PROCEDURE [ccall] mbtowc* (pwc: PtrWSTR; s: PtrSTR; n: size_t): INTEGER;
+	PROCEDURE [ccall] mbstowcs* (pwcs: PtrWSTR; s: PtrSTR; n: size_t): size_t;
 
 END LinLibc.
