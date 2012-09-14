@@ -1237,7 +1237,7 @@ MODULE HostFiles;
 			}
 *)
 		wildcard := "*"; NEW(dir);
-		(*str := Kernel.cmdLine$;*) str := "";
+		str := Kernel.cmdLine$;
 		i := 0; slp := -1;
 		WHILE (str[i] # " ") & (str[i] # 0X) DO 
 			startupDir[i] := str[i]; 

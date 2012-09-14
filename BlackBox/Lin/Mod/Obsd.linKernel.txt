@@ -2503,6 +2503,16 @@ L1:
 		FOR i := 1 TO bootInfo.argc - 1 DO cmdLine := cmdLine + " " + bootInfo.argv[i]END
 	END SetCmdLine;
 	
+	(* A. V. Shiryaev, 2012.09 *)
+	PROCEDURE SetCmdLine2;
+		VAR x: LinLibc.PtrSTR;
+	BEGIN
+		x := LinLibc.getenv("CMDLINE");
+		IF x # NIL THEN
+			cmdLine := x$
+		END
+	END SetCmdLine2;
+	
 	PROCEDURE Init;
 		VAR (*excp: KERNEL32.ExcpFrm; *) t: Type; (*res: COM.RESULT; *) i: INTEGER;
 			env: LinLibc.jmp_buf; res: LONGINT;
@@ -2565,8 +2575,11 @@ BEGIN
 		ELSE
 			SYSTEM.GETREG(ML, modList);	(* linker loads module list to BX *)
 			SYSTEM.GETREG(SP, baseStack);
+
 			static := init IN modList.opts;
 			inDll := dll IN modList.opts;
+
+			SetCmdLine2 (* A. V. Shiryaev, 2012.09 *)
 		END;
 (*
 		dllMem := inDll;

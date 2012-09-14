@@ -37,19 +37,25 @@ Files:
 			Lin/Mod/Kernel_so_init.odc
 	modified:
 		Lin/Mod/Obsd.linKernel.odc:
-			OpenBUGS Lin/Mod/linKernel.odc modified with OpenBSD specific:
-				Kernel.TrapHandler
-					OpenBSD sigcontext related
-				Kernel.Time
-					CLOCKS_PER_SEC related
-				Kernel.InitModule
-					mprotect added
-				Kernel.InstallSignals:
-					do not install signal handler for SIGTHR (when executable linked with -pthread)
+			OpenBUGS Lin/Mod/linKernel.odc:
+				OpenBSD specific:
+					Kernel.TrapHandler
+						OpenBSD sigcontext related
+					Kernel.Time
+						CLOCKS_PER_SEC related
+					Kernel.InitModule
+						mprotect added
+					Kernel.InstallSignals:
+						do not install signal handler for SIGTHR (when executable linked with -pthread)
+				Kernel.cmdLine support:
+					Kernel.INIT (SetCmdLine2)
 		Lin/Mod/Obsd.linHostFiles.odc:
-			OpenBUGS Lin/Mod/linHostFiles.odc: 
-				size_t specific
-				__xstat -> stat
+			OpenBUGS Lin/Mod/linHostFiles.odc:
+				OpenBSD-specific:
+					size_t
+					__xstat -> stat
+				Kernel.cmdLine support:
+					str := "" -> str := Kernel.cmdLine$
 		Lin/Mod/Obsd.Console.odc:
 			OpenBUGS Lin/Mod/Console.odc:
 				stdin -> SYSTEM.ADR(__sF[0])
@@ -57,7 +63,8 @@ Files:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
 		Lin/Mod/Dates.odc:
-			HostDates, thanks to Trurl@oberoncore.ru
+			HostDates, from http://oberoncore.ru/:
+				OpenBSD-specific
 		Lindev/Mod
 			CP*
 				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.
