@@ -1,11 +1,28 @@
 By priority:
+	TRAPs
+
 	ConsCompiler:
 		interface similar to DevCompiler
 		txt files Converter
 
-	Services
+	localization:
+		Kernel.cmdLine:
+			decode (encoding = current locale encoding)
+		LinConsole:
+			encode on printf, encoding = current locale encoding
+			decode on Read, encoding = current locale encoding
+		filenames:
+			HostFiles:
+				store encoded (ARRAY OF SHORTCHAR), encoding = currect locale encoding
+				display decoded (ARRAY OF CHAR)
+				NOTE: Kernel.cmdLine decoded (see ^)
+		txt Converter: encoding should be the same as in Windows HostTextConv?
+
+	handle SIGTERM in server version (when Kernel.Start used)
 
 	Comm
+
+	printing (to PostScript)
 
 	Xhtml
 
