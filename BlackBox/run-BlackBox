@@ -1,4 +1,10 @@
 #!/bin/sh
 
-# env LD_LIBRARY_PATH=. env LD_DEBUG=1 ./BlackBox
-env LD_LIBRARY_PATH=. CMDLINE="${0} `echo ${@}`" ./BlackBox
+rn=`readlink -f "${0}"`
+d=`dirname "${rn}"`
+
+exe="BlackBox"
+appName=${exe}
+
+# export LD_DEBUG=1
+env LD_LIBRARY_PATH="${d}" CMDLINE="${d}/${appName} `echo ${@}`" "${d}"/${exe}
