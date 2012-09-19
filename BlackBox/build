@@ -109,4 +109,6 @@ DATA
 ./run-BlackBox <<DATA
 DevCompiler.CompileThis DevElfLinker16
 DevCompiler.CompileThis ConsCompiler
+
+DevCompiler.CompileThis ObxHello0 ObxPi ObxRandom
 DATA
