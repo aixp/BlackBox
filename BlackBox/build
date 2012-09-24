@@ -3,7 +3,7 @@
 ./run-lindev <<DATA
 LindevCompiler.Compile('Lin/Mod', 'Obsd.Dl.txt')
 LindevCompiler.Compile('Lin/Mod', 'Obsd.Libc.txt')
-LindevCompiler.Compile('Lin/Mod', 'Obsd.linKernel.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.Kernel.txt')
 
 LindevCompiler.Compile('System/Mod', 'Files.txt')
 LindevCompiler.Compile('System/Mod', 'Console.txt')
@@ -96,7 +96,7 @@ LindevCompiler.Compile('', 'HostFonts.txt')
 LindevCompiler.Compile('', 'HostDialog.txt')
 LindevCompiler.Compile('', 'HostWindows.txt')
 # HostDates:
-LindevCompiler.Compile('Lin/Mod', 'Dates.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.Dates.txt')
 
 LindevCompiler.Compile('Cons/Mod', 'Interp.txt')
 

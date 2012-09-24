@@ -36,16 +36,18 @@ Files:
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
 			Lin/Mod/Kernel_so_init.odc
 	modified:
-		Lin/Mod/Obsd.linKernel.odc:
-			OpenBUGS Lin/Mod/linKernel.odc:
+		Lin/Mod/Obsd.Kernel.odc:
+			1.6-rc6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
 				OpenBSD specific:
+					Memory management rewritten (based on mmap)
 					Kernel.TrapHandler
-						OpenBSD sigcontext related
+						OpenBSD sigcontext-specific
 					Kernel.Time
 						CLOCKS_PER_SEC related
 					Kernel.InitModule
-						mprotect added
+						mprotect call added
 					Kernel.InstallSignals:
+						use alternate stack on which signals are to be processed (to catch stack overflow)
 						do not install signal handler for SIGTHR (when executable linked with -pthread)
 				Kernel.cmdLine support:
 					Kernel.INIT (SetCmdLine2)
@@ -62,7 +64,7 @@ Files:
 		Lin/Mod/Obsd.Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
-		Lin/Mod/Dates.odc:
+		Lin/Mod/Obsd.Dates.odc:
 			HostDates, from http://oberoncore.ru/:
 				OpenBSD-specific
 		Lindev/Mod

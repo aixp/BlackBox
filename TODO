@@ -1,6 +1,4 @@
 By priority:
-	TRAPs
-
 	ConsCompiler:
 		interface similar to DevCompiler
 		txt files Converter

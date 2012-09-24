@@ -3,7 +3,7 @@
 ./run-lindev <<DATA
 LindevCompiler.Compile('Lin/Mod', 'Obsd.Dl.txt')
 LindevCompiler.Compile('Lin/Mod', 'Obsd.Libc.txt')
-LindevCompiler.Compile('Lin/Mod', 'Obsd.linKernel.txt')
+LindevCompiler.Compile('Lin/Mod', 'Obsd.Kernel.txt')
 
 LindevCompiler.Compile('System/Mod', 'Files.txt')
 LindevCompiler.Compile('System/Mod', 'Console.txt')
