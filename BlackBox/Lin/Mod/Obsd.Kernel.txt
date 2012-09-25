@@ -450,7 +450,7 @@ MODULE Kernel;
 	BEGIN
 		(* t := WinApi.GetTickCount(); *)
 
-		(* OpenBSD *)
+		(* A. V. Shiryaev: OpenBSD *)
 			ASSERT(Libc.CLOCKS_PER_SEC = 100);
 			t := 10 * Libc.clock();
 
@@ -483,16 +483,7 @@ MODULE Kernel;
 
 	(* -------------------- system memory management --------------------- *)
 
-(*
-	PROCEDURE BZero (adr: Libc.PtrVoid; len: INTEGER);
-	BEGIN
-		WHILE len > 0 DO
-			S.PUT(adr, 0X);
-			INC(adr);
-			DEC(len)
-		END
-	END BZero;
-*)
+	(* A. V. Shiryaev, 2012.09: NOTE: it seems that GC works correctly with positive addesses only *)
 
 	PROCEDURE BZero4 (adr: Libc.PtrVoid; len: INTEGER);
 	BEGIN
@@ -511,44 +502,27 @@ MODULE Kernel;
 		VAR
 			x: Libc.PtrVoid;
 			res: INTEGER;
-(*			n: INTEGER; *)
 	BEGIN
-		Msg("HeapAlloc(calloc)"); Int(size);
-
 		x := Libc.calloc(1, size); (* calloc initialize allocated space to zero *)
-
-(*
-		n := 1000;
-		REPEAT
-			x := Libc.calloc(1, size);
-			DEC(n)
-		UNTIL (n = 0) OR ((x > 0) & (x + size > 0)) OR ((x < 0) & (x + size < 0));
-		ASSERT(n > 0, 108);
-*)
-
-		IF x # Libc.NULL THEN Int(x); Msg("..OK");
+		IF x # Libc.NULL THEN
 			res := Libc.mprotect(x, size, prot);
 			IF res # 0 THEN
 				Libc.free(x);
 				x := Libc.NULL;
-				Msg("HeapAlloc: mprotect failed!");
+				Msg("Kernel.HeapAlloc: mprotect failed!");
 				HALT(100)
 			END
-		ELSE Msg("..FAILED")
 		END;
 		RETURN x
 	END HeapAlloc;
 *)
-
 	PROCEDURE HeapAlloc (adr: Libc.PtrVoid; size: INTEGER; prot: SET): Libc.PtrVoid;
 		VAR x: Libc.PtrVoid;
 	BEGIN
-		(* Msg("HeapAlloc(mmap)"); Int(size); *)
-
 		x := Libc.mmap(adr, size, prot, Libc.MAP_PRIVATE + Libc.MAP_ANON, -1, 0);
-		IF x = Libc.MAP_FAILED THEN (* Msg("..FAILED"); *)
+		IF x = Libc.MAP_FAILED THEN
 			x := Libc.NULL
-		ELSE (* Int(x); Msg("..OK"); *)
+		ELSE
 			BZero4(x, size)
 		END;
 		RETURN x
@@ -558,19 +532,17 @@ MODULE Kernel;
 	PROCEDURE HeapFree (adr: Libc.PtrVoid; size: INTEGER);
 		VAR res: INTEGER;
 	BEGIN
-		Msg("HeapFree(free)"); Int(adr); Int(size);
-
+(*
 		BZero4(adr, size);
 		res := Libc.mprotect(adr, size, Libc.PROT_NONE);
 		ASSERT(res = 0, 100);
+*)
 		Libc.free(adr)
 	END HeapFree;
 *)
 	PROCEDURE HeapFree (adr: Libc.PtrVoid; size: INTEGER);
 		VAR res: INTEGER;
 	BEGIN
-		(* Msg("HeapFree(munmap)"); Int(adr); Int(size); *)
-
 (*
 		BZero4(adr, size);
 		res := Libc.mprotect(adr, size, Libc.PROT_NONE);
@@ -587,7 +559,6 @@ MODULE Kernel;
 		VAR adr: INTEGER;
 			allocated: INTEGER;
 	BEGIN
-		(* Msg("AllocHeapMem"); Int(size); *)
 		INC(size, 16);
 		ASSERT(size > 0, 100); adr := 0;
 		IF size < N THEN adr := HeapAlloc(1, N, prot) END;
@@ -596,7 +567,6 @@ MODULE Kernel;
 		ELSE
 			c := S.VAL(Cluster, (adr + 15) DIV 16 * 16); c.max := adr;
 			c.size := allocated - (S.VAL(INTEGER, c) - adr);
-			ASSERT(c.size = allocated, 109);
 			INC(used, c.size); INC(total, c.size)
 		END
 		(* post: (c = NIL) OR (c MOD 16 = 0) & (c.size >= size) *)
@@ -610,7 +580,7 @@ MODULE Kernel;
 
 	PROCEDURE AllocModMem* (descSize, modSize: INTEGER; VAR descAdr, modAdr: INTEGER);
 		CONST
-			prot = Libc.PROT_READ + Libc.PROT_WRITE + Libc.PROT_EXEC;
+			prot = Libc.PROT_READ + Libc.PROT_WRITE (* + Libc.PROT_EXEC *);
 	BEGIN
 		descAdr := HeapAlloc(0, descSize, prot);
 		IF descAdr # 0 THEN
@@ -643,19 +613,8 @@ MODULE Kernel;
 	END IsReadable;
 *)
 
-(* It does not work IN OpenBSD 5.2 (returns TRUE instead of FALSE in test cases)
-	PROCEDURE IsReadable* (from, to: INTEGER): BOOLEAN;
-		(* check wether memory between from (incl.) and to (excl.) may be read *)
-		VAR	res: INTEGER; len: INTEGER;
-	BEGIN
-		DEC(from, from MOD pageSize); len := to - from;
-		res := Libc.madvise(from, len, Libc.MADV_NORMAL);
-		IF res = 0 THEN Msg("IsReadable") ELSE Msg("~IsReadable") END;
-		RETURN res = 0
-	END IsReadable;
-*)
-
-	(* NOTE: TRUE result DOES NOT GUARANTEE what mem region is REALLY accessible! (implementation limit) *)
+	(* NOTE:
+		TRUE result DOES NOT GUARANTEE what mem region is REALLY accessible! (implementation limit) *)
 	PROCEDURE IsReadable* (from, to: INTEGER): BOOLEAN;
 		(* check wether memory between from (incl.) and to (excl.) may be read *)
 		VAR nullfd: INTEGER;
@@ -686,7 +645,6 @@ MODULE Kernel;
 
 		RETURN res
 	END IsReadable;
-
 
 	(* --------------------- NEW implementation (portable) -------------------- *)
 
@@ -857,7 +815,7 @@ MODULE Kernel;
 
 	PROCEDURE InitModule (mod: Module);	(* initialize linked modules *)
 		VAR body: Command;
-			res, errno: INTEGER;
+			res: INTEGER; errno: INTEGER;
 	BEGIN
 		IF ~(dyn IN mod.opts) & (mod.next # NIL) & ~(init IN mod.next.opts) THEN InitModule(mod.next) END;
 		IF ~(init IN mod.opts) THEN
@@ -865,24 +823,13 @@ MODULE Kernel;
 			INCL(mod.opts, init);
 			actual := mod;
 
-			(* A. V. Shiryaev: OpenBSD-specific *)
-				(*
-				res := LinLibc.mprotect(
-					(mod.code DIV LinLibc.PAGE_SIZE) * LinLibc.PAGE_SIZE,
-					((mod.csize + mod.code MOD LinLibc.PAGE_SIZE - 1) DIV LinLibc.PAGE_SIZE) * LinLibc.PAGE_SIZE + LinLibc.PAGE_SIZE,
-					LinLibc.PROT_READ + LinLibc.PROT_WRITE + LinLibc.PROT_EXEC);
-				*)
+			(* A. V. Shiryaev: Allow execution on code pages *)
 				res := Libc.mprotect(mod.code, mod.csize,
 					Libc.PROT_READ + Libc.PROT_WRITE + Libc.PROT_EXEC);
 				IF res = -1 THEN
 					S.GET( Libc.__errno_location(), errno );
-
-					res := Libc.printf("ERROR: Kernel.InitModule('"); res := Libc.printf(mod.name);
-					res := Libc.printf("'): mprotect("); Int(mod.code);
-					res := Libc.printf(", "); Int(mod.csize);
-					res := Libc.printf(", R|W|E) failed: errno = "); Int(errno);
-					res := Libc.printf(0AX);
-					
+					Msg("ERROR: Kernel.InitModule: mprotect failed!");
+					Msg(mod.name$); Int(mod.code); Int(mod.csize); Int(errno);
 					HALT(100)
 				ELSE ASSERT(res = 0)
 				END;
@@ -1842,8 +1789,7 @@ MODULE Kernel;
 		FLDCW
 	END InitFpu;
 
-	(* A. V. Shiryaev *)
-	(* show extended trap information *)
+	(* A. V. Shiryaev: Show extended trap information (OpenBSD) *)
 	PROCEDURE ShowTrap (sig: INTEGER; siginfo: Libc.Ptrsiginfo_t; context: Libc.Ptrucontext_t);
 
 		PROCEDURE WriteChar (c: SHORTCHAR);
@@ -1934,15 +1880,16 @@ MODULE Kernel;
 		stack := baseStack;
 
 		(* A. V. Shiryaev *)
-			ShowTrap(sig, siginfo, context);
 			(*
 			sp := context.uc_mcontext.gregs[7]; (* TODO: is the stack pointer really stored in register 7? *)
 			fp := context.uc_mcontext.gregs[6]; (* TODO: is the frame pointer really stored in register 6? *)
 			pc := context.uc_mcontext.gregs[14]; (* TODO: is the pc really stored in register 14? *)
 			*)
-			sp := context.sc_esp; fp := context.sc_ebp; pc := context.sc_eip;
 			(* val := siginfo.si_addr; *)
-			val := siginfo.si_pid; (* XXX *)
+			(* OpenBSD *)
+				ShowTrap(sig, siginfo, context);
+				sp := context.sc_esp; fp := context.sc_ebp; pc := context.sc_eip;
+				val := siginfo.si_pid; (* XXX *)
 
 	(*
 		Int(sig); Int(siginfo.si_signo); Int(siginfo.si_code); Int(siginfo.si_errno);
@@ -2020,14 +1967,17 @@ MODULE Kernel;
 		VAR sa, old: Libc.sigaction_t; res, i: INTEGER;
 			sigstk: Libc.sigaltstack_t;
 	BEGIN
-		(* Set alternative stack on which signals are to be processed *)
-			sigstk.ss_sp := Libc.malloc(sigStackSize);
+		(* A. V. Shiryaev: Set alternative stack on which signals are to be processed *)
+			sigstk.ss_sp := Libc.calloc(1, sigStackSize);
 			IF sigstk.ss_sp # Libc.NULL THEN
 				sigstk.ss_size := sigStackSize;
 				sigstk.ss_flags := 0;
 				res := Libc.sigaltstack(sigstk, NIL);
-				IF res # 0 THEN Msg("ERROR: sigaltstack failed") END
-			ELSE Msg("ERROR: malloc(SIGSTKSIZE) failed")
+				IF res # 0 THEN Msg("ERROR: Kernel.InstallSignals: sigaltstack failed!");
+					Libc.exit(1)
+				END
+			ELSE Msg("ERROR: malloc(SIGSTKSIZE) failed");
+				Libc.exit(1)
 			END;
 
 		sa.sa_sigaction := TrapHandler;
@@ -2116,12 +2066,6 @@ BEGIN
 		END;
 		static := init IN modList.opts;
 		inDll := dll IN modList.opts;
-
-(*
-		IF static THEN Msg("static") ELSE Msg("~static") END;
-		IF inDll THEN Msg("inDll") ELSE Msg("~inDll") END;
-*)
-
 		Init
 	END
 CLOSE
