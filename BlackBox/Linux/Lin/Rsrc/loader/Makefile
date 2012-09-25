@@ -12,7 +12,7 @@ BlackBox: BlackBox.c
 	${CC} ${CFLAGS} -o $@ $^ -L. -lBB
 
 BlackBox-dl: BlackBox-dl.c
-	${CC} ${CFLAGS} -o $@ $^
+	${CC} ${CFLAGS} -o $@ $^ -ldl
 
 lindev: BlackBox1.c
 	${CC} ${CFLAGS} -o $@ $^ -L . -lBB0
