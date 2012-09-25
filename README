@@ -5,7 +5,7 @@ Some significant parts taken from OpenBUGS (http://www.openbugs.info/)
 
 How to build:
 	compile loader executable (BlackBox itself and simple interpreter):
-		libBB*.so must be present (can be built from Windows)
+		`uname -s`/libBB*.so must be present (can be built from Windows)
 
 		cd BlackBox/`uname -s`/Lin/Rsrc/loader; make
 
