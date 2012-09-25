@@ -1,9 +1,9 @@
 #!/bin/sh
 
 ./run-lindev <<DATA
-LindevCompiler.Compile('Lin/Mod', 'Obsd.Dl.txt')
-LindevCompiler.Compile('Lin/Mod', 'Obsd.Libc.txt')
-LindevCompiler.Compile('Lin/Mod', 'Obsd.Kernel.txt')
+LindevCompiler.Compile('Lin/Mod', 'Dl.txt')
+LindevCompiler.Compile('Lin/Mod', 'Libc.txt')
+LindevCompiler.Compile('Lin/Mod', 'Kernel.txt')
 
 LindevCompiler.Compile('System/Mod', 'Files.txt')
 LindevCompiler.Compile('System/Mod', 'Console.txt')
@@ -12,8 +12,8 @@ LindevCompiler.Compile('System/Mod', 'Strings.txt')
 LindevCompiler.Compile('System/Mod', 'Meta.txt')
 LindevCompiler.Compile('System/Mod', 'Dialog.txt')
 
-LindevCompiler.Compile('Lin/Mod', 'Obsd.Console.txt')
-LindevCompiler.Compile('Lin/Mod', 'Obsd.linHostFiles.txt')
+LindevCompiler.Compile('Lin/Mod', 'Console.txt')
+LindevCompiler.Compile('Lin/Mod', 'linHostFiles.txt')
 
 LindevCompiler.Compile('System/Mod', 'Stores.txt')
 LindevCompiler.Compile('System/Mod', 'Converters.txt')
@@ -96,7 +96,7 @@ LindevCompiler.Compile('', 'HostFonts.txt')
 LindevCompiler.Compile('', 'HostDialog.txt')
 LindevCompiler.Compile('', 'HostWindows.txt')
 # HostDates:
-LindevCompiler.Compile('Lin/Mod', 'Obsd.Dates.txt')
+LindevCompiler.Compile('Lin/Mod', 'Dates.txt')
 
 LindevCompiler.Compile('Cons/Mod', 'Interp.txt')
 

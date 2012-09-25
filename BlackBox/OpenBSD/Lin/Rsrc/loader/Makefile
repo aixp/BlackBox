@@ -1,3 +1,11 @@
+# This is BSD Makefile
+#    BSD       GNU
+# ${.TARGET}    $@
+# ${.ALLSRC}    $^
+# ${.IMPSRC}    $<
+
+CFLAGS += -Wall -O0 -g
+
 all: libdlobsdwrap.so lindev BlackBox BlackBox-dl
 
 # libdlobsdwrap.so: universal method of correct access to dl* functions
@@ -6,16 +14,16 @@ all: libdlobsdwrap.so lindev BlackBox BlackBox-dl
 
 # -pthread required to dlopen libraries that depends on pthread
 BlackBox: BlackBox.c
-	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -L. -lBB -pthread
+	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -L. -lBB -pthread
 
 BlackBox-dl: BlackBox-dl.c
-	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -pthread
+	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -pthread
 
 lindev: BlackBox1.c
-	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -L . -lBB0
+	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -L . -lBB0
 
 libdlobsdwrap.so: libdlobsdwrap.c
-	${CC} ${CFLAGS} -Wall -O0 -g -o ${.TARGET} ${.ALLSRC} -fPIC -shared
+	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -fPIC -shared
 
 clean:
 	rm -f lindev BlackBox BlackBox-dl libdlobsdwrap.so

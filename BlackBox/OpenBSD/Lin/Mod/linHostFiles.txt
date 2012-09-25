@@ -1,6 +1,6 @@
 MODULE HostFiles;
 
-	(* THIS IS TEXT COPY OF Obsd.linHostFiles.odc *)
+	(* THIS IS TEXT COPY OF linHostFiles.odc *)
 	(* DO NOT EDIT *)
 
 	IMPORT SYSTEM, Kernel, Files, LinLibc;

@@ -1,6 +1,6 @@
 MODULE HostDates;
 
-	(* THIS IS TEXT COPY OF Obsd.Dates.odc *)
+	(* THIS IS TEXT COPY OF Dates.odc *)
 	(* DO NOT EDIT *)
 
 	IMPORT 

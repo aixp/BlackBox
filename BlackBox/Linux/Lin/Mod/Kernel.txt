@@ -1,10 +1,10 @@
 MODULE Kernel;
 
-	(* THIS IS TEXT COPY OF Obsd.Kernel.odc *)
+	(* THIS IS TEXT COPY OF Kernel.odc *)
 	(* DO NOT EDIT *)
 
 	(* A. V. Shiryaev, 2012.09
-		OpenBSD Kernel
+		Linux Kernel
 		Based on 1.6-rc6 Windows Kernel
 		+ 20120822 Marc changes
 		Some parts taken from OpenBUGS linKernel
@@ -12,7 +12,7 @@ MODULE Kernel;
 		Most Windows-specific code removed
 		Some Windows-specific code commented and marked red
 		Windows COM-specific code re-marked from green to gray
-		OpenBSD(/Linux)-specific code marked green
+		Linux(/OpenBSD)-specific code marked green
 
 		TODO:
 			IsReadable
@@ -261,6 +261,7 @@ MODULE Kernel;
 
 		watcher*: PROCEDURE (event: INTEGER);	(* for debugging *)
 
+		zerofd: INTEGER;
 
 		loopContext: Libc.sigjmp_buf; (* trap return context, if no Kernel.Try has been used. *)
 		currentTryContext: POINTER TO Libc.sigjmp_buf; (* trap return context, if Kernel.Try has been used. *)
@@ -450,9 +451,8 @@ MODULE Kernel;
 	BEGIN
 		(* t := WinApi.GetTickCount(); *)
 
-		(* A. V. Shiryaev: OpenBSD *)
-			ASSERT(Libc.CLOCKS_PER_SEC = 100);
-			t := 10 * Libc.clock();
+		(* Linux *)
+		t := Libc.clock() DIV (Libc.CLOCKS_PER_SECOND DIV 1000); (* processor time to milliseconds *)
 
 		IF t < told THEN INC(shift) END;
 		told := t;
@@ -519,7 +519,7 @@ MODULE Kernel;
 	PROCEDURE HeapAlloc (adr: Libc.PtrVoid; size: INTEGER; prot: SET): Libc.PtrVoid;
 		VAR x: Libc.PtrVoid;
 	BEGIN
-		x := Libc.mmap(adr, size, prot, Libc.MAP_PRIVATE + Libc.MAP_ANON, -1, 0);
+		x := Libc.mmap(adr, size, prot, Libc.MAP_PRIVATE + Libc.MAP_ANON, zerofd, 0);
 		IF x = Libc.MAP_FAILED THEN
 			x := Libc.NULL
 		ELSE
@@ -1789,88 +1789,6 @@ MODULE Kernel;
 		FLDCW
 	END InitFpu;
 
-	(* A. V. Shiryaev: Show extended trap information (OpenBSD) *)
-	PROCEDURE ShowTrap (sig: INTEGER; siginfo: Libc.Ptrsiginfo_t; context: Libc.Ptrucontext_t);
-
-		PROCEDURE WriteChar (c: SHORTCHAR);
-			VAR s: ARRAY [untagged] 2 OF SHORTCHAR;
-		BEGIN
-			s[0] := c; s[1] := 0X;
-			res := Libc.printf(s)
-		END WriteChar;
-
-		PROCEDURE WriteString (s: ARRAY OF SHORTCHAR);
-			VAR res: INTEGER;
-		BEGIN
-			res := Libc.printf(s)
-		END WriteString;
-		
-		PROCEDURE WriteHex (x, n: INTEGER);
-			VAR i, y: INTEGER;
-				s: ARRAY 9 OF SHORTCHAR;
-		BEGIN
-			s[n] := 0X;
-			i := 0 + n - 1;
-			WriteChar("$");
-			WHILE i >= 0 DO
-				y := x MOD 16; x := x DIV 16;
-				IF y > 9 THEN y := y + (ORD("A") - ORD("0") - 10) END;
-				s[i] := SHORT(CHR(y + ORD("0")));
-				DEC(i)
-			END;
-			WriteString(s)
-		END WriteHex;
-
-		PROCEDURE WriteLn;
-		BEGIN
-			WriteChar(0AX)
-		END WriteLn;
-
-		PROCEDURE KV (name: ARRAY OF SHORTCHAR; x: INTEGER);
-		BEGIN
-			WriteString(name); WriteString(" = "); WriteHex(x, 8)
-		END KV;
-
-	BEGIN
-		WriteString("================================"); WriteLn;
-		WriteString("TRAP:"); WriteLn;
-		WriteString("--------------------------------"); WriteLn;
-
-		KV("sig", sig); WriteString(", ");
-		KV("baseStack", baseStack); WriteLn;		
-
-		KV("GS ", context.sc_gs); WriteString(", ");
-		KV("FS ", context.sc_fs); WriteString(", ");
-		KV("ES ", context.sc_es); WriteString(", ");
-		KV("DS ", context.sc_ds); WriteLn;
-
-		KV("EDI", context.sc_edi); WriteString(", ");
-		KV("ESI", context.sc_esi); WriteString(", ");
-		KV("EBP", context.sc_ebp); WriteString(", ");
-		KV("EBX", context.sc_ebx); WriteLn;
-
-		KV("EDX", context.sc_edx); WriteString(", ");
-		KV("ECX", context.sc_ecx); WriteString(", ");
-		KV("EAX", context.sc_eax); WriteString(", ");
-		KV("EIP", context.sc_eip); WriteLn;
-
-		KV("CS", context.sc_cs); WriteString(", ");
-		KV("EFLAGS", context.sc_eflags); WriteString(", ");
-		KV("ESP", context.sc_esp); WriteString(", ");
-		KV("SS", context.sc_ss); WriteLn;
-
-		KV("ONSTACK", context.sc_onstack); WriteString(", ");
-		KV("MASK", context.sc_mask); WriteString(", ");
-		KV("TRAPNO", context.sc_trapno); WriteString(", ");
-		KV("ERR", context.sc_err); WriteLn;
-
-		(* WriteString("--------------------------------"); WriteLn; *)
-
-		(* TODO: show siginfo *)
-
-		WriteString("================================"); WriteLn
-	END ShowTrap;
-
 	PROCEDURE TrapHandler (sig: INTEGER; siginfo: Libc.Ptrsiginfo_t; context: Libc.Ptrucontext_t);
 	BEGIN
 	(*
@@ -1879,17 +1797,10 @@ MODULE Kernel;
 	*)
 		stack := baseStack;
 
-		(* A. V. Shiryaev *)
-			(*
-			sp := context.uc_mcontext.gregs[7]; (* TODO: is the stack pointer really stored in register 7? *)
-			fp := context.uc_mcontext.gregs[6]; (* TODO: is the frame pointer really stored in register 6? *)
-			pc := context.uc_mcontext.gregs[14]; (* TODO: is the pc really stored in register 14? *)
-			*)
-			(* val := siginfo.si_addr; *)
-			(* OpenBSD *)
-				ShowTrap(sig, siginfo, context);
-				sp := context.sc_esp; fp := context.sc_ebp; pc := context.sc_eip;
-				val := siginfo.si_pid; (* XXX *)
+		sp := context.uc_mcontext.gregs[7]; (* TODO: is the stack pointer really stored in register 7? *)
+		fp := context.uc_mcontext.gregs[6]; (* TODO: is the frame pointer really stored in register 6? *)
+		pc := context.uc_mcontext.gregs[14]; (* TODO: is the pc really stored in register 14? *)
+		val := siginfo.si_addr;
 
 	(*
 		Int(sig); Int(siginfo.si_signo); Int(siginfo.si_code); Int(siginfo.si_errno);
@@ -1915,15 +1826,11 @@ MODULE Kernel;
 			| Libc.SIGFPE: 
 				CASE siginfo.si_code OF
 					0: (* TODO: ?????? *)
-						(* A. V. Shiryaev: OpenBSD *)
-							(*
-							IF siginfo.si_int = 8 THEN
-								err := 139
-							ELSIF siginfo.si_int = 0 THEN
-								err := 143
-							END
-							*)
-							err := 143;
+						IF siginfo.si_int = 8 THEN
+							err := 139
+						ELSIF siginfo.si_int = 0 THEN
+							err := 143
+						END
 					| Libc.FPE_INTDIV: err := 139 (* Integer divide by zero.  *)
 					| Libc.FPE_INTOVF: err := 138 (* Integer overflow.  *)
 					| Libc.FPE_FLTDIV: err := 140 (* Floating point divide by zero.  *)
@@ -1962,11 +1869,12 @@ MODULE Kernel;
 	END TrapHandler;
 
 	PROCEDURE InstallSignals*;
-		CONST
-			sigStackSize = Libc.SIGSTKSZ;
+		(* CONST
+			sigStackSize = Libc.SIGSTKSZ; *)
 		VAR sa, old: Libc.sigaction_t; res, i: INTEGER;
-			sigstk: Libc.sigaltstack_t;
+			(* sigstk: Libc.sigaltstack_t; *)
 	BEGIN
+(* Linux: TODO
 		(* A. V. Shiryaev: Set alternative stack on which signals are to be processed *)
 			sigstk.ss_sp := Libc.calloc(1, sigStackSize);
 			IF sigstk.ss_sp # Libc.NULL THEN
@@ -1979,13 +1887,14 @@ MODULE Kernel;
 			ELSE Msg("ERROR: malloc(SIGSTKSIZE) failed");
 				Libc.exit(1)
 			END;
+*)
 
 		sa.sa_sigaction := TrapHandler;
 (*
 		res := LinLibc.sigemptyset(S.ADR(sa.sa_mask));
 *)
 		res := Libc.sigfillset(S.ADR(sa.sa_mask));
-		sa.sa_flags := Libc.SA_ONSTACK + Libc.SA_SIGINFO; (* TrapHandler takes three arguments *)
+		sa.sa_flags := (* Libc.SA_ONSTACK + *) Libc.SA_SIGINFO; (* TrapHandler takes three arguments *)
 		(*
 		IF LinLibc.sigaction(LinLibc.SIGINT, sa, old) # 0 THEN Msg("failed to install SIGINT") END;
 		IF LinLibc.sigaction(LinLibc.SIGILL, sa, old) # 0 THEN Msg("failed to install SIGILL") END;
@@ -1999,7 +1908,6 @@ MODULE Kernel;
 			IF (i # Libc.SIGKILL)
 				& (i # Libc.SIGSTOP)
 				& (i # Libc.SIGWINCH)
-				& (i # Libc.SIGTHR) (* A. V. Shiryaev: OpenBSD -pthread *)
 			THEN
 				IF Libc.sigaction(i, sa, old) # 0 THEN Msg("failed to install signal"); Int(i) END;
 			END
@@ -2009,6 +1917,13 @@ MODULE Kernel;
 	PROCEDURE Init;
 		VAR i: INTEGER;
 	BEGIN
+		(* for mmap *)
+			zerofd := Libc.open("/dev/zero", Libc.O_RDWR, {0..8});
+			IF zerofd < 0 THEN
+				Msg("ERROR: Kernel.Init: can not open /dev/zero!");
+				Libc.exit(1)
+			END;
+
 		InstallSignals; (* init exception handling *)
 		currentTryContext := NIL;
 

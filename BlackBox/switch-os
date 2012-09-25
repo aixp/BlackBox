@@ -1,0 +1,49 @@
+#!/bin/sh
+
+none() {
+	if [ -e System/Mod/Kernel.odc -a ! -h System/Mod/Kernel.odc ]; then
+		echo Kernel.odc modified
+		exit 1
+	fi
+
+	rm -rf \
+		System/Mod/Kernel.odc System/Code/Kernel.ocf System/Sym/Kernel.osf \
+		Code/Kernel.ocf Sym/Kernel.osf \
+		Host Win Lin BlackBox blackbox.exe BlackBox.exe *.so lindev
+}
+
+obsd() {
+	ln -s ../../OpenBSD/Lin/Mod/Kernel.odc System/Mod/Kernel.odc
+	ln -s OpenBSD/Lin
+	ln -s OpenBSD/Host
+	ln -s OpenBSD/libBB.so
+	ln -s OpenBSD/libBB0.so
+	cp OpenBSD/BlackBox .
+	cp OpenBSD/lindev .
+	cp OpenBSD/libdlobsdwrap.so .
+}
+
+lin() {
+	ln -s ../../Linux/Lin/Mod/Kernel.odc System/Mod/Kernel.odc
+	ln -s Linux/Lin
+	ln -s Linux/Host
+	ln -s Linux/libBB.so
+	ln -s Linux/libBB0.so
+	ln -s Linux/BlackBox .
+	ln -s Linux/lindev .
+}
+
+case $1 in
+none)
+	none
+	;;
+OpenBSD)
+	none && obsd
+	;;
+Linux)
+	none && lin
+	;;
+*)
+	echo "usage: `basename $0` ( none | OpenBSD | Linux )"
+	;;
+esac

@@ -1,5 +1,5 @@
 Oberon Microsystems BlackBox Component Builder (http://www.oberon.ch/)
-Port for OpenBSD/i386
+Port for OpenBSD/i386, Linux/i386
 
 Some significant parts taken from OpenBUGS (http://www.openbugs.info/)
 
@@ -7,11 +7,11 @@ How to build:
 	compile loader executable (BlackBox itself and simple interpreter):
 		libBB*.so must be present (can be built from Windows)
 
-		cd c; make
+		cd BlackBox/`uname -s`/Lin/Rsrc/loader; make
 
 	compile self:
 
-		cd BlackBox; ./clean; ./build-lindev; ./build
+		cd BlackBox; ./switch-os `uname -s`; ./clean; ./build-lindev; ./build
 
 Files:
 	original:
@@ -34,9 +34,9 @@ Files:
 			System/Mod/Console.odc
 			Docu/OpenBUGS-License.odc
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
-			Lin/Mod/Kernel_so_init.odc
+			{Linux,OpenBSD}/Lin/Mod/Kernel_so_init.odc
 	modified:
-		Lin/Mod/Obsd.Kernel.odc:
+		OpenBSD/Lin/Mod/Kernel.odc:
 			1.6-rc6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
 				OpenBSD specific:
 					Memory management rewritten (based on mmap)
@@ -51,22 +51,38 @@ Files:
 						do not install signal handler for SIGTHR (when executable linked with -pthread)
 				Kernel.cmdLine support:
 					Kernel.INIT (SetCmdLine2)
-		Lin/Mod/Obsd.linHostFiles.odc:
+		Linux/Lin/Mod/Kernel.odc:
+			OpenBSD/Lin/Mod/Kernel.odc modified for Linux
+		OpenBSD/Lin/Mod/linHostFiles.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				OpenBSD-specific:
 					size_t
 					__xstat -> stat
 				Kernel.cmdLine support:
 					str := "" -> str := Kernel.cmdLine$
-		Lin/Mod/Obsd.Console.odc:
+		Linux/Lin/Mod/linHostFiles.odc:
+			OpenBUGS Lin/Mod/linHostFiles.odc:
+				Kernel.cmdLine support:
+					str := "" -> str := Kernel.cmdLine$
+		OpenBSD/Lin/Mod/Console.odc:
 			OpenBUGS Lin/Mod/Console.odc:
 				stdin -> SYSTEM.ADR(__sF[0])
-		Lin/Mod/Obsd.Libc.txt:
+		Linux/Lin/Mod/Console.odc:
+			OpenBUGS Lin/Mod/Console.odc
+		OpenBSD/Lin/Mod/Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
-		Lin/Mod/Obsd.Dates.odc:
+		Linux/Lin/Mod/Libc.odc:
+			OpenBUGS Lin/Mod/Libc.odc:
+				PROT_*, MAP_* O_* CONSTs added
+				open, close, read, write, mmap, munmap, mprotect, getenv functions added
+		Linux/Lin/Mod/Dl.odc:
+			OpenBUGS Lin/Mod/Dl.odc
+		OpenBSD/Lin/Mod/Dates.odc:
 			HostDates, from http://oberoncore.ru/:
 				OpenBSD-specific
+		Linux/Lin/Mod/Dates.odc:
+			HostDates, from http://oberoncore.ru/
 		Lindev/Mod
 			CP*
 				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.
@@ -78,8 +94,9 @@ Files:
 		Cons/Mod
 			Interp.odc: console interpreter
 			Compiler.odc: console interface to Dev compiler
-		libBB.so: compiled and linked OpenBSD shared library to run BlackBox
-		libBB0.so: compiled and linked OpenBSD shared library to run simple development interpreter
+
+		{OpenBSD,Linux}/libBB.so: compiled and linked shared library to run BlackBox
+		{OpenBSD,Linux}/libBB0.so: compiled and linked shared library to run simple development interpreter
 
 		Views.odc: minimal Views implementation required to compile StdInterpreter
 		StdLog.odc: alternative StdLog implementation to not depend on GUI

@@ -1,9 +1,9 @@
 #!/bin/sh
 
 ./run-lindev <<DATA
-LindevCompiler.Compile('Lin/Mod', 'Obsd.Dl.txt')
-LindevCompiler.Compile('Lin/Mod', 'Obsd.Libc.txt')
-LindevCompiler.Compile('Lin/Mod', 'Obsd.Kernel.txt')
+LindevCompiler.Compile('Lin/Mod', 'Dl.txt')
+LindevCompiler.Compile('Lin/Mod', 'Libc.txt')
+LindevCompiler.Compile('Lin/Mod', 'Kernel.txt')
 
 LindevCompiler.Compile('System/Mod', 'Files.txt')
 LindevCompiler.Compile('System/Mod', 'Console.txt')
@@ -26,8 +26,8 @@ LindevCompiler.Compile('Lindev/Mod', 'CPV486.txt')
 LindevCompiler.Compile('Lindev/Mod', 'Compiler.txt')
 LindevCompiler.Compile('Lindev/Mod', 'ElfLinker16.txt')
 
-LindevCompiler.Compile('Lin/Mod', 'Obsd.Console.txt')
-LindevCompiler.Compile('Lin/Mod', 'Obsd.linHostFiles.txt')
+LindevCompiler.Compile('Lin/Mod', 'Console.txt')
+LindevCompiler.Compile('Lin/Mod', 'linHostFiles.txt')
 
 ### simple dev interpreter (include LindevCompiler and LindevElfLinker)
 
