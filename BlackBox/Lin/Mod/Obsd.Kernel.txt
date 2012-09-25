@@ -9,6 +9,11 @@ MODULE Kernel;
 		+ 20120822 Marc changes
 		Some parts taken from OpenBUGS linKernel
 
+		Most Windows-specific code removed
+		Some Windows-specific code commented and marked red
+		Windows COM-specific code re-marked from green to gray
+		OpenBSD(/Linux)-specific code marked green
+
 		TODO:
 			IsReadable
 			correct cmdLine
@@ -598,13 +603,9 @@ MODULE Kernel;
 	END AllocHeapMem;
 
 	PROCEDURE FreeHeapMem (c: Cluster);
-		VAR adr: Libc.PtrVoid;
-			size: INTEGER;
-			res: INTEGER;
 	BEGIN
 		DEC(used, c.size); DEC(total, c.size);
-		adr := c.max; size := (S.VAL(INTEGER, c) - adr) + c.size;
-		HeapFree(adr, size)
+		HeapFree(c.max, (S.VAL(INTEGER, c) - c.max) + c.size)
 	END FreeHeapMem;
 
 	PROCEDURE AllocModMem* (descSize, modSize: INTEGER; VAR descAdr, modAdr: INTEGER);
@@ -723,6 +724,9 @@ MODULE Kernel;
 		IF (nofdim < 0)OR(nofdim>1FFFFFFCH) THEN RETURN 0 END;(*20120822 Marc*)
 		headSize := 4 * nofdim + 12; fin := FALSE;
 		CASE eltyp OF
+(*
+		| -1: eltyp := S.ADR(IntPtrType); fin := TRUE
+*)
 		| -1: HALT(100)
 		| 0: eltyp := S.ADR(PtrType)
 		| 1: eltyp := S.ADR(Char8Type)
@@ -879,7 +883,7 @@ MODULE Kernel;
 					res := Libc.printf(", R|W|E) failed: errno = "); Int(errno);
 					res := Libc.printf(0AX);
 					
-					(* HALT(100) *)
+					HALT(100)
 				ELSE ASSERT(res = 0)
 				END;
 
@@ -2052,32 +2056,9 @@ MODULE Kernel;
 		END
 	END InstallSignals;
 
-(*
-	PROCEDURE ReserveCrossArea;
-		CONST
-			allocSize = 65536 * 5;
-		VAR x: Libc.PtrVoid;
-			n: INTEGER;
-	BEGIN
-		n := 10000;
-		x := Libc.calloc(1, allocSize);
-		WHILE (n > 0) & (x # Libc.NULL) & ((x > 0) & (x + allocSize > 0) OR (x < 0) & (x + allocSize < 0)) DO
-			Libc.free(x);
-			x := Libc.calloc(1, allocSize);
-			DEC(n)
-		END;
-		IF (n > 0) & (x # Libc.NULL) THEN
-			Msg("CROSS AREA RESERVED")
-		ELSE
-			Msg("CROSS AREA NOT RESERVED")
-		END
-	END ReserveCrossArea;
-*)
-
 	PROCEDURE Init;
 		VAR i: INTEGER;
 	BEGIN
-		(* ReserveCrossArea; *)
 		InstallSignals; (* init exception handling *)
 		currentTryContext := NIL;
 
@@ -2087,9 +2068,6 @@ MODULE Kernel;
 
 (*
 		S.PUTREG(ML, S.ADR(modList));
-*)
-(*
-		WinApi.OutputDebugStringW("BlackBox started");
 *)
 
 		i := N;
