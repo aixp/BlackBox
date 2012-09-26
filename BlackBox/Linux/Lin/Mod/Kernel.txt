@@ -262,6 +262,7 @@ MODULE Kernel;
 		watcher*: PROCEDURE (event: INTEGER);	(* for debugging *)
 
 		zerofd: INTEGER;
+		pageSize: INTEGER;
 
 		loopContext: Libc.sigjmp_buf; (* trap return context, if no Kernel.Try has been used. *)
 		currentTryContext: POINTER TO Libc.sigjmp_buf; (* trap return context, if Kernel.Try has been used. *)
@@ -824,7 +825,10 @@ MODULE Kernel;
 			actual := mod;
 
 			(* A. V. Shiryaev: Allow execution on code pages *)
-				res := Libc.mprotect(mod.code, mod.csize,
+			(* Linux: must be page-aligned *)
+				res := Libc.mprotect(
+					(mod.code DIV pageSize) * pageSize,
+					((mod.csize + mod.code MOD pageSize - 1) DIV pageSize) * pageSize + pageSize,
 					Libc.PROT_READ + Libc.PROT_WRITE + Libc.PROT_EXEC);
 				IF res = -1 THEN
 					S.GET( Libc.__errno_location(), errno );
@@ -1921,6 +1925,12 @@ MODULE Kernel;
 			zerofd := Libc.open("/dev/zero", Libc.O_RDWR, {0..8});
 			IF zerofd < 0 THEN
 				Msg("ERROR: Kernel.Init: can not open /dev/zero!");
+				Libc.exit(1)
+			END;
+		(* for mprotect *)
+			pageSize := Libc.sysconf(Libc._SC_PAGESIZE);
+			IF pageSize < 0 THEN
+				Msg("ERROR: Kernel.Init: pageSize < 0!");
 				Libc.exit(1)
 			END;
 

@@ -237,6 +237,8 @@ MODULE LinLibc ["libc.so.6"];
 		O_WRONLY* = {0} ;	(* Open write-only *)
 		O_RDWR* = {1} ;	(* Open read/write *)
 
+		_SC_PAGESIZE* = 30;
+
 	TYPE 
 		__ftw_func_t* = PROCEDURE (fileName: PtrSTR; VAR [nil] stat: stat_t; flag: INTEGER): INTEGER;
 		PtrVoid* = INTEGER;
@@ -448,5 +450,7 @@ MODULE LinLibc ["libc.so.6"];
 	PROCEDURE [ccall] mprotect* (addr: PtrVoid; len: size_t; prot: SET): INTEGER;
 
 	PROCEDURE [ccall] getenv* (name: PtrSTR): PtrSTR;
+
+	PROCEDURE [ccall] sysconf* (name: INTEGER): INTEGER;
 
 END LinLibc.
