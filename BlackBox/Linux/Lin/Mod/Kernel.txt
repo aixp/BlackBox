@@ -1913,7 +1913,7 @@ MODULE Kernel;
 				& (i # Libc.SIGSTOP)
 				& (i # Libc.SIGWINCH)
 			THEN
-				IF Libc.sigaction(i, sa, old) # 0 THEN Msg("failed to install signal"); Int(i) END;
+				IF Libc.sigaction(i, sa, old) # 0 THEN (* Msg("failed to install signal"); Int(i) *) END;
 			END
 		END
 	END InstallSignals;

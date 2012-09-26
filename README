@@ -52,7 +52,13 @@ Files:
 				Kernel.cmdLine support:
 					Kernel.INIT (SetCmdLine2)
 		Linux/Lin/Mod/Kernel.odc:
-			OpenBSD/Lin/Mod/Kernel.odc modified for Linux
+			OpenBSD/Lin/Mod/Kernel.odc modified for Linux:
+				Time*
+				TrapHandler
+				mmap: use "/dev/zero" device instead of -1
+				mprotect addresses must be page-aligned
+				do not show warning message if signal install failed
+				sigaltstack
 		OpenBSD/Lin/Mod/linHostFiles.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				OpenBSD-specific:
