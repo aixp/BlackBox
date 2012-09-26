@@ -1873,12 +1873,12 @@ MODULE Kernel;
 	END TrapHandler;
 
 	PROCEDURE InstallSignals*;
-		(* CONST
-			sigStackSize = Libc.SIGSTKSZ; *)
+		CONST
+			sigStackSize = Libc.SIGSTKSZ;
 		VAR sa, old: Libc.sigaction_t; res, i: INTEGER;
-			(* sigstk: Libc.sigaltstack_t; *)
+			sigstk: Libc.stack_t;
+			errno: INTEGER;
 	BEGIN
-(* Linux: TODO
 		(* A. V. Shiryaev: Set alternative stack on which signals are to be processed *)
 			sigstk.ss_sp := Libc.calloc(1, sigStackSize);
 			IF sigstk.ss_sp # Libc.NULL THEN
@@ -1886,19 +1886,20 @@ MODULE Kernel;
 				sigstk.ss_flags := 0;
 				res := Libc.sigaltstack(sigstk, NIL);
 				IF res # 0 THEN Msg("ERROR: Kernel.InstallSignals: sigaltstack failed!");
+					S.GET( Libc.__errno_location(), errno );
+					Int(errno);
 					Libc.exit(1)
 				END
 			ELSE Msg("ERROR: malloc(SIGSTKSIZE) failed");
 				Libc.exit(1)
 			END;
-*)
 
 		sa.sa_sigaction := TrapHandler;
 (*
 		res := LinLibc.sigemptyset(S.ADR(sa.sa_mask));
 *)
 		res := Libc.sigfillset(S.ADR(sa.sa_mask));
-		sa.sa_flags := (* Libc.SA_ONSTACK + *) Libc.SA_SIGINFO; (* TrapHandler takes three arguments *)
+		sa.sa_flags := Libc.SA_ONSTACK + Libc.SA_SIGINFO; (* TrapHandler takes three arguments *)
 		(*
 		IF LinLibc.sigaction(LinLibc.SIGINT, sa, old) # 0 THEN Msg("failed to install SIGINT") END;
 		IF LinLibc.sigaction(LinLibc.SIGILL, sa, old) # 0 THEN Msg("failed to install SIGILL") END;

@@ -58,7 +58,6 @@ Files:
 				mmap: use "/dev/zero" device instead of -1
 				mprotect addresses must be page-aligned
 				do not show warning message if signal install failed
-				sigaltstack
 		OpenBSD/Lin/Mod/linHostFiles.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				OpenBSD-specific:
@@ -80,8 +79,8 @@ Files:
 				OpenBSD-specific
 		Linux/Lin/Mod/Libc.odc:
 			OpenBUGS Lin/Mod/Libc.odc:
-				PROT_*, MAP_*, O_*, _SC_PAGESIZE CONSTs added
-				open, close, read, write, mmap, munmap, mprotect, getenv, sysconf functions added
+				PROT_*, MAP_*, O_*, _SC_PAGESIZE, SIGSTKSZ CONSTs added
+				open, close, read, write, mmap, munmap, mprotect, getenv, sysconf, sigaltstack functions added
 		Linux/Lin/Mod/Dl.odc:
 			OpenBUGS Lin/Mod/Dl.odc
 		OpenBSD/Lin/Mod/Dates.odc:

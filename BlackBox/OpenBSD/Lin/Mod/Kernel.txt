@@ -1966,6 +1966,7 @@ MODULE Kernel;
 			sigStackSize = Libc.SIGSTKSZ;
 		VAR sa, old: Libc.sigaction_t; res, i: INTEGER;
 			sigstk: Libc.sigaltstack_t;
+			 errno: INTEGER;
 	BEGIN
 		(* A. V. Shiryaev: Set alternative stack on which signals are to be processed *)
 			sigstk.ss_sp := Libc.calloc(1, sigStackSize);
@@ -1974,6 +1975,8 @@ MODULE Kernel;
 				sigstk.ss_flags := 0;
 				res := Libc.sigaltstack(sigstk, NIL);
 				IF res # 0 THEN Msg("ERROR: Kernel.InstallSignals: sigaltstack failed!");
+					S.GET( Libc.__errno_location(), errno );
+					Int(errno);
 					Libc.exit(1)
 				END
 			ELSE Msg("ERROR: malloc(SIGSTKSIZE) failed");

@@ -239,6 +239,8 @@ MODULE LinLibc ["libc.so.6"];
 
 		_SC_PAGESIZE* = 30;
 
+		SIGSTKSZ* = 8192;
+
 	TYPE 
 		__ftw_func_t* = PROCEDURE (fileName: PtrSTR; VAR [nil] stat: stat_t; flag: INTEGER): INTEGER;
 		PtrVoid* = INTEGER;
@@ -452,5 +454,7 @@ MODULE LinLibc ["libc.so.6"];
 	PROCEDURE [ccall] getenv* (name: PtrSTR): PtrSTR;
 
 	PROCEDURE [ccall] sysconf* (name: INTEGER): INTEGER;
+	
+	PROCEDURE [ccall] sigaltstack* (VAR [nil] ss: stack_t; VAR [nil] oss: stack_t): INTEGER;
 
 END LinLibc.
