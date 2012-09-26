@@ -1874,7 +1874,7 @@ MODULE Kernel;
 
 	PROCEDURE InstallSignals*;
 		CONST
-			sigStackSize = Libc.SIGSTKSZ;
+			sigStackSize = Libc.SIGSTKSZ + 32768; (* SIGSTKSZ=8192 on Linux is too low *)
 		VAR sa, old: Libc.sigaction_t; res, i: INTEGER;
 			sigstk: Libc.stack_t;
 			errno: INTEGER;
