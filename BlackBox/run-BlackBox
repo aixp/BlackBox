@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # ulimit -s 32000
+# ulimit -a
 
 rn=`readlink -f "${0}"`
 d=`dirname "${rn}"`
@@ -8,5 +9,14 @@ d=`dirname "${rn}"`
 exe="BlackBox"
 appName=${exe}
 
+p=
+for x in "${@}"; do
+	if [ ! "${x}" = "`echo ${x} | sed s'/ //'`" ]; then
+		p="${p} \"${x}\""
+	else
+		p="${p} ${x}"
+	fi
+done
+
 # export LD_DEBUG=all
-env LD_LIBRARY_PATH="${d}" CMDLINE="${d}/${appName} `echo ${@}`" "${d}"/${exe}
+env LD_LIBRARY_PATH="${d}" CMDLINE="${d}/${appName}${p}" "${d}"/${exe}
