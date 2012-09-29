@@ -1608,7 +1608,10 @@ MODULE Kernel;
 	PROCEDURE Start* (code: Command);
 	BEGIN
 		restart := code;
+(*
 		S.GETREG(SP, baseStack);	(* save base stack *)
+*)
+		res := Libc.sigsetjmp(loopContext, Libc.TRUE);
 		code()
 	END Start;
 
