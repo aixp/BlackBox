@@ -65,6 +65,8 @@ MODULE Kernel;
 		debug = FALSE;
 
 
+		sigStackSize = MAX(Libc.SIGSTKSZ, 65536);
+
 		trapReturn = 1; (* Return value for sigsetjmp given from siglongjmp *)
 
 		(* constants for the message boxes *) 
@@ -262,6 +264,8 @@ MODULE Kernel;
 		watcher*: PROCEDURE (event: INTEGER);	(* for debugging *)
 
 
+		sigStack: Libc.PtrVoid;
+		
 		loopContext: Libc.sigjmp_buf; (* trap return context, if no Kernel.Try has been used. *)
 		currentTryContext: POINTER TO Libc.sigjmp_buf; (* trap return context, if Kernel.Try has been used. *)
 		
@@ -1962,24 +1966,18 @@ MODULE Kernel;
 	END TrapHandler;
 
 	PROCEDURE InstallSignals*;
-		CONST
-			sigStackSize = Libc.SIGSTKSZ;
 		VAR sa, old: Libc.sigaction_t; res, i: INTEGER;
 			sigstk: Libc.sigaltstack_t;
-			 errno: INTEGER;
+			errno: INTEGER;
 	BEGIN
 		(* A. V. Shiryaev: Set alternative stack on which signals are to be processed *)
-			sigstk.ss_sp := Libc.calloc(1, sigStackSize);
-			IF sigstk.ss_sp # Libc.NULL THEN
-				sigstk.ss_size := sigStackSize;
-				sigstk.ss_flags := 0;
-				res := Libc.sigaltstack(sigstk, NIL);
-				IF res # 0 THEN Msg("ERROR: Kernel.InstallSignals: sigaltstack failed!");
-					S.GET( Libc.__errno_location(), errno );
-					Int(errno);
-					Libc.exit(1)
-				END
-			ELSE Msg("ERROR: malloc(SIGSTKSIZE) failed");
+			sigstk.ss_sp := sigStack;
+			sigstk.ss_size := sigStackSize;
+			sigstk.ss_flags := 0;
+			res := Libc.sigaltstack(sigstk, NIL);
+			IF res # 0 THEN Msg("ERROR: Kernel.InstallSignals: sigaltstack failed!");
+				S.GET( Libc.__errno_location(), errno );
+				Int(errno);
 				Libc.exit(1)
 			END;
 
@@ -1998,7 +1996,7 @@ MODULE Kernel;
 		IF LinLibc.sigaction(LinLibc.SIGTERM, sa, old) # 0 THEN Msg("failed to install SIGTERM") END;
 		*)
 		(* respond to all possible signals *)
-		FOR i := 1 TO Libc._NSIG - 1 DO 
+		FOR i := 1 TO Libc._NSIG - 1 DO
 			IF (i # Libc.SIGKILL)
 				& (i # Libc.SIGSTOP)
 				& (i # Libc.SIGWINCH)
@@ -2012,6 +2010,13 @@ MODULE Kernel;
 	PROCEDURE Init;
 		VAR i: INTEGER;
 	BEGIN
+		(* for sigaltstack *)
+			sigStack := Libc.calloc(1, sigStackSize);
+			IF sigStack = Libc.NULL THEN
+				Msg("ERROR: Kernel.Init: calloc(1, sigStackSize) failed!");
+				Libc.exit(1)
+			END;
+
 		InstallSignals; (* init exception handling *)
 		currentTryContext := NIL;
 
