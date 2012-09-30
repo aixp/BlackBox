@@ -491,18 +491,6 @@ MODULE Kernel;
 
 	(* A. V. Shiryaev, 2012.09: NOTE: it seems that GC works correctly with positive addesses only *)
 
-	PROCEDURE BZero4 (adr: Libc.PtrVoid; len: INTEGER);
-	BEGIN
-		ASSERT(adr MOD 4 = 0, 20);
-		ASSERT(len MOD 4 = 0, 21);
-		len := len DIV 4;
-		WHILE len > 0 DO
-			S.PUT(adr, 0);
-			INC(adr, 4);
-			DEC(len)
-		END
-	END BZero4;
-
 (*
 	PROCEDURE HeapAlloc (adr: INTEGER; size: INTEGER; prot: SET): Libc.PtrVoid;
 		VAR
@@ -529,7 +517,8 @@ MODULE Kernel;
 		IF x = Libc.MAP_FAILED THEN
 			x := Libc.NULL
 		ELSE
-			BZero4(x, size)
+			ASSERT(size MOD 4 = 0, 100);
+			Erase(x, size DIV 4)
 		END;
 		RETURN x
 	END HeapAlloc;
@@ -539,9 +528,10 @@ MODULE Kernel;
 		VAR res: INTEGER;
 	BEGIN
 (*
-		BZero4(adr, size);
+		ASSERT(size MOD 4 = 0, 100);
+		Erase(adr, size DIV 4);
 		res := Libc.mprotect(adr, size, Libc.PROT_NONE);
-		ASSERT(res = 0, 100);
+		ASSERT(res = 0, 101);
 *)
 		Libc.free(adr)
 	END HeapFree;
@@ -550,12 +540,13 @@ MODULE Kernel;
 		VAR res: INTEGER;
 	BEGIN
 (*
-		BZero4(adr, size);
+		ASSERT(size MOD 4 = 0, 100);
+		Erase(adr, size DIV 4);
 		res := Libc.mprotect(adr, size, Libc.PROT_NONE);
-		ASSERT(res = 0, 100);
+		ASSERT(res = 0, 101);
 *)
 		res := Libc.munmap(adr, size);
-		ASSERT(res = 0, 101)
+		ASSERT(res = 0, 102)
 	END HeapFree;
 
 	PROCEDURE AllocHeapMem (size: INTEGER; VAR c: Cluster);
