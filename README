@@ -104,7 +104,6 @@ Files:
 		{OpenBSD,Linux}/libBB0.so: compiled and linked shared library to run simple development interpreter
 
 		Views.odc: minimal Views implementation required to compile StdInterpreter
-		StdLog.odc: alternative StdLog implementation to not depend on GUI
 		HostFonts.odc, HostDialog.odc, HostWindows.odc: simple Hosts implementation
 
 Notes:
