@@ -27,7 +27,7 @@ LindevCompiler.Compile('Lindev/Mod', 'Compiler.txt')
 LindevCompiler.Compile('Lindev/Mod', 'ElfLinker16.txt')
 
 LindevCompiler.Compile('Lin/Mod', 'Console.txt')
-LindevCompiler.Compile('Lin/Mod', 'linHostFiles.txt')
+LindevCompiler.Compile('Lin/Mod', 'HostFiles.txt')
 
 ### simple dev interpreter (include LindevCompiler and LindevElfLinker)
 

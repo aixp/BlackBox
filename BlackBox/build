@@ -13,7 +13,7 @@ LindevCompiler.Compile('System/Mod', 'Meta.txt')
 LindevCompiler.Compile('System/Mod', 'Dialog.txt')
 
 LindevCompiler.Compile('Lin/Mod', 'Console.txt')
-LindevCompiler.Compile('Lin/Mod', 'linHostFiles.txt')
+LindevCompiler.Compile('Lin/Mod', 'HostFiles.txt')
 
 LindevCompiler.Compile('System/Mod', 'Stores.txt')
 LindevCompiler.Compile('System/Mod', 'Converters.txt')
