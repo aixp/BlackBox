@@ -7,7 +7,26 @@ MODULE ConsInterp;
 	IMPORT
 		Console,
 		Strings, Dialog,
-		DevCommanders, TextModels;
+		DevCommanders, TextModels,
+		StdLog;
+
+	VAR
+		textR: TextModels.Reader;
+
+	PROCEDURE ShowStdLog;
+		VAR c: CHAR;
+	BEGIN
+		StdLog.text.Append(StdLog.buf);
+
+		textR.SetPos(0);
+		textR.ReadChar(c);
+		WHILE ~textR.eot DO
+			IF c = 0DX THEN c := 0AX END;
+			Console.WriteChar(c);
+			textR.ReadChar(c)
+		END;
+		StdLog.text.Delete(0, StdLog.text.Length())
+	END ShowStdLog;
 
 	PROCEDURE Call1 (IN s: ARRAY OF CHAR; i: INTEGER): BOOLEAN;
 		VAR j: INTEGER;
@@ -30,6 +49,7 @@ MODULE ConsInterp;
 		END;
 		Dialog.Call(s, " ", res);
 		DevCommanders.par := NIL;
+		ShowStdLog;
 	RETURN res = 0
 	END Call1;
 
@@ -100,4 +120,6 @@ MODULE ConsInterp;
 		END
 	END Run;
 
+BEGIN
+	textR := StdLog.text.NewReader(NIL)
 END ConsInterp.

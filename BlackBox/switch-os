@@ -18,9 +18,9 @@ obsd() {
 	ln -s OpenBSD/Host
 	ln -s OpenBSD/libBB.so
 	ln -s OpenBSD/libBB0.so
-	cp OpenBSD/BlackBox .
-	cp OpenBSD/lindev .
-	cp OpenBSD/libdlobsdwrap.so .
+	ln -s OpenBSD/BlackBox
+	ln -s OpenBSD/lindev
+	ln -s OpenBSD/libdlobsdwrap.so
 }
 
 lin() {

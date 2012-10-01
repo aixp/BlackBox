@@ -7,9 +7,9 @@ MODULE Init;
 		HostWindows (* Windows.SetHook *),
 		HostDates (* Dates.SetHook *),
 		HostDialog (* Dialog.SetShowHook *),
-		StdLog,
 		StdInterpreter, (* Dialog.SetCallHook *)
 		StdDialog (* Views.SetViewHook *),
+		(* StdLog, *)
 
 		Converters (* .odc *),
 		Dialog;

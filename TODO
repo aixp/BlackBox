@@ -3,6 +3,9 @@ By priority:
 		interface similar to DevCompiler
 		txt files Converter
 
+	ConsLog:
+		Log.hook instead of StdLog (load after StdLog)
+
 	localization:
 		Kernel.cmdLine:
 			decode (encoding = current locale encoding)

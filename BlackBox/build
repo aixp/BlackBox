@@ -68,8 +68,11 @@ LindevCompiler.Compile('Std/Mod', 'Links.txt')
 LindevCompiler.Compile('Std/Mod', 'Loader.txt')
 LindevCompiler.Compile('Lin/Mod', 'Kernel_so_init.txt')
 
-# LindevCompiler.Compile('Std/Mod', 'Log.txt')
-LindevCompiler.Compile('', 'StdLog.txt')
+# before StdLog
+LindevCompiler.Compile('', 'HostDialog.txt')
+
+LindevCompiler.Compile('Std/Mod', 'Log.txt')
+# LindevCompiler.Compile('', 'StdLog.txt')
 # LindevCompiler.Compile('Std/Mod', 'Out.txt')
 
 LindevCompiler.Compile('Dev/Mod', 'Markers.txt')
@@ -93,7 +96,6 @@ LindevCompiler.Compile('Std/Mod', 'Interpreter.txt')
 ### BlackBox
 
 LindevCompiler.Compile('', 'HostFonts.txt')
-LindevCompiler.Compile('', 'HostDialog.txt')
 LindevCompiler.Compile('', 'HostWindows.txt')
 # HostDates:
 LindevCompiler.Compile('Lin/Mod', 'Dates.txt')
