@@ -58,14 +58,14 @@ Files:
 				mmap: use "/dev/zero" device instead of -1
 				mprotect addresses must be page-aligned
 				do not show warning message if signal install failed
-		OpenBSD/Lin/Mod/linHostFiles.odc:
+		OpenBSD/Lin/Mod/HostFiles.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				OpenBSD-specific:
 					size_t
 					__xstat -> stat
 				Kernel.cmdLine support:
 					str := "" -> str := Kernel.cmdLine$
-		Linux/Lin/Mod/linHostFiles.odc:
+		Linux/Lin/Mod/HostFiles.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				Kernel.cmdLine support:
 					str := "" -> str := Kernel.cmdLine$
