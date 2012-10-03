@@ -112,5 +112,5 @@ DATA
 DevCompiler.CompileThis DevElfLinker16
 DevCompiler.CompileThis ConsCompiler
 
-DevCompiler.CompileThis ObxHello0 ObxPi ObxRandom
+DevCompiler.CompileThis ObxHello0 ObxPi ObxRandom ObxTrap
 DATA
