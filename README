@@ -7,11 +7,11 @@ Some significant parts taken from OpenBUGS (http://www.openbugs.info/)
 
 How to build:
 	compile loader executable (BlackBox itself and simple interpreter):
+		`uname -s`/libBB0.so must be present (can be built from Windows)
 
 		cd BlackBox/`uname -s`/Lin/Rsrc/loader; make
 
 	compile self:
-		`uname -s`/libBB0.so must be present (can be built from Windows)
 
 		cd BlackBox; ./switch-os `uname -s`; ./clean; ./build-lindev; ./build
 
