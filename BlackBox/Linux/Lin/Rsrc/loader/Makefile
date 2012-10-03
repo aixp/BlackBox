@@ -4,18 +4,18 @@
 # ${.ALLSRC}    $^
 # ${.IMPSRC}    $<
 
-all: lindev BlackBox BlackBox-dl
+all: lindev BlackBox
 
 CFLAGS += -Wall -O0 -g -m32
 
-BlackBox: BlackBox.c
-	${CC} ${CFLAGS} -o $@ $^ -L. -lBB
+#BlackBox: BlackBox.c
+#	${CC} ${CFLAGS} -o $@ $^ -L. -lBB
 
-BlackBox-dl: BlackBox-dl.c
+BlackBox: BlackBox-dl.c
 	${CC} ${CFLAGS} -o $@ $^ -ldl
 
 lindev: BlackBox1.c
 	${CC} ${CFLAGS} -o $@ $^ -L . -lBB0
 
 clean:
-	rm -f lindev BlackBox BlackBox-dl
+	rm -f lindev BlackBox

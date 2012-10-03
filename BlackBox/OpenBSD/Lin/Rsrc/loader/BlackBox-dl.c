@@ -4,13 +4,16 @@
 int main (int argc, char *argv[])
 {
 	void * h;
+	/*
 	void * h1;
 	void (*SetKernelBaseStack) (int);
 	void (*Init) (void);
+	*/
 	int res;
 
 	h = dlopen("libBB.so", RTLD_LAZY | RTLD_GLOBAL);
-	if (h == NULL) {
+	if (h != NULL) {
+		/*
 		h1 = dlsym(h, "SetKernelBaseStack");
 		if (h1 != NULL) {
 			*(void **) (&SetKernelBaseStack) = h1;
@@ -34,6 +37,8 @@ int main (int argc, char *argv[])
 			perror(dlerror());
 			res = 2;
 		}
+		*/
+		res = 0;
 	} else {
 		perror(dlerror());
 		res = 1;

@@ -6,17 +6,18 @@
 
 CFLAGS += -Wall -O0 -g
 
-all: libdlobsdwrap.so lindev BlackBox BlackBox-dl
+all: libdlobsdwrap.so lindev BlackBox
 
 # libdlobsdwrap.so: universal method of correct access to dl* functions
 #	in case of dynamic loading of libBB*.so "ld.so" in LibDl may be used instead of "libc.so", but not in case of static linking
 #	wrapper method is universal
 
 # -pthread required to dlopen libraries that depends on pthread
-BlackBox: BlackBox.c
-	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -L. -lBB -pthread
 
-BlackBox-dl: BlackBox-dl.c
+#BlackBox: BlackBox.c
+#	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -L. -lBB -pthread
+
+BlackBox: BlackBox-dl.c
 	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -pthread
 
 lindev: BlackBox1.c
@@ -26,4 +27,4 @@ libdlobsdwrap.so: libdlobsdwrap.c
 	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -fPIC -shared
 
 clean:
-	rm -f lindev BlackBox BlackBox-dl libdlobsdwrap.so
+	rm -f lindev BlackBox libdlobsdwrap.so
