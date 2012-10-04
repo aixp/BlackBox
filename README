@@ -112,4 +112,21 @@ Notes:
 	Lindev:
 		I will not remove Lindev because I can not link .so library based on ConsInterp and Dev
 
+	Kernel.baseStack issue (preliminary description):
+		baseStack is upper border:
+			* of garbage collector stack scan range (see Kernel.MarkLocals)
+			* of TrapViewer stack show range (see Kernel.TrapHandler)
+		it is initialized in Kernel.INIT and initially points close to upper
+			border of library stack (because Kernel.INIT called from library
+			constructor, which executes close to upper border of library stack)
+		it can be changed in Kernel.Start to skip unnecessary stack addresses
+
+		if libBB.so exports procedure for calling from main program,
+			then it will be executed on main program stack, not on library
+			stack, at stack addresses higher than baseStack.
+			Thus, MarkLocals and TrapViewer will work incorrectly.
+		in this case, to solve problem, baseStack should be adjusted and
+			should point to stack on which this exported procedure executes
+		if necessary, this can be done using auxiliary module Kernel_so_init
+
 A. V. Shiryaev, 2012
