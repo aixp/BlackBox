@@ -9,7 +9,8 @@ MODULE Init;
 		HostDialog (* Dialog.SetShowHook *),
 		StdInterpreter, (* Dialog.SetCallHook *)
 		StdDialog (* Views.SetViewHook *),
-		(* StdLog, *)
+
+		StdLog, ConsLog, (* Log.Hook *)
 
 		Converters (* .odc *),
 		Dialog;

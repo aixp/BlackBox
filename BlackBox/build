@@ -74,6 +74,7 @@ LindevCompiler.Compile('', 'HostDialog.txt')
 LindevCompiler.Compile('Std/Mod', 'Log.txt')
 # LindevCompiler.Compile('', 'StdLog.txt')
 # LindevCompiler.Compile('Std/Mod', 'Out.txt')
+LindevCompiler.Compile('Cons/Mod', 'Log.txt')
 
 LindevCompiler.Compile('Dev/Mod', 'Markers.txt')
 LindevCompiler.Compile('Dev/Mod', 'Commanders.txt')
