@@ -237,6 +237,10 @@ MODULE LinLibc ["libc.so.6"];
 		O_WRONLY* = {0} ;	(* Open write-only *)
 		O_RDWR* = {1} ;	(* Open read/write *)
 
+		SIG_BLOCK* = 0;	(* Block signals *)
+		SIG_UNBLOCK* = 1;	(* Unblock signals *)
+		SIG_SETMASK* = 2;	(* Set the set of blocked signals *)
+
 		_SC_PAGESIZE* = 30;
 
 		SIGSTKSZ* = 8192;
@@ -456,5 +460,7 @@ MODULE LinLibc ["libc.so.6"];
 	PROCEDURE [ccall] sysconf* (name: INTEGER): INTEGER;
 	
 	PROCEDURE [ccall] sigaltstack* (VAR [nil] ss: stack_t; VAR [nil] oss: stack_t): INTEGER;
+
+	PROCEDURE [ccall] sigprocmask* (how: INTEGER; set: Ptrsigset_t; oldset: Ptrsigset_t): INTEGER;
 
 END LinLibc.

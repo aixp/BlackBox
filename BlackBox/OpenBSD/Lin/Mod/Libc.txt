@@ -377,6 +377,11 @@ MODULE LinLibc ["libc.so.66.0"];
 		MINSIGSTKSZ* = 8192; (* minimum allowable stack *)
 		SIGSTKSZ* = MINSIGSTKSZ + 32768; (* recommended stack size *)
 
+		(* OpenBSD 5.2 /usr/include/sys/signal.h *)
+		SIG_BLOCK* = 1; (* block specified signal set *)
+		SIG_UNBLOCK* = 2; (* unblock specified signal set *)
+		SIG_SETMASK* = 3; (* set specified signal set *)
+
 	TYPE
 		(* OpenBSD OK *)
 		__ftw_func_t* = PROCEDURE (fileName: PtrSTR; VAR [nil] stat: stat_t; flag: INTEGER): INTEGER; (* OpenBSD 5.2: OK *)
@@ -466,7 +471,7 @@ MODULE LinLibc ["libc.so.66.0"];
 
 		Ptrsigset_t* = INTEGER;
 		sigaction_t* = RECORD [untagged] (* OpenBSD 5.2 /usr/include/sys/signal.h *)
-			sa_sigaction*: PROCEDURE (* [ccall] *) (sig: INTEGER; siginfo: Ptrsiginfo_t; ptr: Ptrucontext_t); (* union with sa_handler*: PtrProc;*)
+			sa_sigaction*: PROCEDURE [ccall] (sig: INTEGER; siginfo: Ptrsiginfo_t; ptr: Ptrucontext_t); (* union with sa_handler*: PtrProc;*)
 			sa_mask*: sigset_t;
 			sa_flags*: SET;
 			(* sa_restorer*: LONGINT; *) (* OpenBSD *)
@@ -774,5 +779,7 @@ MODULE LinLibc ["libc.so.66.0"];
 	PROCEDURE [ccall] sigaltstack* (VAR [nil] ss: sigaltstack_t; VAR [nil] oss: sigaltstack_t): INTEGER;
 
 	PROCEDURE [ccall] sigreturn* (ucontext_t: Ptrucontext_t): INTEGER;
+
+	PROCEDURE [ccall] sigprocmask* (how: INTEGER; VAR [nil] set: sigset_t; VAR [nil] oset: sigset_t): INTEGER;
 
 END LinLibc.

@@ -16,7 +16,6 @@ MODULE Kernel;
 
 		TODO:
 			handle stack overflow exceptions
-			IsReadable0
 			correct cmdLine
 			Quit from TrapHandler
 	*)
@@ -617,11 +616,21 @@ MODULE Kernel;
 *)
 
 	(* Alexander Shiryaev, 2012.10: I do not know other way that works in OpenBSD *)
+	(* This procedure can be called from TrapHandler also *)
 	PROCEDURE IsReadable* (from, to: INTEGER): BOOLEAN;
 		(* check wether memory between from (incl.) and to (excl.) may be read *)
 		VAR res: BOOLEAN; res1: INTEGER;
 			x: SHORTCHAR;
+			mask, omask: Libc.sigset_t;
 	BEGIN
+		(* save old sigmask and unblock SIGSEGV *)
+			res1 := Libc.sigemptyset(S.ADR(mask));
+			ASSERT(res1 = 0, 100);
+			res1 := Libc.sigaddset(S.ADR(mask), Libc.SIGSEGV);
+			ASSERT(res1 = 0, 101);
+			res1 := Libc.sigprocmask(Libc.SIG_UNBLOCK, mask, omask);
+			ASSERT(res1 = 0, 102);
+
 		res := FALSE;
 		res1 := Libc.sigsetjmp(isReadableContext, Libc.TRUE);
 		IF res1 = 0 THEN
@@ -633,17 +642,16 @@ MODULE Kernel;
 			UNTIL from = to;
 			res := TRUE
 		ELSE
-			ASSERT(res1 = 1, 100)
+			ASSERT(res1 = 1, 103)
 		END;
 		isReadableCheck := FALSE;
+
+		(* restore saved sigmask *)
+			res1 := Libc.sigprocmask(Libc.SIG_SETMASK, omask, NIL);
+			ASSERT(res1 = 0, 104);
+
 		RETURN res
 	END IsReadable;
-
-	(* to call from TrapHandler *)
-	PROCEDURE IsReadable0 (from, to: INTEGER): BOOLEAN;
-	BEGIN
-		RETURN TRUE (* TODO *)
-	END IsReadable0;
 
 	(* --------------------- NEW implementation (portable) -------------------- *)
 
@@ -1897,7 +1905,7 @@ MODULE Kernel;
 		WriteString("================================"); WriteLn
 	END ShowTrap;
 
-	PROCEDURE (* [ccall] *) TrapHandler (sig: INTEGER; siginfo: Libc.Ptrsiginfo_t; context: Libc.Ptrucontext_t);
+	PROCEDURE [ccall] TrapHandler (sig: INTEGER; siginfo: Libc.Ptrsiginfo_t; context: Libc.Ptrucontext_t);
 	BEGIN
 		IF isReadableCheck THEN
 			isReadableCheck := FALSE;
@@ -1934,7 +1942,7 @@ MODULE Kernel;
 				err := 200 (* Interrupt (ANSI). *)
 			| Libc.SIGILL: (* Illegal instruction (ANSI). *)
 				err := 202; val := 0;
-				IF IsReadable0(pc, pc + 4) THEN
+				IF IsReadable(pc, pc + 4) THEN
 					S.GET(pc, val);
 					IF val MOD 100H = 8DH THEN	(* lea reg,reg *)
 						IF val DIV 100H MOD 100H = 0F0H THEN
