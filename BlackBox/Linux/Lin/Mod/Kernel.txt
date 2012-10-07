@@ -15,8 +15,10 @@ MODULE Kernel;
 		Linux(/OpenBSD)-specific code marked green
 
 		TODO:
-			IsReadable
+			handle stack overflow exceptions
+			IsReadable0
 			correct cmdLine
+			Quit from TrapHandler
 	*)
 
 	IMPORT S := SYSTEM, Libc := LinLibc, Dl := LinDl;
@@ -65,7 +67,9 @@ MODULE Kernel;
 		debug = FALSE;
 
 
+(*
 		sigStackSize = MAX(Libc.SIGSTKSZ, 65536);
+*)
 
 		trapReturn = 1; (* Return value for sigsetjmp given from siglongjmp *)
 
@@ -264,13 +268,17 @@ MODULE Kernel;
 		watcher*: PROCEDURE (event: INTEGER);	(* for debugging *)
 
 
+(*
 		sigStack: Libc.PtrVoid;
+*)
 		
 		zerofd: INTEGER;
 		pageSize: INTEGER;
 
 		loopContext: Libc.sigjmp_buf; (* trap return context, if no Kernel.Try has been used. *)
 		currentTryContext: POINTER TO Libc.sigjmp_buf; (* trap return context, if Kernel.Try has been used. *)
+		isReadableContext: Libc.sigjmp_buf; (* for IsReadable *)
+		isReadableCheck: BOOLEAN;
 		
 		guiHook: GuiHook;
 		
@@ -610,38 +618,34 @@ MODULE Kernel;
 	END IsReadable;
 *)
 
-	(* NOTE:
-		TRUE result DOES NOT GUARANTEE what mem region is REALLY accessible! (implementation limit) *)
+	(* Alexander Shiryaev, 2012.10: Linux: can be implemented through mincore/madvise *)
 	PROCEDURE IsReadable* (from, to: INTEGER): BOOLEAN;
 		(* check wether memory between from (incl.) and to (excl.) may be read *)
-		VAR nullfd: INTEGER;
-			res1, errno: INTEGER;
-			res: BOOLEAN;
+		VAR res: BOOLEAN; res1: INTEGER;
+			x: SHORTCHAR;
 	BEGIN
-		ASSERT(from < to, 20);
-
 		res := FALSE;
-
-		nullfd := Libc.open("/dev/null", Libc.O_WRONLY, {});
-		IF nullfd >= 0 THEN
-			res1 := Libc.write(nullfd, from, to - from);
-			IF res1 = -1 THEN
-				S.GET(Libc.__errno_location(), errno);
-				IF errno = Libc.EFAULT THEN
-					res := FALSE
-				ELSE
-					HALT(101)
-				END
-			ELSE ASSERT(res1 = to - from);
-				res := TRUE
-			END;
-			res1 := Libc.close(nullfd)
-		ELSE ASSERT(nullfd = -1);
-			HALT(100)
+		res1 := Libc.sigsetjmp(isReadableContext, Libc.TRUE);
+		IF res1 = 0 THEN
+			isReadableCheck := TRUE;
+			(* read memory *)
+			REPEAT
+				S.GET(from, x);
+				INC(from)
+			UNTIL from = to;
+			res := TRUE
+		ELSE
+			ASSERT(res1 = 1, 100)
 		END;
-
+		isReadableCheck := FALSE;
 		RETURN res
 	END IsReadable;
+
+	(* to call from TrapHandler *)
+	PROCEDURE IsReadable0 (from, to: INTEGER): BOOLEAN;
+	BEGIN
+		RETURN TRUE (* TODO *)
+	END IsReadable0;
 
 	(* --------------------- NEW implementation (portable) -------------------- *)
 
@@ -1172,6 +1176,30 @@ MODULE Kernel;
 	END SourcePos;
 
 	(* -------------------- dynamic link libraries --------------------- *)
+
+(*
+	PROCEDURE DlOpen (name: ARRAY OF SHORTCHAR): Dl.HANDLE;
+		CONST flags = Dl.RTLD_LAZY + Dl.RTLD_GLOBAL;
+		VAR h: Dl.HANDLE;
+			i: INTEGER;
+	BEGIN
+		h := Dl.NULL;
+		i := 0; WHILE (i < LEN(name)) & (name[i] # 0X) DO INC(i) END;
+		IF i < LEN(name) THEN
+			h := Dl.dlopen(name, flags);
+			WHILE (h = Dl.NULL) & (i > 0) DO
+				DEC(i);
+				WHILE (i > 0) & (name[i] # '.') DO DEC(i) END;
+				IF i > 0 THEN
+					name[i] := 0X;
+					h := Dl.dlopen(name, flags);
+					(* IF h # Dl.NULL THEN Msg(name$) END *)
+				END
+			END
+		END;
+		RETURN h
+	END DlOpen;
+*)
 
 	PROCEDURE LoadDll* (IN name: ARRAY OF SHORTCHAR; VAR ok: BOOLEAN);
 		VAR h: Dl.HANDLE;
@@ -1792,8 +1820,14 @@ MODULE Kernel;
 		FLDCW
 	END InitFpu;
 
-	PROCEDURE TrapHandler (sig: INTEGER; siginfo: Libc.Ptrsiginfo_t; context: Libc.Ptrucontext_t);
+	PROCEDURE (* [ccall] *) TrapHandler (sig: INTEGER; siginfo: Libc.Ptrsiginfo_t; context: Libc.Ptrucontext_t);
 	BEGIN
+		IF isReadableCheck THEN
+			isReadableCheck := FALSE;
+			Msg("~IsReadable");
+			Libc.siglongjmp(isReadableContext, 1)
+		END;
+
 	(*
 		S.GETREG(SP, sp);
 		S.GETREG(FP, fp);
@@ -1816,7 +1850,7 @@ MODULE Kernel;
 				err := 200 (* Interrupt (ANSI). *)
 			| Libc.SIGILL: (* Illegal instruction (ANSI). *)
 				err := 202; val := 0;
-				IF IsReadable(pc, pc + 4) THEN
+				IF IsReadable0(pc, pc + 4) THEN
 					S.GET(pc, val);
 					IF val MOD 100H = 8DH THEN	(* lea reg,reg *)
 						IF val DIV 100H MOD 100H = 0F0H THEN
@@ -1866,16 +1900,19 @@ MODULE Kernel;
 			IF restart # NIL THEN (* Start failed *)
 				Libc.siglongjmp(loopContext, trapReturn)
 			END;
-			Quit(1);
+			Quit(1); (* FIXME *)
 		END;
 		trapped := FALSE
 	END TrapHandler;
 
 	PROCEDURE InstallSignals*;
 		VAR sa, old: Libc.sigaction_t; res, i: INTEGER;
+(*
 			sigstk: Libc.stack_t;
 			errno: INTEGER;
+*)
 	BEGIN
+(*
 		(* A. V. Shiryaev: Set alternative stack on which signals are to be processed *)
 			sigstk.ss_sp := sigStack;
 			sigstk.ss_size := sigStackSize;
@@ -1886,13 +1923,14 @@ MODULE Kernel;
 				Int(errno);
 				Libc.exit(1)
 			END;
+*)
 
 		sa.sa_sigaction := TrapHandler;
 (*
 		res := LinLibc.sigemptyset(S.ADR(sa.sa_mask));
 *)
 		res := Libc.sigfillset(S.ADR(sa.sa_mask));
-		sa.sa_flags := Libc.SA_ONSTACK + Libc.SA_SIGINFO; (* TrapHandler takes three arguments *)
+		sa.sa_flags := (* Libc.SA_ONSTACK + *) Libc.SA_SIGINFO; (* TrapHandler takes three arguments *)
 		(*
 		IF LinLibc.sigaction(LinLibc.SIGINT, sa, old) # 0 THEN Msg("failed to install SIGINT") END;
 		IF LinLibc.sigaction(LinLibc.SIGILL, sa, old) # 0 THEN Msg("failed to install SIGILL") END;
@@ -1915,12 +1953,14 @@ MODULE Kernel;
 	PROCEDURE Init;
 		VAR i: INTEGER;
 	BEGIN
+(*
 		(* for sigaltstack *)
 			sigStack := Libc.calloc(1, sigStackSize);
 			IF sigStack = Libc.NULL THEN
 				Msg("ERROR: Kernel.Init: calloc(1, sigStackSize) failed!");
 				Libc.exit(1)
 			END;
+*)
 		(* for mmap *)
 			zerofd := Libc.open("/dev/zero", Libc.O_RDWR, {0..8});
 			IF zerofd < 0 THEN
@@ -1933,6 +1973,8 @@ MODULE Kernel;
 				Msg("ERROR: Kernel.Init: pageSize < 0!");
 				Libc.exit(1)
 			END;
+
+		isReadableCheck := FALSE;
 
 		InstallSignals; (* init exception handling *)
 		currentTryContext := NIL;
@@ -1980,13 +2022,12 @@ MODULE Kernel;
 
 BEGIN
 	IF modList = NIL THEN	(* only once *)
+		S.GETREG(SP, baseStack); (* TODO: Check that this is ok. *)
 		IF bootInfo # NIL THEN
 			modList := bootInfo.modList; (* boot loader initializes the bootInfo struct *)
-			S.GETREG(SP, baseStack); (* TODO: Check that this is ok. *)
 			SetCmdLine
 		ELSE
 			S.GETREG(ML, modList);	(* linker loads module list to BX *)
-			S.GETREG(SP, baseStack);
 			SetCmdLine2
 		END;
 		static := init IN modList.opts;

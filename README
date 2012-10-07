@@ -49,8 +49,8 @@ Files:
 					Kernel.InitModule
 						mprotect call added
 					Kernel.InstallSignals:
-						use alternate stack on which signals are to be processed (to catch stack overflow)
 						do not install signal handler for SIGTHR (when executable linked with -pthread)
+					IsReadable
 				Kernel.cmdLine support:
 					Kernel.INIT (SetCmdLine2)
 		Linux/Lin/Mod/Kernel.odc:
@@ -101,6 +101,7 @@ Files:
 		Cons/Mod
 			Interp.odc: console interpreter
 			Compiler.odc: console interface to Dev compiler
+			Log.odc: Log.Hook console implementation
 
 		{OpenBSD,Linux}/libBB.so: compiled and linked shared library to run BlackBox
 		{OpenBSD,Linux}/libBB0.so: compiled and linked shared library to run simple development interpreter
