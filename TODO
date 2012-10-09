@@ -6,7 +6,7 @@ By priority:
 	localization:
 		Kernel.cmdLine:
 			decode (encoding = current locale encoding)
-		LinConsole:
+		HostConsole:
 			encode on printf, encoding = current locale encoding
 			decode on Read, encoding = current locale encoding
 		filenames:

@@ -7,13 +7,14 @@ none() {
 	fi
 
 	rm -rf \
-		System/Mod/Kernel.odc System/Code/Kernel.ocf System/Sym/Kernel.osf \
+		System/Mod/Kernel.odc System/Mod/Kernel.txt System/Code/Kernel.ocf System/Sym/Kernel.osf \
 		Code/Kernel.ocf Sym/Kernel.osf \
 		Host Win Lin BlackBox blackbox.exe BlackBox.exe *.so lindev
 }
 
 obsd() {
-	ln -s ../../OpenBSD/Lin/Mod/Kernel.odc System/Mod/Kernel.odc
+	ln -s ../../OpenBSD/System/Mod/Kernel.odc System/Mod/Kernel.odc
+	ln -s ../../OpenBSD/System/Mod/Kernel.txt System/Mod/Kernel.txt
 	ln -s OpenBSD/Lin
 	ln -s OpenBSD/Host
 	ln -s OpenBSD/libBB.so
@@ -24,7 +25,8 @@ obsd() {
 }
 
 lin() {
-	ln -s ../../Linux/Lin/Mod/Kernel.odc System/Mod/Kernel.odc
+	ln -s ../../Linux/System/Mod/Kernel.odc System/Mod/Kernel.odc
+	ln -s ../../Linux/System/Mod/Kernel.txt System/Mod/Kernel.txt
 	ln -s Linux/Lin
 	ln -s Linux/Host
 	ln -s Linux/libBB.so

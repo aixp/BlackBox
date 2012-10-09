@@ -38,7 +38,7 @@ Files:
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
 			{Linux,OpenBSD}/Lin/Mod/Kernel_so_init.odc
 	modified:
-		OpenBSD/Lin/Mod/Kernel.odc:
+		OpenBSD/System/Mod/Kernel.odc:
 			1.6-rc6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
 				OpenBSD specific:
 					Memory management rewritten (based on mmap)
@@ -53,28 +53,28 @@ Files:
 					IsReadable
 				Kernel.cmdLine support:
 					Kernel.INIT (SetCmdLine2)
-		Linux/Lin/Mod/Kernel.odc:
-			OpenBSD/Lin/Mod/Kernel.odc modified for Linux:
+		Linux/System/Mod/Kernel.odc:
+			OpenBSD/System/Mod/Kernel.odc modified for Linux:
 				Time*
 				TrapHandler
 				mmap: use "/dev/zero" device instead of -1
 				mprotect addresses must be page-aligned
 				do not show warning message if signal install failed
-		OpenBSD/Lin/Mod/HostFiles.odc:
+		OpenBSD/Host/Mod/Files.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				OpenBSD-specific:
 					size_t
 					__xstat -> stat
 				Kernel.cmdLine support:
 					str := "" -> str := Kernel.cmdLine$
-		Linux/Lin/Mod/HostFiles.odc:
+		Linux/Host/Mod/Files.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				Kernel.cmdLine support:
 					str := "" -> str := Kernel.cmdLine$
-		OpenBSD/Lin/Mod/Console.odc:
+		OpenBSD/Host/Mod/Console.odc:
 			OpenBUGS Lin/Mod/Console.odc:
 				stdin -> SYSTEM.ADR(__sF[0])
-		Linux/Lin/Mod/Console.odc:
+		Linux/Host/Mod/Console.odc:
 			OpenBUGS Lin/Mod/Console.odc
 		OpenBSD/Lin/Mod/Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
@@ -85,11 +85,9 @@ Files:
 				open, close, read, write, mmap, munmap, mprotect, getenv, sysconf, sigaltstack functions added
 		Linux/Lin/Mod/Dl.odc:
 			OpenBUGS Lin/Mod/Dl.odc
-		OpenBSD/Lin/Mod/Dates.odc:
-			HostDates, from http://oberoncore.ru/:
-				OpenBSD-specific
-		Linux/Lin/Mod/Dates.odc:
-			HostDates, from http://oberoncore.ru/
+		Linux/Host/Mod/Dates.odc: from http://oberoncore.ru/
+		OpenBSD/Host/Mod/Dates.odc:
+			Linux/Host/Mod/Dates.odc: OpenBSD-specific
 		Lindev/Mod
 			CP*
 				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.

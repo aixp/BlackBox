@@ -3,7 +3,7 @@
 ./run-lindev <<DATA
 LindevCompiler.Compile('Lin/Mod', 'Dl.txt')
 LindevCompiler.Compile('Lin/Mod', 'Libc.txt')
-LindevCompiler.Compile('Lin/Mod', 'Kernel.txt')
+LindevCompiler.Compile('System/Mod', 'Kernel.txt')
 
 LindevCompiler.Compile('System/Mod', 'Files.txt')
 LindevCompiler.Compile('System/Mod', 'Console.txt')
@@ -12,8 +12,8 @@ LindevCompiler.Compile('System/Mod', 'Strings.txt')
 LindevCompiler.Compile('System/Mod', 'Meta.txt')
 LindevCompiler.Compile('System/Mod', 'Dialog.txt')
 
-LindevCompiler.Compile('Lin/Mod', 'Console.txt')
-LindevCompiler.Compile('Lin/Mod', 'HostFiles.txt')
+LindevCompiler.Compile('Host/Mod', 'Files.txt')
+LindevCompiler.Compile('Host/Mod', 'Console.txt')
 
 LindevCompiler.Compile('System/Mod', 'Stores.txt')
 LindevCompiler.Compile('System/Mod', 'Converters.txt')
@@ -98,8 +98,7 @@ LindevCompiler.Compile('Std/Mod', 'Interpreter.txt')
 
 LindevCompiler.Compile('', 'HostFonts.txt')
 LindevCompiler.Compile('', 'HostWindows.txt')
-# HostDates:
-LindevCompiler.Compile('Lin/Mod', 'Dates.txt')
+LindevCompiler.Compile('Host/Mod', 'Dates.txt')
 
 LindevCompiler.Compile('Cons/Mod', 'Interp.txt')
 
