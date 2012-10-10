@@ -88,7 +88,7 @@ Files:
 		Linux/Host/Mod/Dates.odc: from http://oberoncore.ru/
 		OpenBSD/Host/Mod/Dates.odc:
 			Linux/Host/Mod/Dates.odc: OpenBSD-specific
-		Lindev/Mod
+		Dev0/Mod
 			CP*
 				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.
 			Compiler.odc:
@@ -108,8 +108,8 @@ Files:
 		HostFonts.odc, HostDialog.odc, HostWindows.odc: simple Hosts implementation
 
 Notes:
-	Lindev:
-		I will not remove Lindev because I can not link .so library based on ConsInterp and Dev
+	Dev0:
+		I will not remove Dev0 because I can not link .so library based on ConsInterp and Dev
 
 	Kernel.baseStack issue (preliminary description):
 		baseStack is upper border:
