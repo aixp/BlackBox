@@ -1,7 +1,19 @@
-MODULE LindevElfLinker;
+MODULE Dev0ElfLinker;
 
 	(* THIS IS TEXT COPY OF ElfLinker16.odc *)
 	(* DO NOT EDIT *)
+
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems"
+	version	= "System/Rsrc/AboutBB"
+	copyright	= "System/Rsrc/AboutBB"
+	license	= "Docu/BB-License"
+	changes	= ""
+	issues	= ""
+
+**)
 
 (*
 	DevElfLinker version compatible with BlackBox Component Builder release 1.6.
@@ -1871,10 +1883,10 @@ MODULE LindevElfLinker;
 		
 BEGIN
 	newRec := "NewRec"; newArr := "NewArr"
-END LindevElfLinker.
+END Dev0ElfLinker.
 
 LinTestSo LinTestSo2 LinKernel
 
-(!)DevElfLinker.LinkDynDll libtestbb.so := LinKernel+$ LinTestSo2 LinTestSo# ~
-(!)DevElfLinker.LinkDll libtestbb.so := LinTestSo2 LinTestSo# ~
+DevElfLinker.LinkDynDll libtestbb.so := LinKernel+$ LinTestSo2 LinTestSo# ~
+DevElfLinker.LinkDll libtestbb.so := LinTestSo2 LinTestSo# ~
 

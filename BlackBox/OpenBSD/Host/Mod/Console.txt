@@ -1,4 +1,4 @@
-MODULE LinConsole;
+MODULE HostConsole;
 
 	(* THIS IS TEXT COPY OF Console.odc *)
 	(* DO NOT EDIT *)
@@ -110,4 +110,4 @@ MODULE LinConsole;
 
 BEGIN
 	Init
-END LinConsole.
+END HostConsole.

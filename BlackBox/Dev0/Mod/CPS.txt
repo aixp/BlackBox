@@ -1,10 +1,22 @@
-MODULE LindevCPS;
+MODULE Dev0CPS;
 
 	(* THIS IS TEXT COPY OF CPS.odc *)
 	(* DO NOT EDIT *)
-	(* SEE XXX BELOW *)
 
-	IMPORT SYSTEM, Math, DevCPM := LindevCPM, DevCPT := LindevCPT;
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems"
+	version	= "System/Rsrc/AboutBB"
+	copyright	= "System/Rsrc/AboutBB"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
+
+	IMPORT SYSTEM, Math, DevCPM := Dev0CPM, DevCPT := Dev0CPT;
 	
 	CONST
 		MaxIdLen = 256;
@@ -345,7 +357,7 @@ MODULE LindevCPS;
 						IF name = "WHILE" THEN s := while
 						ELSIF name = "WITH" THEN s := with
 						END
-			| "G".."H", "J", "K", "Q", "S", "X".."Z", "a".."z", "_" (* XXX *): Identifier(s)
+			| "G".."H", "J", "K", "Q", "S", "X".."Z", "a".."z", "_", "À".."Ö", "Ø".."ö", "ø".."ÿ": Identifier(s)
 			| "["  : s := lbrak; DevCPM.Get(ch)
 			| "]"  : s := rbrak; DevCPM.Get(ch)
 			| "^"  : s := arrow; DevCPM.Get(ch)
@@ -364,4 +376,4 @@ MODULE LindevCPS;
 	BEGIN ch := " "
 	END Init;
 
-END LindevCPS.
+END Dev0CPS.

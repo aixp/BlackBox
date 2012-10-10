@@ -1,10 +1,23 @@
-MODULE LindevCPP;
+MODULE Dev0CPP;
 
 	(* THIS IS TEXT COPY OF CPP.odc *)
 	(* DO NOT EDIT *)
 
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems"
+	version	= "System/Rsrc/AboutBB"
+	copyright	= "System/Rsrc/AboutBB"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
+
 	IMPORT
-		DevCPM := LindevCPM, DevCPT := LindevCPT, DevCPB := LindevCPB, DevCPS := LindevCPS;
+		DevCPM := Dev0CPM, DevCPT := Dev0CPT, DevCPB := Dev0CPB, DevCPS := Dev0CPS;
 		
 	CONST
 		anchorVarPar = TRUE;
@@ -1646,4 +1659,4 @@ MODULE LindevCPP;
 		DevCPS.str := NIL
 	END Module;
 
-END LindevCPP.
+END Dev0CPP.

@@ -1,10 +1,23 @@
-MODULE LindevCPC486;
+MODULE Dev0CPC486;
 
 	(* THIS IS TEXT COPY OF CPC486.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT SYSTEM, DevCPM := LindevCPM, DevCPT := LindevCPT, DevCPE := LindevCPE, 
-		DevCPL486 := LindevCPL486;
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems"
+	version	= "System/Rsrc/AboutBB"
+	copyright	= "System/Rsrc/AboutBB"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
+
+	IMPORT SYSTEM, DevCPM := Dev0CPM, DevCPT := Dev0CPT, DevCPE := Dev0CPE, 
+		DevCPL486 := Dev0CPL486;
 
 	CONST
 		initializeAll = FALSE;	(* initialize all local variable to zero *)
@@ -1433,7 +1446,7 @@ MODULE LindevCPC486;
 	END ArrayLen;
 
 (*
-(!)		src		dest	zero
+		src		dest	zero
 sx	= sy	x b		y b
 SHORT(lx)	= sy	x b+	x w	y b
 SHORT(lx)	= SHORT(ly)	x b+	x w	y b+
@@ -1448,7 +1461,7 @@ sx	:= SHORT(ly)	y b+	y w	x b
 lx	:= ly	y w		x w
 lx	:= LONG(sy)	y b		x w	*
 lx	:= LONG(SHORT(ly))	y b+	y w*	x w	*
-(!)*)
+*)
 	
 	PROCEDURE AddCopy* (VAR x, y: DevCPL486.Item; last: BOOLEAN); (* x := .. + y + .. *)
 	BEGIN
@@ -2331,4 +2344,4 @@ lx	:= LONG(SHORT(ly))	y b+	y w*	x w	*
 
 BEGIN
 	imLevel[0] := 0
-END LindevCPC486.
+END Dev0CPC486.

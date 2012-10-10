@@ -1,9 +1,22 @@
-MODULE LindevCPL486;
+MODULE Dev0CPL486;
 
 	(* THIS IS TEXT COPY OF CPL486.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT DevCPM := LindevCPM, DevCPT := LindevCPT, DevCPE := LindevCPE;
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems"
+	version	= "System/Rsrc/AboutBB"
+	copyright	= "System/Rsrc/AboutBB"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
+
+	IMPORT DevCPM := Dev0CPM, DevCPT := Dev0CPT, DevCPE := Dev0CPE;
 	
 	TYPE
 		Item* = RECORD
@@ -1054,4 +1067,4 @@ BEGIN
 	Size[Char16] := 2;
 	Size[Int64] := 8;
 	Size[String16] := 0
-END LindevCPL486.
+END Dev0CPL486.

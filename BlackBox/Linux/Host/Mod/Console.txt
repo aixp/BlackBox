@@ -1,6 +1,6 @@
-MODULE LinConsole;
+MODULE HostConsole;
 
-	(* THIS IS TEXT COPY OF OpenBUGS Lin/Mod/Console.odc *)
+	(* THIS IS TEXT COPY OF Console.odc *)
 	(* DO NOT EDIT *)
 
 	IMPORT
@@ -110,4 +110,4 @@ MODULE LinConsole;
 
 BEGIN
 	Init
-END LinConsole.
+END HostConsole.

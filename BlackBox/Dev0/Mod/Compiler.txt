@@ -1,17 +1,17 @@
-MODULE LindevCompiler;
+MODULE Dev0Compiler;
 
 	(* THIS IS TEXT COPY OF Compiler.odc *)
 	(* DO NOT EDIT *)
 
 	(*
-		A. V. Shiryaev, 2012.09
+		A. V. Shiryaev, 2012.10
 
 		Based on DevCompiler
 	*)
 
 	IMPORT Files, Console, Kernel, Strings,
-		DevCPM := LindevCPM, DevCPT:= LindevCPT, DevCPB := LindevCPB, DevCPP := LindevCPP,
-		DevCPE := LindevCPE, DevCPV := LindevCPV486;
+		DevCPM := Dev0CPM, DevCPT:= Dev0CPT, DevCPB := Dev0CPB, DevCPP := Dev0CPP,
+		DevCPE := Dev0CPE, DevCPV := Dev0CPV486;
 
 	CONST
 		(* compiler options: *)
@@ -137,4 +137,4 @@ MODULE LindevCompiler;
 		Do(path, name, opts)
 	END CompileOpt;
 
-END LindevCompiler.
+END Dev0Compiler.

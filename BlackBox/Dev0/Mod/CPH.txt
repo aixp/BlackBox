@@ -1,9 +1,22 @@
-MODULE LindevCPH;
+MODULE Dev0CPH;
 
 	(* THIS IS TEXT COPY OF CPH.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT DevCPT := LindevCPT;
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems"
+	version	= "System/Rsrc/AboutBB"
+	copyright	= "System/Rsrc/AboutBB"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
+
+	IMPORT DevCPT := Dev0CPT;
 	
 	CONST
 		(* UseCalls options *)
@@ -266,7 +279,7 @@ MODULE LindevCPH;
 		END
 	END UseReals;
 		
-END LindevCPH.
+END Dev0CPH.
 
 
 

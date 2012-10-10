@@ -1,9 +1,22 @@
-MODULE LindevCPT;
+MODULE Dev0CPT;
 
 	(* THIS IS TEXT COPY OF CPT.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT DevCPM := LindevCPM;
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems"
+	version	= "System/Rsrc/About"
+	copyright	= "System/Rsrc/About"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
+
+	IMPORT DevCPM := Dev0CPM;
 
 	CONST
 		MaxIdLen = 256;
@@ -1735,7 +1748,7 @@ BEGIN
 	impCtxt.ref[Int64] := int64typ;
 	impCtxt.ref[IUnk] := iunktyp; impCtxt.ref[PUnk] := punktyp; 
 	impCtxt.ref[Guid] := guidtyp; impCtxt.ref[Res] := restyp;
-END LindevCPT.
+END Dev0CPT.
 
 Objects:
 

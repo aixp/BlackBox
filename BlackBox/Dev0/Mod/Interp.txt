@@ -1,12 +1,12 @@
-MODULE LindevInterp;
+MODULE Dev0Interp;
 
 	(*
-		A. V. Shiryaev, 2012.09
+		A. V. Shiryaev, 2012.10
 
-		(Std)Interpreter on (Lin)Console
+		(Std)Interpreter on (Host)Console
 	*)
 
-	IMPORT Console, LinConsole (* required *), Strings, Dialog, StdInterpreter (* required (Dialog.SetCallHook) *);
+	IMPORT Console, HostConsole (* required *), Strings, Dialog, StdInterpreter (* required (Dialog.SetCallHook) *);
 
 	PROCEDURE WriteInt (x: INTEGER);
 		VAR s: ARRAY 16 OF CHAR;
@@ -51,4 +51,4 @@ MODULE LindevInterp;
 		END
 	END Init;
 
-END LindevInterp.
+END Dev0Interp.

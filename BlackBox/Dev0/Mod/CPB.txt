@@ -1,9 +1,22 @@
-MODULE LindevCPB;
+MODULE Dev0CPB;
 
 	(* THIS IS TEXT COPY OF CPB.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT DevCPT := LindevCPT, DevCPM := LindevCPM;
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems, Robert Campbell"
+	version	= "System/Rsrc/About"
+	copyright	= "System/Rsrc/About"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
+
+	IMPORT DevCPT := Dev0CPT, DevCPM := Dev0CPM;
 
 	CONST
 		(* symbol values or ops *)
@@ -2235,4 +2248,4 @@ BEGIN
 	two := DevCPT.NewConst(); two.intval := 2; two.realval := 0;
 	dummy := DevCPT.NewConst();
 	quot := DevCPT.NewConst()
-END LindevCPB.
+END Dev0CPB.

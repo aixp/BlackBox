@@ -1,9 +1,22 @@
-MODULE LindevCPE;
+MODULE Dev0CPE;
 
 	(* THIS IS TEXT COPY OF CPE.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT SYSTEM, (* Dates, *) DevCPM := LindevCPM, DevCPT := LindevCPT;
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems, Robert Campbell"
+	version	= "System/Rsrc/About"
+	copyright	= "System/Rsrc/About"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
+
+	IMPORT SYSTEM, (* Dates, *) DevCPM := Dev0CPM, DevCPT := Dev0CPT;
 
 
 	CONST
@@ -1104,4 +1117,4 @@ BEGIN
 	NEW(Mod); Mod.mode := Con; Mod.mnolev := 0;
 	NEW(Proc); Proc.mode := Con; Proc.mnolev := 0;
 	NEW(Meta); Meta.mode := Con; Mod.mnolev := 0;
-END LindevCPE.
+END Dev0CPE.

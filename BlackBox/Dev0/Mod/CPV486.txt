@@ -1,10 +1,23 @@
-MODULE LindevCPV486;
+MODULE Dev0CPV486;
 
 	(* THIS IS TEXT COPY OF CPV486.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT SYSTEM, DevCPM := LindevCPM, DevCPT := LindevCPT, DevCPE := LindevCPE, 
-		DevCPH := LindevCPH, DevCPL486 := LindevCPL486, DevCPC486 := LindevCPC486;
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems"
+	version	= "System/Rsrc/AboutBB"
+	copyright	= "System/Rsrc/AboutBB"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
+
+	IMPORT SYSTEM, DevCPM := Dev0CPM, DevCPT := Dev0CPT, DevCPE := Dev0CPE, 
+		DevCPH := Dev0CPH, DevCPL486 := Dev0CPL486, DevCPC486 := Dev0CPC486;
 	
 	CONST
 		processor* = 10; (* for i386 *)
@@ -1772,4 +1785,4 @@ MODULE LindevCPV486;
 		END
 	END Module;
 
-END LindevCPV486.
+END Dev0CPV486.

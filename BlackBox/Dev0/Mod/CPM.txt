@@ -1,7 +1,20 @@
-MODULE LindevCPM;
+MODULE Dev0CPM;
 
 	(* THIS IS TEXT COPY OF CPM.odc *)
 	(* DO NOT EDIT *)
+
+(**
+	project	= "BlackBox"
+	organization	= "www.oberon.ch"
+	contributors	= "Oberon microsystems"
+	version	= "System/Rsrc/About"
+	copyright	= "System/Rsrc/About"
+	license	= "Docu/BB-License"
+	references	= "ftp://ftp.inf.ethz.ch/pub/software/Oberon/OberonV4/Docu/OP2.Paper.ps"
+	changes	= ""
+	issues	= ""
+
+**)
 
 	IMPORT SYSTEM, Kernel, Files (* , Stores, Models, Views, TextModels, TextMappers, StdLog, DevMarkers *);
 
@@ -793,4 +806,4 @@ TYPE
 BEGIN
 	InitCrcTab;
 	InitHost
-END LindevCPM.
+END Dev0CPM.

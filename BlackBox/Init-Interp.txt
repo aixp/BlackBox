@@ -1,7 +1,7 @@
 MODULE Init;
 
 	IMPORT
-		LinConsole,
+		HostConsole, (* Console.SetHook *)
 
 		HostFonts (* Fonts.SetHook; required for Texts *),
 		HostWindows (* Windows.SetHook *),
