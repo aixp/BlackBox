@@ -9,7 +9,7 @@ none() {
 	rm -rf \
 		System/Mod/Kernel.odc System/Mod/Kernel.txt System/Code/Kernel.ocf System/Sym/Kernel.osf \
 		Code/Kernel.ocf Sym/Kernel.osf \
-		Host Win Lin BlackBox blackbox.exe BlackBox.exe *.so lindev
+		Host Win Lin BlackBox blackbox.exe BlackBox.exe *.so dev0
 }
 
 obsd() {
@@ -20,7 +20,7 @@ obsd() {
 	ln -s OpenBSD/libBB.so
 	ln -s OpenBSD/libBB0.so
 	ln -s OpenBSD/BlackBox
-	ln -s OpenBSD/lindev
+	ln -s OpenBSD/dev0
 	ln -s OpenBSD/libdlobsdwrap.so
 }
 
@@ -31,8 +31,8 @@ lin() {
 	ln -s Linux/Host
 	ln -s Linux/libBB.so
 	ln -s Linux/libBB0.so
-	ln -s Linux/BlackBox .
-	ln -s Linux/lindev .
+	ln -s Linux/BlackBox
+	ln -s Linux/dev0
 }
 
 case $1 in

@@ -13,7 +13,7 @@ How to build:
 
 	compile self:
 
-		cd BlackBox; ./switch-os `uname -s`; ./clean; ./build-lindev; ./build
+		cd BlackBox; ./switch-os `uname -s`; ./clean; ./build-dev0; ./build
 
 Files:
 	original:

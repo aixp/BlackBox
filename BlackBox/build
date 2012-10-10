@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./run-lindev <<DATA
+./run-dev0 <<DATA
 Dev0Compiler.Compile('Lin/Mod', 'Dl.txt')
 Dev0Compiler.Compile('Lin/Mod', 'Libc.txt')
 Dev0Compiler.Compile('System/Mod', 'Kernel.txt')
