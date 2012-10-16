@@ -30,6 +30,7 @@ Files:
 				all except Console
 			System/Rsrc/*
 			Text/*
+			Xhtml
 		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
