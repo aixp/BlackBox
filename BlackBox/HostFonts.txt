@@ -1,6 +1,6 @@
 MODULE HostFonts;
 
-	(* for Texts *)
+	(* for Texts, HostTextConv *)
 
 	IMPORT Fonts;
 
@@ -12,12 +12,14 @@ MODULE HostFonts;
 		defDsc = 28575;
 
 	TYPE
-		Font = POINTER TO RECORD (Fonts.Font) END;
+		Font = POINTER TO RECORD (Fonts.Font)
+			alias-: Fonts.Typeface;	(* alias # typeface & typeface # "*" == alien font *)
+		END;
 
 		Directory = POINTER TO RECORD (Fonts.Directory) END;
 
 	VAR
-		f: Font;
+		defFont-: Font; (* for HostTextConv *)
 		ti: Fonts.TypefaceInfo;
 		dir: Directory;
 
@@ -45,12 +47,12 @@ MODULE HostFonts;
 
 	PROCEDURE (d: Directory) This (typeface: Fonts.Typeface; size: INTEGER; style: SET; weight: INTEGER): Font;
 	BEGIN
-		RETURN f
+		RETURN defFont
 	END This;
 
 	PROCEDURE (d: Directory) Default (): Font;
 	BEGIN
-		RETURN f
+		RETURN defFont
 	END Default;
 
 	PROCEDURE (d: Directory) TypefaceList (): Fonts.TypefaceInfo;
@@ -60,8 +62,9 @@ MODULE HostFonts;
 
 	PROCEDURE Init;
 	BEGIN
-		NEW(f);
-		f.Init(defTypeface, defSize, {}, Fonts.normal);
+		NEW(defFont);
+		defFont.Init(defTypeface, defSize, {}, Fonts.normal);
+		defFont.alias := "Arial";
 		NEW(ti);
 		ti.typeface := defTypeface;
 		NEW(dir); Fonts.SetDir(dir)

@@ -1,7 +1,6 @@
 By priority:
 	ConsCompiler:
 		interface similar to DevCompiler
-		txt files Converter
 
 	localization:
 		Kernel.cmdLine:

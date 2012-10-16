@@ -99,6 +99,7 @@ Dev0Compiler.Compile('Std/Mod', 'Interpreter.txt')
 Dev0Compiler.Compile('', 'HostFonts.txt')
 Dev0Compiler.Compile('', 'HostWindows.txt')
 Dev0Compiler.Compile('Host/Mod', 'Dates.txt')
+Dev0Compiler.Compile('', 'HostTextConv.txt')
 
 Dev0Compiler.Compile('Cons/Mod', 'Interp.txt')
 

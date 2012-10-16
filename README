@@ -95,6 +95,9 @@ Files:
 				modified original BlackBox Dev/Mod/Compiler.odc
 			ElfLinker16.odc:
 				modified OpenBUGS Dev/Mod/ElfLinker16.odc
+		HostTextConv.odc:
+			BlackBox 1.6-rc6 Host/Mod/TextConv.odc:
+				Windows-specific converters removed
 	new:
 		Cons/Mod
 			Interp.odc: console interpreter
