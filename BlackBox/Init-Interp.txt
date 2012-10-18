@@ -28,7 +28,7 @@ MODULE Init;
 		Converters.Register("HostTextConv.ImportDosText", "", "TextViews.View", "txt", {});
 		Converters.Register("HostTextConv.ImportHex", "", "TextViews.View", "dat", {Converters.importAll});
 		Converters.Register("HostTextConv.ImportText", "HostTextConv.ExportText", "TextViews.View", "xml", {});
-		Converters.Register("HostTextConv.ImportText", "HostTextConv.ExportText", "TextViews.View", "html", {});
+		(* Converters.Register("HostTextConv.ImportText", "HostTextConv.ExportText", "TextViews.View", "html", {}); *)
 (*
 		Converters.Register("DevBrowser.ImportSymFile", "", "TextViews.View", "osf", {});
 		Converters.Register("DevBrowser.ImportCodeFile", "", "TextViews.View", "ocf", {});
