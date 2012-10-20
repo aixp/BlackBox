@@ -31,8 +31,6 @@ Files:
 			System/Rsrc/*
 			Text/*
 			Xhtml
-			Windows/Host/Mod/Files.odc (HostFiles)
-			Windows/Host/Mod/Registry.odc (HostRegistry)
 		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
@@ -93,8 +91,6 @@ Files:
 		Linux/Host/Mod/Dates.odc: from http://oberoncore.ru/
 		OpenBSD/Host/Mod/Dates.odc:
 			Linux/Host/Mod/Dates.odc: OpenBSD-specific
-		Windows/Host/Mod/Dates.odc:
-			BlackBox 1.6-rc6 DatesHook from HostDialog
 		Dev0/Mod
 			CP*
 				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.
