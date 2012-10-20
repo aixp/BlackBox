@@ -14,8 +14,8 @@ CFLAGS += -Wall -O0 -g -m32
 BlackBox: BlackBox-dl.c
 	${CC} ${CFLAGS} -o $@ $^ -ldl
 
-dev0: BlackBox1.c
-	${CC} ${CFLAGS} -o $@ $^ -L . -lBB0
+dev0: dev0.c
+	${CC} ${CFLAGS} -o $@ $^
 
 clean:
 	rm -f dev0 BlackBox

@@ -9,7 +9,7 @@ none() {
 	rm -rf \
 		System/Mod/Kernel.odc System/Mod/Kernel.txt System/Code/Kernel.ocf System/Sym/Kernel.osf \
 		Code/Kernel.ocf Sym/Kernel.osf \
-		Host Win Lin BlackBox blackbox.exe BlackBox.exe *.so dev0
+		Host Win Lin *.exe *.so BlackBox dev0
 }
 
 obsd() {

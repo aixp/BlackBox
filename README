@@ -31,6 +31,8 @@ Files:
 			System/Rsrc/*
 			Text/*
 			Xhtml
+			Windows/Host/Mod/Files.odc (HostFiles)
+			Windows/Host/Mod/Registry.odc (HostRegistry)
 		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
@@ -77,6 +79,8 @@ Files:
 				stdin -> SYSTEM.ADR(__sF[0])
 		Linux/Host/Mod/Console.odc:
 			OpenBUGS Lin/Mod/Console.odc
+		Windows/Host/Mod/Console.odc:
+			OpenBUGS Lin/Mod/Console.odc ported to Windows
 		OpenBSD/Lin/Mod/Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
@@ -89,11 +93,15 @@ Files:
 		Linux/Host/Mod/Dates.odc: from http://oberoncore.ru/
 		OpenBSD/Host/Mod/Dates.odc:
 			Linux/Host/Mod/Dates.odc: OpenBSD-specific
+		Windows/Host/Mod/Dates.odc:
+			BlackBox 1.6-rc6 DatesHook from HostDialog
 		Dev0/Mod
 			CP*
 				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.
 			Compiler.odc:
 				modified original BlackBox Dev/Mod/Compiler.odc
+			Linker.odc:
+				modified original BlackBox Dev/Mod/Linker.odc
 			ElfLinker16.odc:
 				modified OpenBUGS Dev/Mod/ElfLinker16.odc
 		HostTextConv.odc:
@@ -107,6 +115,7 @@ Files:
 
 		{OpenBSD,Linux}/libBB.so: compiled and linked shared library to run BlackBox
 		{OpenBSD,Linux}/libBB0.so: compiled and linked shared library to run simple development interpreter
+		Windows/dev0.exe: compiled and linked simple development interpreter
 
 		Views.odc: minimal Views implementation required to compile StdInterpreter
 		HostFonts.odc, HostDialog.odc, HostWindows.odc: simple Hosts implementation

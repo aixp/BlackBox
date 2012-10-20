@@ -117,5 +117,3 @@ DevCompiler.CompileThis XhtmlEntitySets XhtmlWriters XhtmlStdFileWriters XhtmlTe
 
 DevCompiler.CompileThis ObxHello0 ObxPi ObxRandom ObxTrap
 DATA
-
-

@@ -20,8 +20,11 @@ all: libdlobsdwrap.so dev0 BlackBox
 BlackBox: BlackBox-dl.c
 	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -pthread
 
-dev0: BlackBox1.c
-	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -L . -lBB0
+#dev0: BlackBox1.c
+#	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -L . -lBB0
+
+dev0: dev0.c
+	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC}
 
 libdlobsdwrap.so: libdlobsdwrap.c
 	${CC} ${CFLAGS} -o ${.TARGET} ${.ALLSRC} -fPIC -shared

@@ -21,8 +21,11 @@ MODULE ConsInterp;
 		textR.SetPos(0);
 		textR.ReadChar(c);
 		WHILE ~textR.eot DO
-			IF c = 0DX THEN c := 0AX END;
-			Console.WriteChar(c);
+			IF c = 0DX THEN
+				Console.WriteLn
+			ELSE
+				Console.WriteChar(c)
+			END;
 			textR.ReadChar(c)
 		END;
 		StdLog.text.Delete(0, StdLog.text.Length())
