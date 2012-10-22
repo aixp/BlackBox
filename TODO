@@ -1,9 +1,16 @@
 By priority:
+	do not use command line (Kernel.cmdLine), use env variables instead
+		BB_PRIMARY_DIR
+		BB_SECONDARY_DIR (instead of /USE)
+
+	cleanup Console
+
 	ConsCompiler:
 		interface similar to DevCompiler
 
 	localization:
-		Kernel.cmdLine:
+		command line: not use
+		env variables:
 			decode (encoding = current locale encoding)
 		HostConsole:
 			encode on printf, encoding = current locale encoding
@@ -13,7 +20,6 @@ By priority:
 				store encoded (ARRAY OF SHORTCHAR), encoding = currect locale encoding
 				display decoded (ARRAY OF CHAR)
 				NOTE: Kernel.cmdLine decoded (see ^)
-		txt Converter: encoding should be the same as in Windows HostTextConv?
 
 	handle SIGTERM in server version (when Kernel.Start used)
 
