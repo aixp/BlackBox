@@ -9,7 +9,7 @@ By priority:
 		interface similar to DevCompiler
 
 	localization:
-		command line: not use
+		command line: do not use
 		env variables:
 			decode (encoding = current locale encoding)
 		HostConsole:
