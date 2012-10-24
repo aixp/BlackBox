@@ -249,7 +249,8 @@ MODULE LinLibc ["libc.so.6"];
 		__ftw_func_t* = PROCEDURE (fileName: PtrSTR; VAR [nil] stat: stat_t; flag: INTEGER): INTEGER;
 		PtrVoid* = INTEGER;
 		PtrSTR* = POINTER TO ARRAY [untagged] OF SHORTCHAR;
-		PtrWSTR* = POINTER TO ARRAY [untagged] OF CHAR;
+		wchar_t* = INTEGER;
+		PtrWSTR* = POINTER TO ARRAY [untagged] OF wchar_t;
 		PtrInt* = INTEGER;
 		StrArray* = POINTER TO ARRAY [untagged] OF PtrSTR;
 		PtrFILE* = INTEGER;
@@ -393,7 +394,7 @@ MODULE LinLibc ["libc.so.6"];
 
 	VAR
 		timezone*: INTEGER; (* seconds from GMT *)		
-		stdin*, stdout*, stderr* : PtrFILE; 
+		stdin*, stdout*, stderr* : PtrFILE;
 
 	PROCEDURE [ccall] calloc* (num, size: size_t): PtrVoid;
 	PROCEDURE [ccall] clock* (): clock_t;
