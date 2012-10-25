@@ -9,6 +9,11 @@ By priority:
 		interface similar to DevCompiler
 
 	localization:
+		Enc:
+			utf-8 encoder:
+				special case: high surrogate
+			utf-8 decoder: fix
+
 		command line: do not use
 		env variables:
 			decode (encoding = current locale encoding)
