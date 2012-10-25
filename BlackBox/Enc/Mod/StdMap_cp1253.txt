@@ -1,0 +1,133 @@
+MODULE EncStdMap_cp1253;
+
+	(* This file was generated automatically *)
+
+	(* Source: http://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP1253.TXT *)
+
+	IMPORT Codecs := EncCodecs;
+
+	TYPE
+		Encoder = POINTER TO RECORD (Codecs.Encoder) END;
+		Decoder = POINTER TO RECORD (Codecs.Decoder)
+			b: INTEGER;
+			st: INTEGER; (* 0 - no state, > 0 - number of chars expected, -1 - error *)
+		END;
+
+	(* Encoder *)
+
+	PROCEDURE (e: Encoder) Encode (IN f: ARRAY OF CHAR; VAR fR, fLen: INTEGER; VAR t: ARRAY OF SHORTCHAR; VAR tW: INTEGER);
+		VAR x, y: INTEGER;
+	BEGIN
+		WHILE fLen > 0 DO
+			x := ORD(f[fR]);
+			CASE x OF
+			| 00H..7FH: y := x
+			| 0A0H: y := 0A0H
+			| 0A3H..0A9H: y := x
+			| 0ABH..0AEH: y := x
+			| 0B0H..0B3H: y := x
+			| 0B5H..0B7H: y := x
+			| 0BBH: y := 0BBH
+			| 0BDH: y := 0BDH
+			| 0192H: y := 83H
+			| 0384H: y := 0B4H
+			| 0385H..0386H: y := x - 02E4H
+			| 0388H..038AH: y := x - 02D0H
+			| 038CH: y := 0BCH
+			| 038EH..03A1H: y := x - 02D0H
+			| 03A3H..03CEH: y := x - 02D0H
+			| 2013H..2014H: y := x - 1F7DH
+			| 2015H: y := 0AFH
+			| 2018H..2019H: y := x - 1F87H
+			| 201AH: y := 82H
+			| 201CH..201DH: y := x - 1F89H
+			| 201EH: y := 84H
+			| 2020H..2021H: y := x - 1F9AH
+			| 2022H: y := 95H
+			| 2026H: y := 85H
+			| 2030H: y := 89H
+			| 2039H: y := 8BH
+			| 203AH: y := 9BH
+			| 20ACH: y := 80H
+			| 2122H: y := 99H
+			ELSE
+				RETURN
+			END;
+			t[tW] := SHORT(CHR(y)); INC(tW);
+			INC(fR);
+			DEC(fLen)
+		END
+	END Encode;
+
+	PROCEDURE NewEncoder* (): Codecs.Encoder;
+		VAR e: Encoder;
+	BEGIN
+		NEW(e); RETURN e
+	END NewEncoder;
+
+	(* Decoder *)
+
+	PROCEDURE (d: Decoder) Decode (IN f: ARRAY OF SHORTCHAR; VAR fR, fLen: INTEGER; VAR t: ARRAY OF CHAR; VAR tW: INTEGER; OUT state: BOOLEAN);
+		VAR x, y: INTEGER;
+	BEGIN
+		WHILE fLen > 0 DO
+			x := ORD(f[fR]);
+
+			CASE x OF
+			| 00H..7FH: y := x
+			| 80H: y := 20ACH
+			| 82H: y := 201AH
+			| 83H: y := 0192H
+			| 84H: y := 201EH
+			| 85H: y := 2026H
+			| 86H..87H: y := x + 1F9AH
+			| 89H: y := 2030H
+			| 8BH: y := 2039H
+			| 91H..92H: y := x + 1F87H
+			| 93H..94H: y := x + 1F89H
+			| 95H: y := 2022H
+			| 96H..97H: y := x + 1F7DH
+			| 99H: y := 2122H
+			| 9BH: y := 203AH
+			| 0A0H: y := 0A0H
+			| 0A1H..0A2H: y := x + 02E4H
+			| 0A3H..0A9H: y := x
+			| 0ABH..0AEH: y := x
+			| 0AFH: y := 2015H
+			| 0B0H..0B3H: y := x
+			| 0B4H: y := 0384H
+			| 0B5H..0B7H: y := x
+			| 0B8H..0BAH: y := x + 02D0H
+			| 0BBH: y := 0BBH
+			| 0BCH: y := 038CH
+			| 0BDH: y := 0BDH
+			| 0BEH..0D1H: y := x + 02D0H
+			| 0D3H..0FEH: y := x + 02D0H
+			ELSE
+				d.st := -1; RETURN
+			END;
+
+			t[tW] := CHR(y); INC(tW);
+
+			INC(fR);
+			DEC(fLen)
+		END;
+
+		IF d.st = 0 THEN state := FALSE
+		ELSIF d.st > 0 THEN state := TRUE
+		ELSE HALT(100)
+		END
+	END Decode;
+
+	PROCEDURE (d: Decoder) Reset;
+	BEGIN
+		d.st := 0
+	END Reset;
+
+	PROCEDURE NewDecoder* (): Codecs.Decoder;
+		VAR d: Decoder;
+	BEGIN
+		NEW(d); d.Reset; RETURN d
+	END NewDecoder;
+
+END EncStdMap_cp1253.

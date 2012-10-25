@@ -1,0 +1,195 @@
+MODULE EncStdMap_ptcp154;
+
+	(* This file was generated automatically *)
+
+	(* Source: http://www.math.nmsu.edu/~mleisher/Software/csets/PTCP154.TXT *)
+
+	IMPORT Codecs := EncCodecs;
+
+	TYPE
+		Encoder = POINTER TO RECORD (Codecs.Encoder) END;
+		Decoder = POINTER TO RECORD (Codecs.Decoder)
+			b: INTEGER;
+			st: INTEGER; (* 0 - no state, > 0 - number of chars expected, -1 - error *)
+		END;
+
+	(* Encoder *)
+
+	PROCEDURE (e: Encoder) Encode (IN f: ARRAY OF CHAR; VAR fR, fLen: INTEGER; VAR t: ARRAY OF SHORTCHAR; VAR tW: INTEGER);
+		VAR x, y: INTEGER;
+	BEGIN
+		WHILE fLen > 0 DO
+			x := ORD(f[fR]);
+			CASE x OF
+			| 00H..7FH: y := x
+			| 0A0H: y := 0A0H
+			| 0A7H: y := 0A7H
+			| 0A9H: y := 0A9H
+			| 0ABH..0ACH: y := x
+			| 0AEH: y := 0AEH
+			| 0B0H: y := 0B0H
+			| 0B6H..0B7H: y := x
+			| 0BBH: y := 0BBH
+			| 0401H: y := 0A8H
+			| 0406H: y := 0B2H
+			| 0408H: y := 0A3H
+			| 040EH: y := 0A1H
+			| 0410H..044FH: y := x - 0350H
+			| 0451H: y := 0B8H
+			| 0456H: y := 0B3H
+			| 0458H: y := 0BCH
+			| 045EH: y := 0A2H
+			| 0492H: y := 81H
+			| 0493H: y := 83H
+			| 0496H: y := 80H
+			| 0497H: y := 90H
+			| 0498H: y := 0A5H
+			| 0499H: y := 0B4H
+			| 049AH: y := 8DH
+			| 049BH: y := 9DH
+			| 049CH: y := 0AFH
+			| 049DH: y := 0BFH
+			| 04A0H: y := 8AH
+			| 04A1H: y := 9AH
+			| 04A2H: y := 8CH
+			| 04A3H: y := 9CH
+			| 04AAH..04ABH: y := x - 03EDH
+			| 04AEH: y := 87H
+			| 04AFH: y := 89H
+			| 04B0H: y := 0A6H
+			| 04B1H: y := 0B1H
+			| 04B2H: y := 88H
+			| 04B3H: y := 98H
+			| 04B6H: y := 86H
+			| 04B7H: y := 99H
+			| 04B8H: y := 8FH
+			| 04B9H: y := 9FH
+			| 04BAH: y := 8EH
+			| 04BBH: y := 9EH
+			| 04D8H: y := 0AAH
+			| 04D9H: y := 0BAH
+			| 04E2H: y := 8BH
+			| 04E3H: y := 9BH
+			| 04E8H: y := 0A4H
+			| 04E9H: y := 0B5H
+			| 04EEH: y := 82H
+			| 04EFH: y := 0ADH
+			| 2013H..2014H: y := x - 1F7DH
+			| 2018H..2019H: y := x - 1F87H
+			| 201CH..201DH: y := x - 1F89H
+			| 201EH: y := 84H
+			| 2022H: y := 95H
+			| 2026H: y := 85H
+			| 2116H: y := 0B9H
+			ELSE
+				RETURN
+			END;
+			t[tW] := SHORT(CHR(y)); INC(tW);
+			INC(fR);
+			DEC(fLen)
+		END
+	END Encode;
+
+	PROCEDURE NewEncoder* (): Codecs.Encoder;
+		VAR e: Encoder;
+	BEGIN
+		NEW(e); RETURN e
+	END NewEncoder;
+
+	(* Decoder *)
+
+	PROCEDURE (d: Decoder) Decode (IN f: ARRAY OF SHORTCHAR; VAR fR, fLen: INTEGER; VAR t: ARRAY OF CHAR; VAR tW: INTEGER; OUT state: BOOLEAN);
+		VAR x, y: INTEGER;
+	BEGIN
+		WHILE fLen > 0 DO
+			x := ORD(f[fR]);
+
+			CASE x OF
+			| 00H..7FH: y := x
+			| 80H: y := 0496H
+			| 81H: y := 0492H
+			| 82H: y := 04EEH
+			| 83H: y := 0493H
+			| 84H: y := 201EH
+			| 85H: y := 2026H
+			| 86H: y := 04B6H
+			| 87H: y := 04AEH
+			| 88H: y := 04B2H
+			| 89H: y := 04AFH
+			| 8AH: y := 04A0H
+			| 8BH: y := 04E2H
+			| 8CH: y := 04A2H
+			| 8DH: y := 049AH
+			| 8EH: y := 04BAH
+			| 8FH: y := 04B8H
+			| 90H: y := 0497H
+			| 91H..92H: y := x + 1F87H
+			| 93H..94H: y := x + 1F89H
+			| 95H: y := 2022H
+			| 96H..97H: y := x + 1F7DH
+			| 98H: y := 04B3H
+			| 99H: y := 04B7H
+			| 9AH: y := 04A1H
+			| 9BH: y := 04E3H
+			| 9CH: y := 04A3H
+			| 9DH: y := 049BH
+			| 9EH: y := 04BBH
+			| 9FH: y := 04B9H
+			| 0A0H: y := 0A0H
+			| 0A1H: y := 040EH
+			| 0A2H: y := 045EH
+			| 0A3H: y := 0408H
+			| 0A4H: y := 04E8H
+			| 0A5H: y := 0498H
+			| 0A6H: y := 04B0H
+			| 0A7H: y := 0A7H
+			| 0A8H: y := 0401H
+			| 0A9H: y := 0A9H
+			| 0AAH: y := 04D8H
+			| 0ABH..0ACH: y := x
+			| 0ADH: y := 04EFH
+			| 0AEH: y := 0AEH
+			| 0AFH: y := 049CH
+			| 0B0H: y := 0B0H
+			| 0B1H: y := 04B1H
+			| 0B2H: y := 0406H
+			| 0B3H: y := 0456H
+			| 0B4H: y := 0499H
+			| 0B5H: y := 04E9H
+			| 0B6H..0B7H: y := x
+			| 0B8H: y := 0451H
+			| 0B9H: y := 2116H
+			| 0BAH: y := 04D9H
+			| 0BBH: y := 0BBH
+			| 0BCH: y := 0458H
+			| 0BDH..0BEH: y := x + 03EDH
+			| 0BFH: y := 049DH
+			| 0C0H..0FFH: y := x + 0350H
+			ELSE
+				d.st := -1; RETURN
+			END;
+
+			t[tW] := CHR(y); INC(tW);
+
+			INC(fR);
+			DEC(fLen)
+		END;
+
+		IF d.st = 0 THEN state := FALSE
+		ELSIF d.st > 0 THEN state := TRUE
+		ELSE HALT(100)
+		END
+	END Decode;
+
+	PROCEDURE (d: Decoder) Reset;
+	BEGIN
+		d.st := 0
+	END Reset;
+
+	PROCEDURE NewDecoder* (): Codecs.Decoder;
+		VAR d: Decoder;
+	BEGIN
+		NEW(d); d.Reset; RETURN d
+	END NewDecoder;
+
+END EncStdMap_ptcp154.

@@ -1,0 +1,103 @@
+MODULE EncStdMap_iso8859_15;
+
+	(* This file was generated automatically *)
+
+	(* Source: http://www.unicode.org/Public/MAPPINGS/ISO8859/8859-15.TXT *)
+
+	IMPORT Codecs := EncCodecs;
+
+	TYPE
+		Encoder = POINTER TO RECORD (Codecs.Encoder) END;
+		Decoder = POINTER TO RECORD (Codecs.Decoder)
+			b: INTEGER;
+			st: INTEGER; (* 0 - no state, > 0 - number of chars expected, -1 - error *)
+		END;
+
+	(* Encoder *)
+
+	PROCEDURE (e: Encoder) Encode (IN f: ARRAY OF CHAR; VAR fR, fLen: INTEGER; VAR t: ARRAY OF SHORTCHAR; VAR tW: INTEGER);
+		VAR x, y: INTEGER;
+	BEGIN
+		WHILE fLen > 0 DO
+			x := ORD(f[fR]);
+			CASE x OF
+			| 00H..0A3H: y := x
+			| 0A5H: y := 0A5H
+			| 0A7H: y := 0A7H
+			| 0A9H..0B3H: y := x
+			| 0B5H..0B7H: y := x
+			| 0B9H..0BBH: y := x
+			| 0BFH..0FFH: y := x
+			| 0152H..0153H: y := x - 96H
+			| 0160H: y := 0A6H
+			| 0161H: y := 0A8H
+			| 0178H: y := 0BEH
+			| 017DH: y := 0B4H
+			| 017EH: y := 0B8H
+			| 20ACH: y := 0A4H
+			ELSE
+				RETURN
+			END;
+			t[tW] := SHORT(CHR(y)); INC(tW);
+			INC(fR);
+			DEC(fLen)
+		END
+	END Encode;
+
+	PROCEDURE NewEncoder* (): Codecs.Encoder;
+		VAR e: Encoder;
+	BEGIN
+		NEW(e); RETURN e
+	END NewEncoder;
+
+	(* Decoder *)
+
+	PROCEDURE (d: Decoder) Decode (IN f: ARRAY OF SHORTCHAR; VAR fR, fLen: INTEGER; VAR t: ARRAY OF CHAR; VAR tW: INTEGER; OUT state: BOOLEAN);
+		VAR x, y: INTEGER;
+	BEGIN
+		WHILE fLen > 0 DO
+			x := ORD(f[fR]);
+
+			CASE x OF
+			| 00H..0A3H: y := x
+			| 0A4H: y := 20ACH
+			| 0A5H: y := 0A5H
+			| 0A6H: y := 0160H
+			| 0A7H: y := 0A7H
+			| 0A8H: y := 0161H
+			| 0A9H..0B3H: y := x
+			| 0B4H: y := 017DH
+			| 0B5H..0B7H: y := x
+			| 0B8H: y := 017EH
+			| 0B9H..0BBH: y := x
+			| 0BCH..0BDH: y := x + 96H
+			| 0BEH: y := 0178H
+			| 0BFH..0FFH: y := x
+			ELSE
+				d.st := -1; RETURN
+			END;
+
+			t[tW] := CHR(y); INC(tW);
+
+			INC(fR);
+			DEC(fLen)
+		END;
+
+		IF d.st = 0 THEN state := FALSE
+		ELSIF d.st > 0 THEN state := TRUE
+		ELSE HALT(100)
+		END
+	END Decode;
+
+	PROCEDURE (d: Decoder) Reset;
+	BEGIN
+		d.st := 0
+	END Reset;
+
+	PROCEDURE NewDecoder* (): Codecs.Decoder;
+		VAR d: Decoder;
+	BEGIN
+		NEW(d); d.Reset; RETURN d
+	END NewDecoder;
+
+END EncStdMap_iso8859_15.

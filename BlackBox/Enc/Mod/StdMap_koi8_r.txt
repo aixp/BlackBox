@@ -1,0 +1,223 @@
+MODULE EncStdMap_koi8_r;
+
+	(* This file was generated automatically *)
+
+	(* Source: http://www.unicode.org/Public/MAPPINGS/VENDORS/MISC/KOI8-R.TXT *)
+
+	IMPORT Codecs := EncCodecs;
+
+	TYPE
+		Encoder = POINTER TO RECORD (Codecs.Encoder) END;
+		Decoder = POINTER TO RECORD (Codecs.Decoder)
+			b: INTEGER;
+			st: INTEGER; (* 0 - no state, > 0 - number of chars expected, -1 - error *)
+		END;
+
+	(* Encoder *)
+
+	PROCEDURE (e: Encoder) Encode (IN f: ARRAY OF CHAR; VAR fR, fLen: INTEGER; VAR t: ARRAY OF SHORTCHAR; VAR tW: INTEGER);
+		VAR x, y: INTEGER;
+	BEGIN
+		WHILE fLen > 0 DO
+			x := ORD(f[fR]);
+			CASE x OF
+			| 00H..7FH: y := x
+			| 0A0H: y := 9AH
+			| 0A9H: y := 0BFH
+			| 0B0H: y := 9CH
+			| 0B2H: y := 9DH
+			| 0B7H: y := 9EH
+			| 0F7H: y := 9FH
+			| 0401H: y := 0B3H
+			| 0410H..0411H: y := x - 032FH
+			| 0412H: y := 0F7H
+			| 0413H: y := 0E7H
+			| 0414H..0415H: y := x - 0330H
+			| 0416H: y := 0F6H
+			| 0417H: y := 0FAH
+			| 0418H..041FH: y := x - 032FH
+			| 0420H..0423H: y := x - 032EH
+			| 0424H: y := 0E6H
+			| 0425H: y := 0E8H
+			| 0426H: y := 0E3H
+			| 0427H: y := 0FEH
+			| 0428H: y := 0FBH
+			| 0429H: y := 0FDH
+			| 042AH: y := 0FFH
+			| 042BH: y := 0F9H
+			| 042CH: y := 0F8H
+			| 042DH: y := 0FCH
+			| 042EH: y := 0E0H
+			| 042FH: y := 0F1H
+			| 0430H..0431H: y := x - 036FH
+			| 0432H: y := 0D7H
+			| 0433H: y := 0C7H
+			| 0434H..0435H: y := x - 0370H
+			| 0436H: y := 0D6H
+			| 0437H: y := 0DAH
+			| 0438H..043FH: y := x - 036FH
+			| 0440H..0443H: y := x - 036EH
+			| 0444H: y := 0C6H
+			| 0445H: y := 0C8H
+			| 0446H: y := 0C3H
+			| 0447H: y := 0DEH
+			| 0448H: y := 0DBH
+			| 0449H: y := 0DDH
+			| 044AH: y := 0DFH
+			| 044BH: y := 0D9H
+			| 044CH: y := 0D8H
+			| 044DH: y := 0DCH
+			| 044EH: y := 0C0H
+			| 044FH: y := 0D1H
+			| 0451H: y := 0A3H
+			| 2219H..221AH: y := x - 2184H
+			| 2248H: y := 97H
+			| 2264H..2265H: y := x - 21CCH
+			| 2320H: y := 93H
+			| 2321H: y := 9BH
+			| 2500H: y := 80H
+			| 2502H: y := 81H
+			| 250CH: y := 82H
+			| 2510H: y := 83H
+			| 2514H: y := 84H
+			| 2518H: y := 85H
+			| 251CH: y := 86H
+			| 2524H: y := 87H
+			| 252CH: y := 88H
+			| 2534H: y := 89H
+			| 253CH: y := 8AH
+			| 2550H..2552H: y := x - 24B0H
+			| 2553H..2561H: y := x - 24AFH
+			| 2562H..256CH: y := x - 24AEH
+			| 2580H: y := 8BH
+			| 2584H: y := 8CH
+			| 2588H: y := 8DH
+			| 258CH: y := 8EH
+			| 2590H..2593H: y := x - 2501H
+			| 25A0H: y := 94H
+			ELSE
+				RETURN
+			END;
+			t[tW] := SHORT(CHR(y)); INC(tW);
+			INC(fR);
+			DEC(fLen)
+		END
+	END Encode;
+
+	PROCEDURE NewEncoder* (): Codecs.Encoder;
+		VAR e: Encoder;
+	BEGIN
+		NEW(e); RETURN e
+	END NewEncoder;
+
+	(* Decoder *)
+
+	PROCEDURE (d: Decoder) Decode (IN f: ARRAY OF SHORTCHAR; VAR fR, fLen: INTEGER; VAR t: ARRAY OF CHAR; VAR tW: INTEGER; OUT state: BOOLEAN);
+		VAR x, y: INTEGER;
+	BEGIN
+		WHILE fLen > 0 DO
+			x := ORD(f[fR]);
+
+			CASE x OF
+			| 00H..7FH: y := x
+			| 80H: y := 2500H
+			| 81H: y := 2502H
+			| 82H: y := 250CH
+			| 83H: y := 2510H
+			| 84H: y := 2514H
+			| 85H: y := 2518H
+			| 86H: y := 251CH
+			| 87H: y := 2524H
+			| 88H: y := 252CH
+			| 89H: y := 2534H
+			| 8AH: y := 253CH
+			| 8BH: y := 2580H
+			| 8CH: y := 2584H
+			| 8DH: y := 2588H
+			| 8EH: y := 258CH
+			| 8FH..92H: y := x + 2501H
+			| 93H: y := 2320H
+			| 94H: y := 25A0H
+			| 95H..96H: y := x + 2184H
+			| 97H: y := 2248H
+			| 98H..99H: y := x + 21CCH
+			| 9AH: y := 0A0H
+			| 9BH: y := 2321H
+			| 9CH: y := 0B0H
+			| 9DH: y := 0B2H
+			| 9EH: y := 0B7H
+			| 9FH: y := 0F7H
+			| 0A0H..0A2H: y := x + 24B0H
+			| 0A3H: y := 0451H
+			| 0A4H..0B2H: y := x + 24AFH
+			| 0B3H: y := 0401H
+			| 0B4H..0BEH: y := x + 24AEH
+			| 0BFH: y := 0A9H
+			| 0C0H: y := 044EH
+			| 0C1H..0C2H: y := x + 036FH
+			| 0C3H: y := 0446H
+			| 0C4H..0C5H: y := x + 0370H
+			| 0C6H: y := 0444H
+			| 0C7H: y := 0433H
+			| 0C8H: y := 0445H
+			| 0C9H..0D0H: y := x + 036FH
+			| 0D1H: y := 044FH
+			| 0D2H..0D5H: y := x + 036EH
+			| 0D6H: y := 0436H
+			| 0D7H: y := 0432H
+			| 0D8H: y := 044CH
+			| 0D9H: y := 044BH
+			| 0DAH: y := 0437H
+			| 0DBH: y := 0448H
+			| 0DCH: y := 044DH
+			| 0DDH: y := 0449H
+			| 0DEH: y := 0447H
+			| 0DFH: y := 044AH
+			| 0E0H: y := 042EH
+			| 0E1H..0E2H: y := x + 032FH
+			| 0E3H: y := 0426H
+			| 0E4H..0E5H: y := x + 0330H
+			| 0E6H: y := 0424H
+			| 0E7H: y := 0413H
+			| 0E8H: y := 0425H
+			| 0E9H..0F0H: y := x + 032FH
+			| 0F1H: y := 042FH
+			| 0F2H..0F5H: y := x + 032EH
+			| 0F6H: y := 0416H
+			| 0F7H: y := 0412H
+			| 0F8H: y := 042CH
+			| 0F9H: y := 042BH
+			| 0FAH: y := 0417H
+			| 0FBH: y := 0428H
+			| 0FCH: y := 042DH
+			| 0FDH: y := 0429H
+			| 0FEH: y := 0427H
+			| 0FFH: y := 042AH
+			ELSE
+				d.st := -1; RETURN
+			END;
+
+			t[tW] := CHR(y); INC(tW);
+
+			INC(fR);
+			DEC(fLen)
+		END;
+
+		IF d.st = 0 THEN state := FALSE
+		ELSIF d.st > 0 THEN state := TRUE
+		ELSE HALT(100)
+		END
+	END Decode;
+
+	PROCEDURE (d: Decoder) Reset;
+	BEGIN
+		d.st := 0
+	END Reset;
+
+	PROCEDURE NewDecoder* (): Codecs.Decoder;
+		VAR d: Decoder;
+	BEGIN
+		NEW(d); d.Reset; RETURN d
+	END NewDecoder;
+
+END EncStdMap_koi8_r.
