@@ -31,17 +31,17 @@ ISO8859-16:	A:	MAPPINGS/ISO8859/8859-16.TXT:	http://www.unicode.org/Public/MAPPI
 # ISO8859-4-1998:		A:	MAPPINGS/ISO8859/DatedVersions/8859-4-1998.TXT:		http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-4-1998.TXT
 # ISO8859-5-1999:		A:	MAPPINGS/ISO8859/DatedVersions/8859-5-1999.TXT:		http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-5-1999.TXT
 # ISO8859-6-1999:		A:	MAPPINGS/ISO8859/DatedVersions/8859-6-1999.TXT:		http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-6-1999.TXT
-# ISO8859-7-1987A:	A:	MAPPINGS/ISO8859/DatedVersions/8859-7-1987a.txt:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-7-1987a.txt
-# ISO8859-7-1987B:	A:	MAPPINGS/ISO8859/DatedVersions/8859-7-1987b.txt:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-7-1987b.txt
+# ISO8859-7-1987A:		A:	MAPPINGS/ISO8859/DatedVersions/8859-7-1987a.txt:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-7-1987a.txt
+# ISO8859-7-1987B:		A:	MAPPINGS/ISO8859/DatedVersions/8859-7-1987b.txt:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-7-1987b.txt
 # ISO8859-7-2003:		A:	MAPPINGS/ISO8859/DatedVersions/8859-7-2003.txt:		http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-7-2003.txt
 # ISO8859-8-1999:		A:	MAPPINGS/ISO8859/DatedVersions/8859-8-1999.TXT:		http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-8-1999.TXT
 # ISO8859-9-1999:		A:	MAPPINGS/ISO8859/DatedVersions/8859-9-1999.TXT:		http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-9-1999.TXT
-# ISO8859-10-1998:	A:	MAPPINGS/ISO8859/DatedVersions/8859-10-1998.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-10-1998.TXT
-# ISO8859-11-2001:	A:	MAPPINGS/ISO8859/DatedVersions/8859-11-2001.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-11-2001.TXT
-# ISO8859-13-1998:	A:	MAPPINGS/ISO8859/DatedVersions/8859-13-1998.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-13-1998.TXT
-# ISO8859-14-1998:	A:	MAPPINGS/ISO8859/DatedVersions/8859-14-1998.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-14-1998.TXT
-# ISO8859-15-1999:	A:	MAPPINGS/ISO8859/DatedVersions/8859-15-1999.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-15-1999.TXT
-# ISO8859-16-2001:	A:	MAPPINGS/ISO8859/DatedVersions/8859-16-2001.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-16-2001.TXT
+# ISO8859-10-1998:		A:	MAPPINGS/ISO8859/DatedVersions/8859-10-1998.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-10-1998.TXT
+# ISO8859-11-2001:		A:	MAPPINGS/ISO8859/DatedVersions/8859-11-2001.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-11-2001.TXT
+# ISO8859-13-1998:		A:	MAPPINGS/ISO8859/DatedVersions/8859-13-1998.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-13-1998.TXT
+# ISO8859-14-1998:		A:	MAPPINGS/ISO8859/DatedVersions/8859-14-1998.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-14-1998.TXT
+# ISO8859-15-1999:		A:	MAPPINGS/ISO8859/DatedVersions/8859-15-1999.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-15-1999.TXT
+# ISO8859-16-2001:		A:	MAPPINGS/ISO8859/DatedVersions/8859-16-2001.TXT:	http://www.unicode.org/Public/MAPPINGS/ISO8859/DatedVersions/8859-16-2001.TXT
 
 # MAPPINGS/VENDORS/ADOBE/stdenc.txt
 # MAPPINGS/VENDORS/ADOBE/symbol.txt
@@ -168,8 +168,8 @@ CP1140:		pySBCS:	CP1140:		Python
 
 HP-ROMAN8:	pySBCS:	HP-ROMAN8:	Python
 
-# uuu:		pyDBCS:	UTF-8:		Python
-# sss:		pyDBCS:	SJIS:		Python
+# utf8:		pyDBCS:	UTF-8:		Python
+# sjis:		pyDBCS:	SJIS:		Python
 ### end of source Python
 
 ### source: csets
