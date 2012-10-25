@@ -12,7 +12,6 @@ By priority:
 		Enc:
 			utf-8:
 				encoder: special case: high surrogate
-				decoder: fix
 			encodings with not unique codes
 			CJK
 
