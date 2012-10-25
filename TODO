@@ -10,9 +10,10 @@ By priority:
 
 	localization:
 		Enc:
-			utf-8 encoder:
-				special case: high surrogate
-			utf-8 decoder: fix
+			utf-8:
+				encoder: special case: high surrogate
+				decoder: fix
+			DBCS, CJK
 
 		command line: do not use
 		env variables:
