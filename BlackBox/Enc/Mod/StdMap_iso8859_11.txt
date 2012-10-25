@@ -18,9 +18,8 @@ MODULE EncStdMap_iso8859_11;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..0A0H: y := x
-			| 0E01H..0E3AH: y := x - 0D60H
-			| 0E3FH..0E5BH: y := x - 0D60H
+			| 00H..0A0H: y := 00H + x
+			| 0E01H..0E3AH,0E3FH..0E5BH: y := -0D60H + x
 			ELSE
 				RETURN
 			END;
@@ -43,9 +42,8 @@ MODULE EncStdMap_iso8859_11;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..0A0H: y := x
-			| 0A1H..0DAH: y := x + 0D60H
-			| 0DFH..0FBH: y := x + 0D60H
+			| 00H..0A0H: y := 00H + x
+			| 0A1H..0DAH,0DFH..0FBH: y := 0D60H + x
 			ELSE
 				RETURN
 			END;

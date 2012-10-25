@@ -18,35 +18,23 @@ MODULE EncStdMap_cp1253;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..7FH: y := x
-			| 0A0H: y := 0A0H
-			| 0A3H..0A9H: y := x
-			| 0ABH..0AEH: y := x
-			| 0B0H..0B3H: y := x
-			| 0B5H..0B7H: y := x
-			| 0BBH: y := 0BBH
-			| 0BDH: y := 0BDH
-			| 0192H: y := 83H
-			| 0384H: y := 0B4H
-			| 0385H..0386H: y := x - 02E4H
-			| 0388H..038AH: y := x - 02D0H
-			| 038CH: y := 0BCH
-			| 038EH..03A1H: y := x - 02D0H
-			| 03A3H..03CEH: y := x - 02D0H
-			| 2013H..2014H: y := x - 1F7DH
-			| 2015H: y := 0AFH
-			| 2018H..2019H: y := x - 1F87H
-			| 201AH: y := 82H
-			| 201CH..201DH: y := x - 1F89H
-			| 201EH: y := 84H
-			| 2020H..2021H: y := x - 1F9AH
-			| 2022H: y := 95H
-			| 2026H: y := 85H
-			| 2030H: y := 89H
-			| 2039H: y := 8BH
+			| 00H..7FH,0A0H,0A3H..0A9H,0ABH..0AEH,0B0H..0B3H,0B5H..0B7H,0BBH,0BDH: y := 00H + x
 			| 203AH: y := 9BH
-			| 20ACH: y := 80H
+			| 2013H,2014H: y := -1F7DH + x
+			| 201EH,2020H,2021H: y := -1F9AH + x
+			| 201AH: y := 82H
 			| 2122H: y := 99H
+			| 0384H,0388H..038AH,038CH,038EH..03A1H,03A3H..03CEH: y := -02D0H + x
+			| 0192H: y := 83H
+			| 2039H: y := 8BH
+			| 2022H: y := 95H
+			| 20ACH: y := 80H
+			| 2030H: y := 89H
+			| 201CH,201DH: y := -1F89H + x
+			| 2018H,2019H: y := -1F87H + x
+			| 2015H: y := 0AFH
+			| 0385H,0386H: y := -02E4H + x
+			| 2026H: y := 85H
 			ELSE
 				RETURN
 			END;
@@ -69,35 +57,23 @@ MODULE EncStdMap_cp1253;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..7FH: y := x
-			| 80H: y := 20ACH
-			| 82H: y := 201AH
-			| 83H: y := 0192H
-			| 84H: y := 201EH
+			| 00H..7FH,0A0H,0A3H..0A9H,0ABH..0AEH,0B0H..0B3H,0B5H..0B7H,0BBH,0BDH: y := 00H + x
 			| 85H: y := 2026H
-			| 86H..87H: y := x + 1F9AH
-			| 89H: y := 2030H
-			| 8BH: y := 2039H
-			| 91H..92H: y := x + 1F87H
-			| 93H..94H: y := x + 1F89H
-			| 95H: y := 2022H
-			| 96H..97H: y := x + 1F7DH
-			| 99H: y := 2122H
-			| 9BH: y := 203AH
-			| 0A0H: y := 0A0H
-			| 0A1H..0A2H: y := x + 02E4H
-			| 0A3H..0A9H: y := x
-			| 0ABH..0AEH: y := x
+			| 0A1H,0A2H: y := 02E4H + x
 			| 0AFH: y := 2015H
-			| 0B0H..0B3H: y := x
-			| 0B4H: y := 0384H
-			| 0B5H..0B7H: y := x
-			| 0B8H..0BAH: y := x + 02D0H
-			| 0BBH: y := 0BBH
-			| 0BCH: y := 038CH
-			| 0BDH: y := 0BDH
-			| 0BEH..0D1H: y := x + 02D0H
-			| 0D3H..0FEH: y := x + 02D0H
+			| 89H: y := 2030H
+			| 93H,94H: y := 1F89H + x
+			| 91H,92H: y := 1F87H + x
+			| 80H: y := 20ACH
+			| 95H: y := 2022H
+			| 8BH: y := 2039H
+			| 83H: y := 0192H
+			| 0B4H,0B8H..0BAH,0BCH,0BEH..0D1H,0D3H..0FEH: y := 02D0H + x
+			| 99H: y := 2122H
+			| 82H: y := 201AH
+			| 84H,86H,87H: y := 1F9AH + x
+			| 96H,97H: y := 1F7DH + x
+			| 9BH: y := 203AH
 			ELSE
 				RETURN
 			END;

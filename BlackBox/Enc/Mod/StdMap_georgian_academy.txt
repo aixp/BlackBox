@@ -18,32 +18,27 @@ MODULE EncStdMap_georgian_academy;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..81H: y := x
-			| 8DH..90H: y := x
-			| 9DH..9EH: y := x
-			| 0A0H..0BFH: y := x
-			| 0E7H..0FFH: y := x
-			| 0152H: y := 8CH
+			| 00H..81H,8DH..90H,9DH,9EH,0A0H..0BFH,0E7H..0FFH: y := 00H + x
+			| 203AH: y := 9BH
+			| 02C6H: y := 88H
+			| 2013H,2014H: y := -1F7DH + x
+			| 201EH,2020H,2021H: y := -1F9AH + x
+			| 0178H: y := 9FH
+			| 201AH: y := 82H
 			| 0153H: y := 9CH
 			| 0160H: y := 8AH
-			| 0161H: y := 9AH
-			| 0178H: y := 9FH
+			| 201CH,201DH: y := -1F89H + x
+			| 10D0H..10F6H: y := -1010H + x
 			| 0192H: y := 83H
-			| 02C6H: y := 88H
-			| 02DCH: y := 98H
-			| 10D0H..10F6H: y := x - 1010H
-			| 2013H..2014H: y := x - 1F7DH
-			| 2018H..2019H: y := x - 1F87H
-			| 201AH: y := 82H
-			| 201CH..201DH: y := x - 1F89H
-			| 201EH: y := 84H
-			| 2020H..2021H: y := x - 1F9AH
-			| 2022H: y := 95H
-			| 2026H: y := 85H
-			| 2030H: y := 89H
 			| 2039H: y := 8BH
-			| 203AH: y := 9BH
+			| 2022H: y := 95H
+			| 2030H: y := 89H
+			| 2018H,2019H: y := -1F87H + x
+			| 0161H: y := 9AH
+			| 0152H: y := 8CH
 			| 2122H: y := 99H
+			| 02DCH: y := 98H
+			| 2026H: y := 85H
 			ELSE
 				RETURN
 			END;
@@ -66,32 +61,27 @@ MODULE EncStdMap_georgian_academy;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..81H: y := x
-			| 82H: y := 201AH
-			| 83H: y := 0192H
-			| 84H: y := 201EH
+			| 00H..81H,8DH..90H,9DH,9EH,0A0H..0BFH,0E7H..0FFH: y := 00H + x
 			| 85H: y := 2026H
-			| 86H..87H: y := x + 1F9AH
-			| 88H: y := 02C6H
-			| 89H: y := 2030H
-			| 8AH: y := 0160H
-			| 8BH: y := 2039H
-			| 8CH: y := 0152H
-			| 8DH..90H: y := x
-			| 91H..92H: y := x + 1F87H
-			| 93H..94H: y := x + 1F89H
-			| 95H: y := 2022H
-			| 96H..97H: y := x + 1F7DH
 			| 98H: y := 02DCH
-			| 99H: y := 2122H
-			| 9AH: y := 0161H
-			| 9BH: y := 203AH
+			| 8CH: y := 0152H
+			| 89H: y := 2030H
+			| 93H,94H: y := 1F89H + x
+			| 91H,92H: y := 1F87H + x
+			| 95H: y := 2022H
+			| 8BH: y := 2039H
+			| 83H: y := 0192H
+			| 0C0H..0E6H: y := 1010H + x
 			| 9CH: y := 0153H
-			| 9DH..9EH: y := x
+			| 9AH: y := 0161H
+			| 8AH: y := 0160H
+			| 99H: y := 2122H
+			| 82H: y := 201AH
 			| 9FH: y := 0178H
-			| 0A0H..0BFH: y := x
-			| 0C0H..0E6H: y := x + 1010H
-			| 0E7H..0FFH: y := x
+			| 84H,86H,87H: y := 1F9AH + x
+			| 96H,97H: y := 1F7DH + x
+			| 88H: y := 02C6H
+			| 9BH: y := 203AH
 			ELSE
 				RETURN
 			END;

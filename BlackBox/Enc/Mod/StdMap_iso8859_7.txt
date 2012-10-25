@@ -18,24 +18,12 @@ MODULE EncStdMap_iso8859_7;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..0A0H: y := x
-			| 0A3H: y := 0A3H
-			| 0A6H..0A9H: y := x
-			| 0ABH..0ADH: y := x
-			| 0B0H..0B3H: y := x
-			| 0B7H: y := 0B7H
-			| 0BBH: y := 0BBH
-			| 0BDH: y := 0BDH
-			| 037AH: y := 0AAH
-			| 0384H..0386H: y := x - 02D0H
-			| 0388H..038AH: y := x - 02D0H
-			| 038CH: y := 0BCH
-			| 038EH..03A1H: y := x - 02D0H
-			| 03A3H..03CEH: y := x - 02D0H
-			| 2015H: y := 0AFH
-			| 2018H..2019H: y := x - 1F77H
-			| 20ACH: y := 0A4H
+			| 00H..0A0H,0A3H,0A6H..0A9H,0ABH..0ADH,0B0H..0B3H,0B7H,0BBH,0BDH: y := 00H + x
+			| 2018H,2019H: y := -1F77H + x
+			| 037AH,0384H..0386H,0388H..038AH,038CH,038EH..03A1H,03A3H..03CEH: y := -02D0H + x
 			| 20AFH: y := 0A5H
+			| 20ACH: y := 0A4H
+			| 2015H: y := 0AFH
 			ELSE
 				RETURN
 			END;
@@ -58,24 +46,12 @@ MODULE EncStdMap_iso8859_7;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..0A0H: y := x
-			| 0A1H..0A2H: y := x + 1F77H
-			| 0A3H: y := 0A3H
+			| 00H..0A0H,0A3H,0A6H..0A9H,0ABH..0ADH,0B0H..0B3H,0B7H,0BBH,0BDH: y := 00H + x
+			| 0AFH: y := 2015H
 			| 0A4H: y := 20ACH
 			| 0A5H: y := 20AFH
-			| 0A6H..0A9H: y := x
-			| 0AAH: y := 037AH
-			| 0ABH..0ADH: y := x
-			| 0AFH: y := 2015H
-			| 0B0H..0B3H: y := x
-			| 0B4H..0B6H: y := x + 02D0H
-			| 0B7H: y := 0B7H
-			| 0B8H..0BAH: y := x + 02D0H
-			| 0BBH: y := 0BBH
-			| 0BCH: y := 038CH
-			| 0BDH: y := 0BDH
-			| 0BEH..0D1H: y := x + 02D0H
-			| 0D3H..0FEH: y := x + 02D0H
+			| 0AAH,0B4H..0B6H,0B8H..0BAH,0BCH,0BEH..0D1H,0D3H..0FEH: y := 02D0H + x
+			| 0A1H,0A2H: y := 1F77H + x
 			ELSE
 				RETURN
 			END;

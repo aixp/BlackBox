@@ -18,15 +18,12 @@ MODULE EncStdMap_iso8859_8;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..0A0H: y := x
-			| 0A2H..0A9H: y := x
-			| 0ABH..0B9H: y := x
-			| 0BBH..0BEH: y := x
-			| 0D7H: y := 0AAH
+			| 00H..0A0H,0A2H..0A9H,0ABH..0B9H,0BBH..0BEH: y := 00H + x
 			| 0F7H: y := 0BAH
-			| 05D0H..05EAH: y := x - 04F0H
-			| 200EH..200FH: y := x - 1F11H
 			| 2017H: y := 0DFH
+			| 200EH,200FH: y := -1F11H + x
+			| 05D0H..05EAH: y := -04F0H + x
+			| 0D7H: y := 0AAH
 			ELSE
 				RETURN
 			END;
@@ -49,15 +46,12 @@ MODULE EncStdMap_iso8859_8;
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
 			CASE x OF
-			| 00H..0A0H: y := x
-			| 0A2H..0A9H: y := x
+			| 00H..0A0H,0A2H..0A9H,0ABH..0B9H,0BBH..0BEH: y := 00H + x
 			| 0AAH: y := 0D7H
-			| 0ABH..0B9H: y := x
-			| 0BAH: y := 0F7H
-			| 0BBH..0BEH: y := x
+			| 0E0H..0FAH: y := 04F0H + x
+			| 0FDH,0FEH: y := 1F11H + x
 			| 0DFH: y := 2017H
-			| 0E0H..0FAH: y := x + 04F0H
-			| 0FDH..0FEH: y := x + 1F11H
+			| 0BAH: y := 0F7H
 			ELSE
 				RETURN
 			END;

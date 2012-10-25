@@ -38,6 +38,62 @@ def EC (x, p="X"):
 	else:
 		return "%s0%04X%s" % (s, x, p)
 
+def RC (x, p="X"):
+	x = list(x) # copy
+	x.sort()
+	s = []
+	st = 0
+	for i in x:
+		if st == 0:
+			sti = i
+			stn = 0
+			st = 1
+		elif st == 1:
+			if i == sti + stn + 1:
+				stn = stn + 1
+			else:
+				if stn == 0:
+					s.append(EC(sti, p))
+				elif stn == 1:
+					s.append(EC(sti, p))
+					s.append(EC(sti + 1, p))
+				else:
+					s.append("%s..%s" % (EC(sti, p), EC(sti + stn, p)))
+				sti = i
+				stn = 0
+	if st == 1:
+		if stn == 0:
+			s.append(EC(sti, p))
+		elif stn == 1:
+			s.append(EC(sti, p))
+			s.append(EC(sti + 1, p))
+		else:
+			s.append("%s..%s" % (EC(sti, p), EC(sti + stn, p)))
+	return ','.join(s)
+
+# for encoder
+def opt0 (r):
+	o = {}
+	for i, x in r:
+		ofs = i - x
+		if o.has_key(ofs):
+			o[ofs].append(x)
+		else:
+			o[ofs] = [ x ]
+	return o
+
+# for decoder
+def opt1 (r, nb):
+	o = {}
+	for i, x in r:
+		if nBytes(i) == nb:
+			ofs = x - i
+			if o.has_key(ofs):
+				o[ofs].append(i)
+			else:
+				o[ofs] = [ i ]
+	return o
+
 def gen (modName, r, head, head0=None):
 	e = head
 	if len(e) > 0:
@@ -57,112 +113,53 @@ def gen (modName, r, head, head0=None):
 		else:
 			errS = ''
 
+	### calc man num of SHORTCHARs per CHAR
+	maxN = 1
+	for i, x in r:
+		# i: encoding char in big-endian
+		# x: ucs-2
+		nb = nBytes(i)
+		if nb > maxN:
+			maxN = nb
+
 	### encoder
 
 	r.sort(key=lambda x: x[1])
 	encS = []
-	rs = 0
-	checkDBCS = False
-	for i, x in r:
 
-		# i: encoding char in big-endian
-		# x: ucs-2
-		nb = nBytes(i)
-		if nb > 1:
-			checkDBCS = True
-
-		if rs == 0:
-			rs = 1
-			rsi = i
-			rsnb = nb
-			rsx = x
-			rsn = 0
-		elif rs == 1:
-			# nb == rsnb condition is redundant
-			if (nb == rsnb) and (i == rsi + rsn + 1) and (x == rsx + rsn + 1):
-				rsn = rsn + 1
-			else:
-				if rsn == 0:
-					encS.append("\t\t\t| %s: y := %s" % (EC(rsx, "H"), EC(rsi, "H")))
-				elif rsi == rsx:
-					encS.append("\t\t\t| %s..%s: y := x" % (EC(rsx, "H"), EC(rsx + rsn, "H")))
-				elif rsi > rsx:
-					encS.append("\t\t\t| %s..%s: y := x + %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsi - rsx, "H")))
-				else: # rsi < rsx
-					encS.append("\t\t\t| %s..%s: y := x - %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsx - rsi, "H")))
-
-				rsi = i
-				rsnb = nb
-				rsx = x
-				rsn = 0
+	o = opt0(r)
+	for k, v in o.iteritems():
+		if len(v) == 1:
+			encS.append("\t\t\t| %s: y := %s" % (EC(v[0], "H"), EC(k + v[0], "H")))
 		else:
-			assert False
-	if rs == 1:
-		if rsn == 0:
-			encS.append("\t\t\t| %s: y := %s" % (EC(rsx, "H"), EC(rsi, "H")))
-		elif rsi == rsx:
-			encS.append("\t\t\t| %s..%s: y := x" % (EC(rsx, "H"), EC(rsx + rsn, "H")))
-		elif rsi > rsx:
-			encS.append("\t\t\t| %s..%s: y := x + %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsi - rsx, "H")))
-		else: # rsi < rsx
-			encS.append("\t\t\t| %s..%s: y := x - %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsx - rsi, "H")))
+			encS.append("\t\t\t| %s: y := %s + x" % (RC(v, "H"), EC(k, "H")))
 
-	if checkDBCS:
+	if maxN == 2: # DBCS
 		s1 = """IF y < 256 THEN
 				t[tW] := SHORT(CHR(y)); INC(tW)
 			ELSE
 				t[tW] := SHORT(CHR(y DIV 100H)); t[tW+1] := SHORT(CHR(y MOD 100H)); INC(tW, 2)
 			END;"""
-	else:
+	elif maxN == 1: # SBCS
 		s1 = """t[tW] := SHORT(CHR(y)); INC(tW);"""
+	else:
+		assert False # not implemented
 
 	### decoder
 
 	r.sort(key=lambda x: x[0])
 	decS = []
 	rs = 0
-	if checkDBCS:
+	if maxN == 2: # DBCS
 		decS.append('\t\t\tCASE d.st OF 0:')
 		decS.append('\t\t\t\tCASE x OF')
 
-		for i, x in r:
-			# i: encoding char in big-endian
-			# x: ucs-2
-			if nBytes(i) == 1:
-				if rs == 0:
-					rs = 1
-					rsi = i
-					rsx = x
-					rsn = 0
-				elif rs == 1:
-					if (i == rsi + rsn + 1) and (x == rsx + rsn + 1):
-						rsn = rsn + 1
-					else:
-						if rsn == 0:
-							decS.append("\t\t\t\t| %s: t[tW] := %s; INC(tW)" % (EC(rsi, "H"), EC(rsx, "X")))
-						elif rsi == rsx:
-							decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H")))
-						elif rsx > rsi:
-							decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x + %s); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
-						else: # rsx < rsi
-							decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x - %s); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
-
-						rsi = i
-						rsx = x
-						rsn = 0
-				else:
-					assert False
+		o = opt1(r, 1)
+		for k, v in o.iteritems():
+			if len(v) == 1:
+				decS.append("\t\t\t\t| %s: t[tW] := %s; INC(tW)" % (EC(v[0], "H"), EC(k + v[0], "X")))
 			else:
-				break
-		if rs == 1:
-			if rsn == 0:
-				decS.append("\t\t\t\t| %s: t[tW] := %s; INC(tW)" % (EC(rsi, "H"), EC(rsx, "X")))
-			elif rsi == rsx:
-				decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H")))
-			elif rsx > rsi:
-				decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x + %s); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
-			else: # rsx < rsi
-				decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x - %s); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
+				decS.append("\t\t\t\t| %s: t[tW] := CHR(%s + x); INC(tW)" % (RC(v, "H"), EC(k, "H")))
 
 		i0 = set()
 		for i, x in r:
@@ -170,47 +167,18 @@ def gen (modName, r, head, head0=None):
 				i0.add(i / 256)
 		i0 = list(i0)
 		i0.sort()
-		decS.append("\t\t\t\t| %s: d.b := 256 * x; INC(d.st)" % (','.join([ EC(i, "H") for i in i0 ])))
+		decS.append("\t\t\t\t| %s: d.b := 256 * x; INC(d.st)" % (RC(i0, "H"),))
 
 		decS.append('\t\t\t\tELSE d.st := -1; RETURN END')
 		decS.append('\t\t\t| 1:')
 		decS.append('\t\t\t\tCASE x + d.b OF')
 
-		rs = 0
-		for i, x in r:
-			if nBytes(i) == 2:
-				if rs == 0:
-					rs = 1
-					rsi = i
-					rsx = x
-					rsn = 0
-				elif rs == 1:
-					if (i == rsi + rsn + 1) and (x == rsx + rsn + 1):
-						rsn = rsn + 1
-					else:
-						if rsn == 0:
-							decS.append("\t\t\t\t| %s: y := %s" % (EC(rsi, "H"), EC(rsx, "H")))
-						elif rsi == rsx:
-							decS.append("\t\t\t\t| %s..%s: y := x" % (EC(rsi, "H"), EC(rsi + rsn, "H")))
-						elif rsx > rsi:
-							decS.append("\t\t\t\t| %s..%s: y := x + %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
-						else: # rsx < rsi
-							decS.append("\t\t\t\t| %s..%s: y := x - %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
-
-						rsi = i
-						rsx = x
-						rsn = 0
-				else:
-					assert False
-		if rs == 1:
-			if rsn == 0:
-				decS.append("\t\t\t\t| %s: y := %s" % (EC(rsi, "H"), EC(rsx, "H")))
-			elif rsi == rsx:
-				decS.append("\t\t\t\t| %s..%s: y := x" % (EC(rsi, "H"), EC(rsi + rsn, "H")))
-			elif rsx > rsi:
-				decS.append("\t\t\t\t| %s..%s: y := x + %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
-			else: # rsx < rsi
-				decS.append("\t\t\t\t| %s..%s: y := x - %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
+		o = opt1(r, 2)
+		for k, v in o.iteritems():
+			if len(v) == 1:
+				decS.append("\t\t\t\t| %s: y := %s" % (EC(v[0], "H"), EC(k + v[0], "H")))
+			else:
+				decS.append("\t\t\t\t| %s: y := %s + x" % (RC(v, "H"), EC(k, "H")))
 
 		decS.append('\t\t\t\tELSE d.st := -1; RETURN END;')
 		decS.append('\t\t\t\tt[tW] := CHR(y); INC(tW);')
@@ -229,41 +197,15 @@ def gen (modName, r, head, head0=None):
 	BEGIN d.st := 0
 	END Reset"""
 		s4 = " d.Reset;"
-	else: # SBCS
+	elif maxN == 1: # SBCS
 		decS.append('\t\t\tCASE x OF')
-		for i, x in r:
-			if rs == 0:
-				rs = 1
-				rsi = i
-				rsx = x
-				rsn = 0
-			elif rs == 1:
-				if (i == rsi + rsn + 1) and (x == rsx + rsn + 1):
-					rsn = rsn + 1
-				else:
-					if rsn == 0:
-						decS.append("\t\t\t| %s: y := %s" % (EC(rsi, "H"), EC(rsx, "H")))
-					elif rsi == rsx:
-						decS.append("\t\t\t| %s..%s: y := x" % (EC(rsi, "H"), EC(rsi + rsn, "H")))
-					elif rsx > rsi:
-						decS.append("\t\t\t| %s..%s: y := x + %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
-					else: # rsx < rsi
-						decS.append("\t\t\t| %s..%s: y := x - %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
 
-					rsi = i
-					rsx = x
-					rsn = 0
+		o = opt1(r, 1)
+		for k, v in o.iteritems():
+			if len(v) == 1:
+				decS.append("\t\t\t| %s: y := %s" % (EC(v[0], "H"), EC(k + v[0], "H")))
 			else:
-				assert False
-		if rs == 1:
-			if rsn == 0:
-				decS.append("\t\t\t| %s: y := %s" % (EC(rsi, "H"), EC(rsx, "H")))
-			elif rsi == rsx:
-				decS.append("\t\t\t| %s..%s: y := x" % (EC(rsi, "H"), EC(rsi + rsn, "H")))
-			elif rsx > rsi:
-				decS.append("\t\t\t| %s..%s: y := x + %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
-			else: # rsx < rsi
-				decS.append("\t\t\t| %s..%s: y := x - %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
+				decS.append("\t\t\t| %s: y := %s + x" % (RC(v, "H"), EC(k, "H")))
 
 		decS.append('\t\t\tELSE\n\t\t\t\tRETURN\n\t\t\tEND;')
 		decS.append('\t\t\tt[tW] := CHR(y); INC(tW);')
@@ -272,6 +214,8 @@ def gen (modName, r, head, head0=None):
 		s2 = "\t\tstate := FALSE"
 		s3 = ", EMPTY"
 		s4 = ""
+	else:
+		assert False # not implemented
 
 	return """MODULE %s;
 
