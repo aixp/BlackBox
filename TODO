@@ -13,7 +13,8 @@ By priority:
 			utf-8:
 				encoder: special case: high surrogate
 				decoder: fix
-			DBCS, CJK
+			encodings with not unique codes
+			CJK
 
 		command line: do not use
 		env variables:

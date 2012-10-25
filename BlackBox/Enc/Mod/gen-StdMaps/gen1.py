@@ -78,27 +78,19 @@ def gen (modName, r, head, head0=None):
 			rsx = x
 			rsn = 0
 		elif rs == 1:
+			# nb == rsnb condition is redundant
 			if (nb == rsnb) and (i == rsi + rsn + 1) and (x == rsx + rsn + 1):
 				rsn = rsn + 1
 			else:
-				if rsnb == 1:
-					if rsn == 0:
-						encS.append("\t\t\t| %s: y := %s" % (EC(rsx, "H"), EC(rsi, "H")))
-					elif rsi == rsx:
-						encS.append("\t\t\t| %s..%s: y := x" % (EC(rsx, "H"), EC(rsx + rsn, "H")))
-					elif rsi > rsx:
-						encS.append("\t\t\t| %s..%s: y := x + %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsi - rsx, "H")))
-					else: # rsi < rsx
-						encS.append("\t\t\t| %s..%s: y := x - %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsx - rsi, "H")))
-				elif rsnb == 2:
-					if rsn == 0:
-						encS.append("\t\t\t| %s: y := %s" % (EC(rsx, "H"), EC(rsi, "H")))
-					else:
-						encS.append("\t\t\t| %s..%s: y := %s + x" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsi - rsx, "H")))
-				elif rsnb == 3:
-					assert False # not implemented
-				else:
-					assert False # not implemented
+				if rsn == 0:
+					encS.append("\t\t\t| %s: y := %s" % (EC(rsx, "H"), EC(rsi, "H")))
+				elif rsi == rsx:
+					encS.append("\t\t\t| %s..%s: y := x" % (EC(rsx, "H"), EC(rsx + rsn, "H")))
+				elif rsi > rsx:
+					encS.append("\t\t\t| %s..%s: y := x + %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsi - rsx, "H")))
+				else: # rsi < rsx
+					encS.append("\t\t\t| %s..%s: y := x - %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsx - rsi, "H")))
+
 				rsi = i
 				rsnb = nb
 				rsx = x
@@ -106,24 +98,14 @@ def gen (modName, r, head, head0=None):
 		else:
 			assert False
 	if rs == 1:
-		if rsnb == 1:
-			if rsn == 0:
-				encS.append("\t\t\t| %s: y := %s" % (EC(rsx, "H"), EC(rsi, "H")))
-			elif rsi == rsx:
-				encS.append("\t\t\t| %s..%s: y := x" % (EC(rsx, "H"), EC(rsx + rsn, "H")))
-			elif rsi > rsx:
-				encS.append("\t\t\t| %s..%s: y := x + %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsi - rsx, "H")))
-			else: # rsi < rsx
-				encS.append("\t\t\t| %s..%s: y := x - %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsx - rsi, "H")))
-		elif rsnb == 2:
-			if rsn == 0:
-				encS.append("\t\t\t| %s: y := %s" % (EC(rsx, "H"), EC(rsi, "H")))
-			else:
-				encS.append("\t\t\t| %s..%s: y := %s + x" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsi - rsx, "H")))
-		elif rsnb == 3:
-			assert False # not implemented
-		else:
-			assert False # not implemented
+		if rsn == 0:
+			encS.append("\t\t\t| %s: y := %s" % (EC(rsx, "H"), EC(rsi, "H")))
+		elif rsi == rsx:
+			encS.append("\t\t\t| %s..%s: y := x" % (EC(rsx, "H"), EC(rsx + rsn, "H")))
+		elif rsi > rsx:
+			encS.append("\t\t\t| %s..%s: y := x + %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsi - rsx, "H")))
+		else: # rsi < rsx
+			encS.append("\t\t\t| %s..%s: y := x - %s" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsx - rsi, "H")))
 
 	if checkDBCS:
 		s1 = """IF y < 256 THEN
@@ -146,19 +128,16 @@ def gen (modName, r, head, head0=None):
 		for i, x in r:
 			# i: encoding char in big-endian
 			# x: ucs-2
-			nb = nBytes(i)
-
-			if rs == 0:
-				rs = 1
-				rsi = i
-				rsnb = nb
-				rsx = x
-				rsn = 0
-			elif rs == 1:
-				if (nb == rsnb) and (i == rsi + rsn + 1) and (x == rsx + rsn + 1):
-					rsn = rsn + 1
-				else:
-					if rsnb == 1:
+			if nBytes(i) == 1:
+				if rs == 0:
+					rs = 1
+					rsi = i
+					rsx = x
+					rsn = 0
+				elif rs == 1:
+					if (i == rsi + rsn + 1) and (x == rsx + rsn + 1):
+						rsn = rsn + 1
+					else:
 						if rsn == 0:
 							decS.append("\t\t\t\t| %s: t[tW] := %s; INC(tW)" % (EC(rsi, "H"), EC(rsx, "X")))
 						elif rsi == rsx:
@@ -166,34 +145,91 @@ def gen (modName, r, head, head0=None):
 						elif rsx > rsi:
 							decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x + %s); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
 						else: # rsx < rsi
-							decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x - %s); INC(tW)" % (EC(rsx, "H"), EC(rsx + rsn, "H"), EC(rsi - rsx, "H")))
-					elif rsnb == 2:
-						#if rsn == 0:
-						#	decS.append("\t\t\t\t| %s: d.b := x; INC(d.st)" % (EC(rsi / 256, "H"),))
-						#else:
-						#	decS.append("\t\t\t\t| %s..%s: d.b := x; INC(d.st)" % (EC(rsi / 256, "H"), EC(rsi + rsn, "H")))
-						pass # TODO
-					elif rsnb == 3:
-						assert False # not implemented
-					else:
-						assert False # not implemented
-					rsi = i
-					rsnb = nb
-					rsx = x
-					rsn = 0
+							decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x - %s); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
+
+						rsi = i
+						rsx = x
+						rsn = 0
+				else:
+					assert False
 			else:
-				assert False
-		# TODO
+				break
+		if rs == 1:
+			if rsn == 0:
+				decS.append("\t\t\t\t| %s: t[tW] := %s; INC(tW)" % (EC(rsi, "H"), EC(rsx, "X")))
+			elif rsi == rsx:
+				decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H")))
+			elif rsx > rsi:
+				decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x + %s); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
+			else: # rsx < rsi
+				decS.append("\t\t\t\t| %s..%s: t[tW] := CHR(x - %s); INC(tW)" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
+
+		i0 = set()
+		for i, x in r:
+			if nBytes(i) == 2:
+				i0.add(i / 256)
+		i0 = list(i0)
+		i0.sort()
+		decS.append("\t\t\t\t| %s: d.b := 256 * x; INC(d.st)" % (','.join([ EC(i, "H") for i in i0 ])))
 
 		decS.append('\t\t\t\tELSE d.st := -1; RETURN END')
 		decS.append('\t\t\t| 1:')
-		decS.append('\t\t\t\tCASE x OF')
+		decS.append('\t\t\t\tCASE x + d.b OF')
 
-		# TODO
+		rs = 0
+		for i, x in r:
+			if nBytes(i) == 2:
+				if rs == 0:
+					rs = 1
+					rsi = i
+					rsx = x
+					rsn = 0
+				elif rs == 1:
+					if (i == rsi + rsn + 1) and (x == rsx + rsn + 1):
+						rsn = rsn + 1
+					else:
+						if rsn == 0:
+							decS.append("\t\t\t\t| %s: y := %s" % (EC(rsi, "H"), EC(rsx, "H")))
+						elif rsi == rsx:
+							decS.append("\t\t\t\t| %s..%s: y := x" % (EC(rsi, "H"), EC(rsi + rsn, "H")))
+						elif rsx > rsi:
+							decS.append("\t\t\t\t| %s..%s: y := x + %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
+						else: # rsx < rsi
+							decS.append("\t\t\t\t| %s..%s: y := x - %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
 
-		decS.append('\t\t\t\tELSE d.st := -1; RETURN END')
+						rsi = i
+						rsx = x
+						rsn = 0
+				else:
+					assert False
+		if rs == 1:
+			if rsn == 0:
+				decS.append("\t\t\t\t| %s: y := %s" % (EC(rsi, "H"), EC(rsx, "H")))
+			elif rsi == rsx:
+				decS.append("\t\t\t\t| %s..%s: y := x" % (EC(rsi, "H"), EC(rsi + rsn, "H")))
+			elif rsx > rsi:
+				decS.append("\t\t\t\t| %s..%s: y := x + %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsx - rsi, "H")))
+			else: # rsx < rsi
+				decS.append("\t\t\t\t| %s..%s: y := x - %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
+
+		decS.append('\t\t\t\tELSE d.st := -1; RETURN END;')
+		decS.append('\t\t\t\tt[tW] := CHR(y); INC(tW);')
+		decS.append('\t\t\t\tDEC(d.st)')
 		decS.append('\t\t\tEND;')
-	else:
+
+		s0 = """
+			b: INTEGER;
+			st: INTEGER; (* 0 - no state, > 0 - number of chars expected, -1 - error *)
+		"""
+		s2 = """\t\tIF d.st = 0 THEN state := FALSE
+		ELSIF d.st > 0 THEN state := TRUE
+		ELSE HALT(100)
+		END"""
+		s3 = """;
+	BEGIN d.st := 0
+	END Reset"""
+		s4 = " d.Reset;"
+	else: # SBCS
 		decS.append('\t\t\tCASE x OF')
 		for i, x in r:
 			if rs == 0:
@@ -229,8 +265,13 @@ def gen (modName, r, head, head0=None):
 			else: # rsx < rsi
 				decS.append("\t\t\t| %s..%s: y := x - %s" % (EC(rsi, "H"), EC(rsi + rsn, "H"), EC(rsi - rsx, "H")))
 
-		decS.append('\t\t\tELSE\n\t\t\t\td.st := -1; RETURN\n\t\t\tEND;')
-		decS.append('\n\t\t\tt[tW] := CHR(y); INC(tW);')
+		decS.append('\t\t\tELSE\n\t\t\t\tRETURN\n\t\t\tEND;')
+		decS.append('\t\t\tt[tW] := CHR(y); INC(tW);')
+
+		s0 = " "
+		s2 = "\t\tstate := FALSE"
+		s3 = ", EMPTY"
+		s4 = ""
 
 	return """MODULE %s;
 
@@ -240,10 +281,7 @@ def gen (modName, r, head, head0=None):
 
 	TYPE
 		Encoder = POINTER TO RECORD (Codecs.Encoder) END;
-		Decoder = POINTER TO RECORD (Codecs.Decoder)
-			b: INTEGER;
-			st: INTEGER; (* 0 - no state, > 0 - number of chars expected, -1 - error *)
-		END;
+		Decoder = POINTER TO RECORD (Codecs.Decoder)%sEND;
 
 	(* Encoder *)
 
@@ -258,8 +296,7 @@ def gen (modName, r, head, head0=None):
 				RETURN
 			END;
 			%s
-			INC(fR);
-			DEC(fLen)
+			INC(fR); DEC(fLen)
 		END
 	END Encode;
 
@@ -276,28 +313,18 @@ def gen (modName, r, head, head0=None):
 	BEGIN
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
-
 %s
-
-			INC(fR);
-			DEC(fLen)
+			INC(fR); DEC(fLen)
 		END;
-
-		IF d.st = 0 THEN state := FALSE
-		ELSIF d.st > 0 THEN state := TRUE
-		ELSE HALT(100)
-		END
+%s
 	END Decode;
 
-	PROCEDURE (d: Decoder) Reset;
-	BEGIN
-		d.st := 0
-	END Reset;
+	PROCEDURE (d: Decoder) Reset%s;
 
 	PROCEDURE NewDecoder* (): Codecs.Decoder;
 		VAR d: Decoder;
 	BEGIN
-		NEW(d); d.Reset; RETURN d
+		NEW(d);%s RETURN d
 	END NewDecoder;
 
-END %s.""" % (modName, errS, '\n'.join(encS), s1, '\n'.join(decS), modName)
+END %s.""" % (modName, errS, s0, '\n'.join(encS), s1, '\n'.join(decS), s2, s3, s4, modName)

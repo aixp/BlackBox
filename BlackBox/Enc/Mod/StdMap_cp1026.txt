@@ -8,10 +8,7 @@ MODULE EncStdMap_cp1026;
 
 	TYPE
 		Encoder = POINTER TO RECORD (Codecs.Encoder) END;
-		Decoder = POINTER TO RECORD (Codecs.Decoder)
-			b: INTEGER;
-			st: INTEGER; (* 0 - no state, > 0 - number of chars expected, -1 - error *)
-		END;
+		Decoder = POINTER TO RECORD (Codecs.Decoder) END;
 
 	(* Encoder *)
 
@@ -174,8 +171,7 @@ MODULE EncStdMap_cp1026;
 				RETURN
 			END;
 			t[tW] := SHORT(CHR(y)); INC(tW);
-			INC(fR);
-			DEC(fLen)
+			INC(fR); DEC(fLen)
 		END
 	END Encode;
 
@@ -192,7 +188,6 @@ MODULE EncStdMap_cp1026;
 	BEGIN
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
-
 			CASE x OF
 			| 00H..03H: y := x
 			| 04H: y := 9CH
@@ -344,30 +339,20 @@ MODULE EncStdMap_cp1026;
 			| 0FDH..0FEH: y := x - 24H
 			| 0FFH: y := 9FH
 			ELSE
-				d.st := -1; RETURN
+				RETURN
 			END;
-
 			t[tW] := CHR(y); INC(tW);
-
-			INC(fR);
-			DEC(fLen)
+			INC(fR); DEC(fLen)
 		END;
-
-		IF d.st = 0 THEN state := FALSE
-		ELSIF d.st > 0 THEN state := TRUE
-		ELSE HALT(100)
-		END
+		state := FALSE
 	END Decode;
 
-	PROCEDURE (d: Decoder) Reset;
-	BEGIN
-		d.st := 0
-	END Reset;
+	PROCEDURE (d: Decoder) Reset, EMPTY;
 
 	PROCEDURE NewDecoder* (): Codecs.Decoder;
 		VAR d: Decoder;
 	BEGIN
-		NEW(d); d.Reset; RETURN d
+		NEW(d); RETURN d
 	END NewDecoder;
 
 END EncStdMap_cp1026.

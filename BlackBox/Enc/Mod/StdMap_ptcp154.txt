@@ -8,10 +8,7 @@ MODULE EncStdMap_ptcp154;
 
 	TYPE
 		Encoder = POINTER TO RECORD (Codecs.Encoder) END;
-		Decoder = POINTER TO RECORD (Codecs.Decoder)
-			b: INTEGER;
-			st: INTEGER; (* 0 - no state, > 0 - number of chars expected, -1 - error *)
-		END;
+		Decoder = POINTER TO RECORD (Codecs.Decoder) END;
 
 	(* Encoder *)
 
@@ -85,8 +82,7 @@ MODULE EncStdMap_ptcp154;
 				RETURN
 			END;
 			t[tW] := SHORT(CHR(y)); INC(tW);
-			INC(fR);
-			DEC(fLen)
+			INC(fR); DEC(fLen)
 		END
 	END Encode;
 
@@ -103,7 +99,6 @@ MODULE EncStdMap_ptcp154;
 	BEGIN
 		WHILE fLen > 0 DO
 			x := ORD(f[fR]);
-
 			CASE x OF
 			| 00H..7FH: y := x
 			| 80H: y := 0496H
@@ -166,30 +161,20 @@ MODULE EncStdMap_ptcp154;
 			| 0BFH: y := 049DH
 			| 0C0H..0FFH: y := x + 0350H
 			ELSE
-				d.st := -1; RETURN
+				RETURN
 			END;
-
 			t[tW] := CHR(y); INC(tW);
-
-			INC(fR);
-			DEC(fLen)
+			INC(fR); DEC(fLen)
 		END;
-
-		IF d.st = 0 THEN state := FALSE
-		ELSIF d.st > 0 THEN state := TRUE
-		ELSE HALT(100)
-		END
+		state := FALSE
 	END Decode;
 
-	PROCEDURE (d: Decoder) Reset;
-	BEGIN
-		d.st := 0
-	END Reset;
+	PROCEDURE (d: Decoder) Reset, EMPTY;
 
 	PROCEDURE NewDecoder* (): Codecs.Decoder;
 		VAR d: Decoder;
 	BEGIN
-		NEW(d); d.Reset; RETURN d
+		NEW(d); RETURN d
 	END NewDecoder;
 
 END EncStdMap_ptcp154.
