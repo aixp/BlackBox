@@ -7077,7 +7077,8 @@ MODULE EncStdMap_cp949;
 				| 81H..0C8H,0CAH..0FDH: d.b := 256 * x; INC(d.st)
 				ELSE d.st := -1; RETURN END
 			| 1:
-				CASE x + d.b OF
+				x := x + d.b;
+				CASE x OF
 				| 0B7A5H,0B7A6H: y := 03H + x
 				| 0B7A7H..0B7A9H: y := 04H + x
 				| 0DCE7H,0DCE8H: y := -7FF8H + x

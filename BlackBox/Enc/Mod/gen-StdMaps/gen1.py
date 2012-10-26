@@ -158,7 +158,8 @@ def gen (modName, r, head, head0=None):
 
 		decS.append('\t\t\t\tELSE d.st := -1; RETURN END')
 		decS.append('\t\t\t| 1:')
-		decS.append('\t\t\t\tCASE x + d.b OF')
+		decS.append('\t\t\t\tx := x + d.b;')
+		decS.append('\t\t\t\tCASE x OF')
 
 		o = opt1(r, 2)
 		for k, v in o.iteritems():

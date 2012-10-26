@@ -7984,7 +7984,8 @@ MODULE EncStdMap_cp936;
 				| 81H..0FEH: d.b := 256 * x; INC(d.st)
 				ELSE d.st := -1; RETURN END
 			| 1:
-				CASE x + d.b OF
+				x := x + d.b;
+				CASE x OF
 				| 0E8FBH: y := 68FCH
 				| 0E9C3H: y := 69CAH
 				| 0D3F5H: y := 5401H

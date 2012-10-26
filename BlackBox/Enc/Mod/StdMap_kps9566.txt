@@ -8202,7 +8202,8 @@ MODULE EncStdMap_kps9566;
 				| 81H..0FEH: d.b := 256 * x; INC(d.st)
 				ELSE d.st := -1; RETURN END
 			| 1:
-				CASE x + d.b OF
+				x := x + d.b;
+				CASE x OF
 				| 0B4C0H: y := 0B4C0H
 				| 0F0ACH,0FAAEH: y := -7FFFH + x
 				| 0B4C1H: y := 0B4C4H
