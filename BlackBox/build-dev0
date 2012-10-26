@@ -27,6 +27,7 @@ Dev0Compiler.Compile('Dev0/Mod', 'Compiler.txt')
 Dev0Compiler.Compile('Dev0/Mod', 'ElfLinker16.txt')
 Dev0Compiler.Compile('Dev0/Mod', 'Linker.txt')
 
+Dev0Compiler.Compile('Enc/Mod', 'Codecs.txt')
 Dev0Compiler.Compile('Host/Mod', 'Files.txt')
 Dev0Compiler.Compile('Host/Mod', 'Console.txt')
 
@@ -37,5 +38,5 @@ Dev0Compiler.Compile('Std/Mod', 'Interpreter.txt')
 
 Dev0Compiler.Compile('Dev0/Mod', 'Interp.txt')
 
-Dev0ElfLinker.LinkDll('libBB0.so := Kernel+ Console Math Strings HostConsole Files HostFiles Dev0CPM Dev0CPT Dev0CPS Dev0CPH Dev0CPB Dev0CPP Dev0CPE Dev0CPL486 Dev0CPC486 Dev0CPV486 Dev0Compiler Dev0ElfLinker Dev0Linker Dialog Meta Views StdInterpreter Dev0Interp')
+Dev0ElfLinker.LinkDll('libBB0.so := Kernel+ EncCodecs Console Math Strings HostConsole Files HostFiles Dev0CPM Dev0CPT Dev0CPS Dev0CPH Dev0CPB Dev0CPP Dev0CPE Dev0CPL486 Dev0CPC486 Dev0CPV486 Dev0Compiler Dev0ElfLinker Dev0Linker Dialog Meta Views StdInterpreter Dev0Interp')
 DATA

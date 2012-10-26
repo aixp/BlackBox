@@ -1,17 +1,18 @@
 MODULE HostConsole;
 
-	(* THISIS TEXT COPY OF Console.odc *)
+	(* THIS IS TEXT COPY OF Console.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT
-		SYSTEM,
-		Console,
-		WinApi;
+	(*
+		A. V. Shiryaev, 2012.10
+
+		Console implementation for Windows
+	*)
+
+	IMPORT SYSTEM, Console, WinApi;
 
 	TYPE
 		Cons = POINTER TO RECORD (Console.Console) END;
-
-		Process = POINTER TO RECORD (Console.Process) END;
 
 	CONST
 		inBufLen = 128; (* > 0 *)
@@ -24,9 +25,6 @@ MODULE HostConsole;
 
 		inBuf: ARRAY [untagged] inBufLen OF SHORTCHAR;
 			inBufW, inBufR: INTEGER; (* 0 <= inBufR <= inBufW <= inBufLen *)
-
-		version-: INTEGER;
-		maintainer-: ARRAY 40 OF CHAR;
 
 	PROCEDURE (cons: Cons) ReadLn (OUT text: ARRAY OF CHAR);
 		VAR
@@ -102,44 +100,9 @@ MODULE HostConsole;
 		Print(0DX + 0AX, 2)
 	END WriteLn;
 
-	PROCEDURE (cons: Cons) Open;
-		VAR res: WinApi.BOOL;
-	BEGIN
-		res := WinApi.AllocConsole()
-	END Open;
-
-	PROCEDURE (cons: Cons) Close;
-		VAR res: WinApi.BOOL;
-	BEGIN
-		res := WinApi.FreeConsole()
-	END Close;
-
-	PROCEDURE (cons: Cons) CreateProcess (cmdLine: ARRAY OF CHAR): Console.Process;
-	BEGIN
-		(*	needs coding	*)
-		RETURN NIL
-	END CreateProcess;
-
-	PROCEDURE (cons: Cons) CommandLine (OUT cmdLine: ARRAY OF CHAR);
-	BEGIN
-
-	END CommandLine;
-
-	PROCEDURE (p: Process) Terminate;
-	BEGIN
-		(*	needs coding	*)
-	END Terminate;
-
-	PROCEDURE Maintainer;
-	BEGIN
-		version := 303;
-		maintainer := "A.V.Shiryaev"
-	END Maintainer;
-
 	PROCEDURE Init;
 		VAR res: WinApi.BOOL;
 	BEGIN
-		Maintainer;
 		NEW(cons);
 
 		res := WinApi.AllocConsole(); (* Open console on module load time *)

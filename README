@@ -34,7 +34,6 @@ Files:
 		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
-			System/Mod/Console.odc
 			Docu/OpenBUGS-License.odc
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
 			{Linux,OpenBSD}/Lin/Mod/Kernel_so_init.odc
@@ -72,13 +71,6 @@ Files:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				Kernel.cmdLine support:
 					str := "" -> str := Kernel.cmdLine$
-		OpenBSD/Host/Mod/Console.odc:
-			OpenBUGS Lin/Mod/Console.odc:
-				stdin -> SYSTEM.ADR(__sF[0])
-		Linux/Host/Mod/Console.odc:
-			OpenBUGS Lin/Mod/Console.odc
-		Windows/Host/Mod/Console.odc:
-			OpenBUGS Lin/Mod/Console.odc ported to Windows
 		OpenBSD/Lin/Mod/Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
@@ -104,6 +96,13 @@ Files:
 			BlackBox 1.6-rc6 Host/Mod/TextConv.odc:
 				Windows-specific converters removed
 	new:
+		Console:
+			System/Mod/Console.odc: Console interface
+			Linux/Host/Mod/Console.odc: Console implementation for Linux
+			OpenBSD/Host/Mod/Console.odc:
+				Linux/Host/Mod/Console.odc: stdin -> SYSTEM.ADR(__sF[0]) (OpenBSD-specific)
+			Windows/Host/Mod/Console.odc:
+				Console implementation for Windows
 		Cons/Mod
 			Interp.odc: console interpreter
 			Compiler.odc: console interface to Dev compiler

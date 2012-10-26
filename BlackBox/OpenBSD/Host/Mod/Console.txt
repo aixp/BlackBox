@@ -3,109 +3,158 @@ MODULE HostConsole;
 	(* THIS IS TEXT COPY OF Console.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT
-		SYSTEM,
-		Console,
-		LinLibc;
+	(*
+		A. V. Shiryaev, 2012.10
 
-	TYPE
-		LinCons = POINTER TO RECORD (Console.Console) END;
+		Console implementation for OpenBSD
+	*)
 
-		LinProcess = POINTER TO RECORD (Console.Process) END;
+	IMPORT SYSTEM, Console, Libc := LinLibc, Codecs := EncCodecs;
 
 	CONST
-		strLen = 1024;
+		defEnc = "ASCII";
+		defCh = '?';
+
+	TYPE
+		Cons = POINTER TO RECORD (Console.Console) END;
 
 	VAR
-		s: ARRAY strLen OF CHAR;
-		ss: ARRAY strLen OF SHORTCHAR;
-		linCons: LinCons;
-		version-: INTEGER;
-		maintainer-: ARRAY 40 OF CHAR;
+		cons: Cons;
+		e: Codecs.Encoder;
+		d: Codecs.Decoder;
 
-	PROCEDURE (cons: LinCons) ReadLn (OUT text: ARRAY OF CHAR);
+	PROCEDURE GetEnc (OUT enc: Codecs.Encoding);
+		VAR lang: Libc.PtrSTR;
+			i, j: INTEGER;
+	BEGIN
+		lang := Libc.getenv("LANG");
+		IF lang # NIL THEN
+			IF lang$ = "C" THEN
+				enc := "ASCII"
+			ELSE
+				i := 0; WHILE (lang[i] # 0X) & (lang[i] # '.') DO INC(i) END;
+				IF lang[i] # 0X THEN
+					INC(i);
+					j := 0;
+					WHILE (j < LEN(enc) - 1) & (lang[i] # 0X) DO
+						enc[j] := lang[i];
+						INC(j);
+						INC(i)
+					END;
+					IF j < LEN(enc) - 1 THEN
+						enc[j] := 0X
+					ELSE
+						enc := defEnc
+					END
+				ELSE
+					enc := defEnc
+				END
+			END
+		ELSE
+			enc := defEnc
+		END
+	END GetEnc;
+
+	PROCEDURE (cons: Cons) ReadLn (OUT s: ARRAY OF CHAR);
+		CONST
+			maxLineLen = 1023; (* without null terminating shortchar *)
 		VAR
 			i: INTEGER;
-			str: POINTER TO ARRAY [untagged] OF SHORTCHAR; 
+			str: Libc.PtrSTR;
+			ss: ARRAY maxLineLen+1 OF SHORTCHAR;
+			fR, fLen, tW: INTEGER;
+			st: BOOLEAN;
 	BEGIN
-		str := LinLibc.fgets(ss, strLen, SYSTEM.ADR(LinLibc.__sF[0])); (* Shiryaev A. V.: OpenBSD *)
-		IF (str = NIL) THEN 
-			(* if end of file, then ss is not changed by fgets and NIL is returned. 
-			    We return an empty string here *)
-			text[0] := 0X;
-			RETURN
-		END;			
-		i := 0;
-		REPEAT
-			text[i] := ss[i];
-			INC(i)
-		UNTIL (ss[i] = 0X) OR (i = LEN(text) - 1);
-		text[i] := 0X 
+		ss[LEN(ss)-1] := 0X;
+		str := Libc.fgets(ss, LEN(ss), SYSTEM.ADR(Libc.__sF[0]) (* stdin *));
+		IF (str # NIL) & (ss[LEN(ss)-1] = 0X) THEN
+			fLen := LEN(ss$);
+			IF fLen < LEN(s) THEN
+				IF d # NIL THEN
+					d.Reset;
+					fR := 0; tW := 0;
+					d.Decode(ss, fR, fLen, s, tW, st);
+					IF (fLen = 0) & ~st THEN
+						s[tW] := 0X
+					ELSE
+						s[0] := 0X
+					END
+				ELSE
+					s := ss$
+				END
+			ELSE
+				s[0] := 0X
+			END
+		ELSE
+			s[0] := 0X
+		END
 	END ReadLn;
 
-	PROCEDURE Printf;
-		VAR res: INTEGER;
+	PROCEDURE Printf (IN s: ARRAY OF CHAR; len: INTEGER);
+		CONST
+			maxShortCharsPerChar = 3; (* UTF-8 *)
+			ssLen = 128; (* >= maxShortCharsPerChar + 1 *)
+		VAR
+			ss: ARRAY ssLen OF SHORTCHAR;
+			res: INTEGER;
+			fR, fLen, tW, n: INTEGER;
 	BEGIN
-		res := LinLibc.printf(ss);
-		res := LinLibc.fflush(LinLibc.NULL)
+		fR := 0;
+		WHILE len > 0 DO
+			tW := 0;
+			IF e # NIL THEN
+				fLen := MIN(len, (LEN(ss) - 1) DIV maxShortCharsPerChar); n := fLen;
+				REPEAT
+					e.Encode(s, fR, fLen, ss, tW);
+					IF fLen # 0 THEN
+						ss[tW] := '?'; INC(tW);
+						INC(fR); DEC(fLen)
+					END
+				UNTIL fLen = 0
+			ELSE
+				fLen := MIN(len, LEN(ss) - 1); n := fLen;
+				WHILE fLen > 0 DO
+					ss[tW] := SHORT(s[fR]);
+					INC(tW);
+					INC(fR); DEC(fLen)
+				END
+			END;
+			ss[tW] := 0X;
+			res := Libc.printf(ss);
+			res := Libc.fflush(Libc.NULL);
+
+			len := len - n
+		END
 	END Printf;
 
-	PROCEDURE (cons: LinCons) WriteChar (c: CHAR);
+	PROCEDURE (cons: Cons) WriteChar (c: CHAR);
+		VAR s: ARRAY 1 OF CHAR;
 	BEGIN
 		s[0] := c;
-		s[1] := 0X;
-		ss := SHORT(s);
-		Printf()
+		Printf(s, 1)
 	END WriteChar;
 
-	PROCEDURE (cons: LinCons) WriteStr (IN text: ARRAY OF CHAR);
+	PROCEDURE (cons: Cons) WriteStr (IN text: ARRAY OF CHAR);
 	BEGIN
-		ss := SHORT(text);
-		Printf()
+		Printf(text, LEN(text$))
 	END WriteStr;
 
-	PROCEDURE (cons: LinCons) WriteLn;
+	PROCEDURE (cons: Cons) WriteLn;
 	BEGIN
-		ss[0] := 0AX;
-		ss[1] := 0X;
-		Printf()
+		Printf(0AX, 1)
 	END WriteLn;
 
-	PROCEDURE (cons: LinCons) Open;
-	BEGIN
-	END Open;
-
-	PROCEDURE (cons: LinCons) Close;
-	BEGIN
-	END Close;
-
-	PROCEDURE (cons: LinCons) CreateProcess (cmdLine: ARRAY OF CHAR): Console.Process;
-	BEGIN
-		(*	needs coding	*)
-		RETURN NIL
-	END CreateProcess;
-
-	PROCEDURE (cons: LinCons) CommandLine (OUT cmdLine: ARRAY OF CHAR);
-	BEGIN
-
-	END CommandLine;
-
-	PROCEDURE (p: LinProcess) Terminate;
-	BEGIN
-		(*	needs coding	*)
-	END Terminate;
-
-	PROCEDURE Maintainer;
-	BEGIN
-		version := 303;
-		maintainer := "A.Thomas"
-	END Maintainer;
-
 	PROCEDURE Init;
+		VAR enc: Codecs.Encoding;
 	BEGIN
-		Maintainer;
-		NEW(linCons);
-		Console.SetConsole(linCons)
+		IF Codecs.dir # NIL THEN
+			GetEnc(enc);
+			e := Codecs.dir.NewEncoder(enc);
+			d := Codecs.dir.NewDecoder(enc)
+		END;
+
+		NEW(cons);
+		Console.SetConsole(cons)
 	END Init;
 
 BEGIN

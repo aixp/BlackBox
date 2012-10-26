@@ -3,7 +3,7 @@ By priority:
 		BB_PRIMARY_DIR
 		BB_SECONDARY_DIR (instead of /USE)
 
-	cleanup Console
+	non-blocking Console
 
 	ConsCompiler:
 		interface similar to DevCompiler
@@ -18,9 +18,6 @@ By priority:
 		command line: do not use
 		env variables:
 			decode (encoding = current locale encoding)
-		HostConsole:
-			encode on printf, encoding = current locale encoding
-			decode on Read, encoding = current locale encoding
 		filenames:
 			HostFiles:
 				store encoded (ARRAY OF SHORTCHAR), encoding = currect locale encoding

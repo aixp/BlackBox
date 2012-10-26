@@ -1,0 +1,76 @@
+MODULE EncStdCodecs;
+
+	(* THIS IS TEXT COPY OF StdCodecs.odc *)
+	(* DO NOT EDIT *)
+
+	(*
+			A. V. Shiryaev, 2012.10
+	*)
+
+	IMPORT Meta, Codecs := EncCodecs, Aliases := EncStdAliases;
+
+	TYPE
+		Directory* = POINTER TO RECORD (Codecs.Directory) END;
+
+	(* Directory *)
+
+	PROCEDURE (dir: Directory) NewEncoder* (enc: Codecs.Encoding): Codecs.Encoder;
+		VAR modName: ARRAY LEN(Codecs.Encoding) + 16 OF CHAR;
+			item: Meta.Item; ok: BOOLEAN;
+			item0: RECORD (Meta.Value)
+				fun: PROCEDURE (): Codecs.Encoder
+			END;
+			e: Codecs.Encoder;
+	BEGIN
+		e := NIL;
+		Aliases.GetModName(enc, modName, ok);
+		IF ok THEN
+			Meta.Lookup(modName, item);
+			IF item.obj = Meta.modObj THEN
+				item.Lookup("NewEncoder", item);
+				IF item.obj = Meta.procObj THEN
+					item.GetVal(item0, ok);
+					IF ok THEN
+						e := item0.fun()
+					END
+				END
+			END
+		END;
+		RETURN e
+	END NewEncoder;
+
+	PROCEDURE (dir: Directory) NewDecoder* (enc: Codecs.Encoding): Codecs.Decoder;
+		VAR modName: ARRAY LEN(Codecs.Encoding) + 16 OF CHAR;
+			item: Meta.Item; ok: BOOLEAN;
+			item0: RECORD (Meta.Value)
+				fun: PROCEDURE (): Codecs.Decoder
+			END;
+			d: Codecs.Decoder;
+	BEGIN
+		d := NIL;
+		Aliases.GetModName(enc, modName, ok);
+		IF ok THEN
+			Meta.Lookup(modName, item);
+			IF item.obj = Meta.modObj THEN
+				item.Lookup("NewDecoder", item);
+				IF item.obj = Meta.procObj THEN
+					item.GetVal(item0, ok);
+					IF ok THEN
+						d := item0.fun()
+					END
+				END
+			END
+		END;
+		RETURN d
+	END NewDecoder;
+
+
+	PROCEDURE Init;
+		VAR dir: Directory;
+	BEGIN
+		NEW(dir); Codecs.SetDir(dir)
+	END Init;
+
+BEGIN
+	Init
+END EncStdCodecs.

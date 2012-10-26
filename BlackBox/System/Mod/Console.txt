@@ -1,35 +1,33 @@
 MODULE Console;
 
-	(* THIS IS TEXT COPY OF OpenBUGS System/Mod/Console.odc *)
+	(* THIS IS TEXT COPY OF Console.odc *)
 	(* DO NOT EDIT *)
+
+	(*
+		A. V. Shiryaev, 2012.10
+
+		Interface based on OpenBUGS Console
+	*)
 
 	TYPE
 		Console* = POINTER TO ABSTRACT RECORD END;
 
-		Process* = POINTER TO ABSTRACT RECORD END;
-
 	VAR
-		cons-, stdCon-: Console;
-		version-: INTEGER;
-		maintainer-: ARRAY 40 OF CHAR;
+		cons: Console;
 
-	PROCEDURE (console: Console) WriteStr- (IN text: ARRAY OF CHAR), NEW, ABSTRACT;
+	(* Console *)
 
-	PROCEDURE (console: Console) WriteChar- (c: CHAR), NEW, ABSTRACT;
+	PROCEDURE (c: Console) WriteStr- (IN s: ARRAY OF CHAR), NEW, ABSTRACT;
+	PROCEDURE (c: Console) WriteChar- (ch: CHAR), NEW, ABSTRACT;
+	PROCEDURE (c: Console) WriteLn-, NEW, ABSTRACT;
 
-	PROCEDURE (console: Console) WriteLn-, NEW, ABSTRACT;
+	(*
+		post:
+			s = "": end of input or input error
+			s # "": line with end of line postfix
+	*)
+	PROCEDURE (c: Console) ReadLn- (OUT s: ARRAY OF CHAR), NEW, ABSTRACT;
 
-	PROCEDURE (console: Console) ReadLn- (OUT text: ARRAY OF CHAR), NEW, ABSTRACT;
-
-	PROCEDURE (console: Console) Open-, NEW, ABSTRACT;
-
-	PROCEDURE (console: Console) Close-, NEW, ABSTRACT;
-
-	PROCEDURE (console: Console) CreateProcess- (cmdLine: ARRAY OF CHAR): Process, NEW, ABSTRACT;
-
-	PROCEDURE (console: Console) CommandLine- (OUT cmdLine: ARRAY OF CHAR), NEW, ABSTRACT;
-
-	PROCEDURE (p: Process) Terminate-, NEW, ABSTRACT;
 
 	PROCEDURE WriteStr* (IN text: ARRAY OF CHAR);
 	BEGIN
@@ -51,53 +49,10 @@ MODULE Console;
 		cons.ReadLn(text)
 	END ReadLn;
 
-	PROCEDURE Open*;
-	BEGIN
-		cons.Open
-	END Open;
 
-	PROCEDURE Close*;
+	PROCEDURE SetConsole* (c: Console);
 	BEGIN
-		cons.Close
-	END Close;
-
-	PROCEDURE CreateProcess* (cmdLine: ARRAY OF CHAR): Process;
-		VAR
-			p: Process;
-	BEGIN
-		p := cons.CreateProcess(cmdLine);
-		RETURN p
-	END CreateProcess;
-
-	PROCEDURE CommandLine* (OUT cmdLine: ARRAY OF CHAR);
-	BEGIN
-		cons.CommandLine(cmdLine)
-	END CommandLine;
-
-	PROCEDURE TerminateProcess* (p: Process);
-	BEGIN
-		p.Terminate
-	END TerminateProcess;
-
-	PROCEDURE SetConsole* (console: Console);
-	BEGIN
-		cons := console;
-		IF stdCon = NIL THEN stdCon := console END
+		cons := c
 	END SetConsole;
 
-	PROCEDURE Maintainer;
-	BEGIN
-		version := 310;
-		maintainer := "A.Thomas"
-	END Maintainer;
-
-	PROCEDURE Init;
-	BEGIN
-		Maintainer;
-		cons := NIL;
-		stdCon := NIL
-	END Init;
-
-BEGIN
-	Init
 END Console.
