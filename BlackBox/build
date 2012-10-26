@@ -114,6 +114,11 @@ Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Files HostFiles StdLoader')
 # Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Kernel_so_init# Files HostFiles StdLoader')
 DATA
 
+env LANG=C ./run-BlackBox <<DATA
+DevCompiler.CompileThis DevElfLinker16
+DevCompiler.CompileThis ConsCompiler
+DATA
+
 # Enc
 env LANG=C ./run-BlackBox <<DATA
 # DevCompiler.CompileThis EncCodecs
@@ -190,9 +195,6 @@ ConsCompiler.Compile('Enc/Mod', 'StdMap_viscii.txt')
 DATA
 
 ./run-BlackBox <<DATA
-DevCompiler.CompileThis DevElfLinker16
-DevCompiler.CompileThis ConsCompiler
-
 DevCompiler.CompileThis XhtmlEntitySets XhtmlWriters XhtmlStdFileWriters XhtmlTextTableMarkers XhtmlExporter
 
 DevCompiler.CompileThis ObxHello0 ObxPi ObxRandom ObxTrap
