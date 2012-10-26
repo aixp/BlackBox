@@ -6,13 +6,6 @@
 
 import sys
 
-def be2le (x):
-	y = 0
-	while x > 0:
-		y = y * 256 + x % 256
-		x = x / 256
-	return y
-
 def nBytes (x):
 	if x == 0:
 		return 1
@@ -76,10 +69,7 @@ def opt0 (r):
 	o = {}
 	for i, x in r:
 		ofs = i - x
-		if o.has_key(ofs):
-			o[ofs].append(x)
-		else:
-			o[ofs] = [ x ]
+		o.setdefault(ofs, []).append(x)
 	return o
 
 # for decoder
@@ -88,10 +78,7 @@ def opt1 (r, nb):
 	for i, x in r:
 		if nBytes(i) == nb:
 			ofs = x - i
-			if o.has_key(ofs):
-				o[ofs].append(i)
-			else:
-				o[ofs] = [ i ]
+			o.setdefault(ofs, []).append(i)
 	return o
 
 def gen (modName, r, head, head0=None):
@@ -113,7 +100,7 @@ def gen (modName, r, head, head0=None):
 		else:
 			errS = ''
 
-	### calc man num of SHORTCHARs per CHAR
+	### calc max num of SHORTCHARs per CHAR
 	maxN = 1
 	for i, x in r:
 		# i: encoding char in big-endian
