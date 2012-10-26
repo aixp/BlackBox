@@ -13,6 +13,7 @@ Dev0Compiler.Compile('System/Mod', 'Meta.txt')
 Dev0Compiler.Compile('System/Mod', 'Dialog.txt')
 
 Dev0Compiler.Compile('Enc/Mod', 'Codecs.txt')
+Dev0Compiler.Compile('Host/Mod', 'Lang.txt')
 Dev0Compiler.Compile('Host/Mod', 'Files.txt')
 Dev0Compiler.Compile('Host/Mod', 'Console.txt')
 

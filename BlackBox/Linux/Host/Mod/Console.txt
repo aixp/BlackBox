@@ -9,7 +9,7 @@ MODULE HostConsole;
 		Console implementation for Linux
 	*)
 
-	IMPORT SYSTEM, Console, Libc := LinLibc, Codecs := EncCodecs;
+	IMPORT SYSTEM, Console, Libc := LinLibc, Codecs := EncCodecs, HostLang;
 
 	CONST
 		defEnc = "ASCII";
@@ -22,38 +22,6 @@ MODULE HostConsole;
 		cons: Cons;
 		e: Codecs.Encoder;
 		d: Codecs.Decoder;
-
-	PROCEDURE GetEnc (OUT enc: Codecs.Encoding);
-		VAR lang: Libc.PtrSTR;
-			i, j: INTEGER;
-	BEGIN
-		lang := Libc.getenv("LANG");
-		IF lang # NIL THEN
-			IF lang$ = "C" THEN
-				enc := "ASCII"
-			ELSE
-				i := 0; WHILE (lang[i] # 0X) & (lang[i] # '.') DO INC(i) END;
-				IF lang[i] # 0X THEN
-					INC(i);
-					j := 0;
-					WHILE (j < LEN(enc) - 1) & (lang[i] # 0X) DO
-						enc[j] := lang[i];
-						INC(j);
-						INC(i)
-					END;
-					IF j < LEN(enc) - 1 THEN
-						enc[j] := 0X
-					ELSE
-						enc := defEnc
-					END
-				ELSE
-					enc := defEnc
-				END
-			END
-		ELSE
-			enc := defEnc
-		END
-	END GetEnc;
 
 	PROCEDURE (cons: Cons) ReadLn (OUT s: ARRAY OF CHAR);
 		CONST
@@ -145,12 +113,10 @@ MODULE HostConsole;
 	END WriteLn;
 
 	PROCEDURE Init;
-		VAR enc: Codecs.Encoding;
 	BEGIN
 		IF Codecs.dir # NIL THEN
-			GetEnc(enc);
-			e := Codecs.dir.NewEncoder(enc);
-			d := Codecs.dir.NewDecoder(enc)
+			e := Codecs.dir.NewEncoder(HostLang.enc);
+			d := Codecs.dir.NewDecoder(HostLang.enc)
 		END;
 
 		NEW(cons);

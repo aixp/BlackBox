@@ -108,6 +108,7 @@ Files:
 			Compiler.odc: console interface to Dev compiler
 			Log.odc: Log.Hook console implementation
 		Enc: encodings conversion subsystem
+		{OpenBSD,Linux}/Host/Mod/Lang.odc: Dialog.LanguageHook implementation and LANG environment variable support
 
 		{OpenBSD,Linux}/libBB.so: compiled and linked shared library to run BlackBox
 		{OpenBSD,Linux}/libBB0.so: compiled and linked shared library to run simple development interpreter
