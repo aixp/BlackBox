@@ -43,6 +43,8 @@ MODULE Dev0Interp;
 	PROCEDURE Init;
 		VAR s: ARRAY 1024 OF CHAR;
 	BEGIN
+		(* Dialog.SetLanguage("", FALSE); *)
+
 		Console.ReadLn(s);
 		WHILE Call(s) DO
 			Console.ReadLn(s)
