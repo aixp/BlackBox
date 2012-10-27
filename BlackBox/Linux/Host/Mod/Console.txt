@@ -48,7 +48,16 @@ MODULE HostConsole;
 						s[0] := 0X
 					END
 				ELSE
-					s := ss$
+					i := 0;
+					WHILE (ss[i] > 0X) & (ss[i] < 80X) DO
+						s[i] := ss[i];
+						INC(i)
+					END;
+					IF ss[i] = 0X THEN
+						s[i] := 0X
+					ELSE
+						s[0] := 0X
+					END
 				END
 			ELSE
 				s[0] := 0X
@@ -75,14 +84,18 @@ MODULE HostConsole;
 				REPEAT
 					e.Encode(s, fR, fLen, ss, tW);
 					IF fLen # 0 THEN
-						ss[tW] := '?'; INC(tW);
+						ss[tW] := defCh; INC(tW);
 						INC(fR); DEC(fLen)
 					END
 				UNTIL fLen = 0
 			ELSE
 				fLen := MIN(len, LEN(ss) - 1); n := fLen;
 				WHILE fLen > 0 DO
-					ss[tW] := SHORT(s[fR]);
+					IF s[fR] < 80X THEN
+						ss[tW] := SHORT(s[fR])
+					ELSE
+						ss[tW] := defCh
+					END;
 					INC(tW);
 					INC(fR); DEC(fLen)
 				END
