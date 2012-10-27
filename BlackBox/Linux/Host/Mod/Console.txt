@@ -12,7 +12,6 @@ MODULE HostConsole;
 	IMPORT SYSTEM, Console, Libc := LinLibc, Codecs := EncCodecs, HostLang;
 
 	CONST
-		defEnc = "ASCII";
 		defCh = '?';
 
 	TYPE
