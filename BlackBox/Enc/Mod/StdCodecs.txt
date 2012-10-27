@@ -10,7 +10,10 @@ MODULE EncStdCodecs;
 	IMPORT Meta, Codecs := EncCodecs, Aliases := EncStdAliases;
 
 	TYPE
-		Directory* = POINTER TO RECORD (Codecs.Directory) END;
+		Directory = POINTER TO RECORD (Codecs.Directory) END;
+
+	VAR
+		dir-: Directory;
 
 	(* Directory *)
 
@@ -66,7 +69,6 @@ MODULE EncStdCodecs;
 
 
 	PROCEDURE Init;
-		VAR dir: Directory;
 	BEGIN
 		NEW(dir); Codecs.SetDir(dir)
 	END Init;
