@@ -1,1 +1,0 @@
-../../../../OpenBSD/Lin/Rsrc/loader/dev0.c

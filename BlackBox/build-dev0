@@ -34,7 +34,7 @@ Dev0Compiler.Compile('Host/Mod', 'Console.txt')
 
 ### simple dev interpreter (include Dev0Compiler, Dev0ElfLinker)
 
-Dev0Compiler.Compile('', 'Views.txt')
+Dev0Compiler.Compile('Dev0', 'Views.txt')
 Dev0Compiler.Compile('Std/Mod', 'Interpreter.txt')
 
 Dev0Compiler.Compile('Dev0/Mod', 'Interp.txt')

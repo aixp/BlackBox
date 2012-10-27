@@ -68,10 +68,10 @@ Dev0Compiler.Compile('Std/Mod', 'Headers.txt')
 Dev0Compiler.Compile('Std/Mod', 'Links.txt')
 
 Dev0Compiler.Compile('Std/Mod', 'Loader.txt')
-Dev0Compiler.Compile('Lin/Mod', 'Kernel_so_init.txt')
+Dev0Compiler.Compile('System/Mod', 'Kernel_so_init.txt')
 
 # before StdLog
-Dev0Compiler.Compile('', 'HostDialog.txt')
+Dev0Compiler.Compile('Host/Mod', 'Dialog.txt')
 
 Dev0Compiler.Compile('Std/Mod', 'Log.txt')
 # Dev0Compiler.Compile('', 'StdLog.txt')
@@ -98,17 +98,17 @@ Dev0Compiler.Compile('Std/Mod', 'Interpreter.txt')
 
 ### BlackBox
 
-Dev0Compiler.Compile('', 'HostFonts.txt')
-Dev0Compiler.Compile('', 'HostWindows.txt')
+Dev0Compiler.Compile('Host/Mod', 'Fonts.txt')
+Dev0Compiler.Compile('Host/Mod', 'Windows.txt')
 Dev0Compiler.Compile('Host/Mod', 'Dates.txt')
-Dev0Compiler.Compile('', 'HostTextConv.txt')
+Dev0Compiler.Compile('Host/Mod', 'TextConv.txt')
 
 Dev0Compiler.Compile('Enc/Mod', 'StdAliases.txt')
 Dev0Compiler.Compile('Enc/Mod', 'StdCodecs.txt')
 
 Dev0Compiler.Compile('Cons/Mod', 'Interp.txt')
 
-Dev0Compiler.Compile('', 'Init-Interp.txt')
+Dev0Compiler.Compile('System/Mod', 'Init.txt')
 
 Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Files HostFiles StdLoader')
 # Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Kernel_so_init# Files HostFiles StdLoader')

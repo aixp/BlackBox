@@ -1,6 +1,6 @@
 MODULE HostTextConv;
 
-	(* THIS IS TEXT COPY OF HostTextConv.odc *)
+	(* THIS IS TEXT COPY OF TextConv.odc *)
 	(* DO NOT EDIT *)
 
 	IMPORT

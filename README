@@ -6,14 +6,21 @@ Tested on OpenBSD 5.2, Fedora Core 17, Ubuntu 12.04 LTS
 Some significant parts taken from OpenBUGS (http://www.openbugs.info/)
 
 How to build:
-	compile loader executable (BlackBox itself and simple interpreter):
-		`uname -s`/libBB0.so must be present (can be built from Windows)
+	cd BlackBox
+	./clean
+	./switch-target `uname -s`
 
-		cd BlackBox/`uname -s`/Lin/Rsrc/loader; make
+	compile loader executables (for BlackBox itself and for simple develompent interpreter):
+		cd BlackBox/Lin/Rsrc/loader
+		make clean
+		make
+		mv BlackBox dev0 ../../../_`uname -s`_/Lin/Rsrc/loader/
+		OpenBSD: move also libdlobsdwrap.so
 
 	compile self:
-
-		cd BlackBox; ./switch-os `uname -s`; ./clean; ./build-dev0; ./build
+		cd BlackBox
+		./build-dev0
+		./build
 
 Files:
 	original:
@@ -36,13 +43,13 @@ Files:
 			Dev/Docu/ElfLinker.odc
 			Docu/OpenBUGS-License.odc
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
-			{Linux,OpenBSD}/Lin/Mod/Kernel_so_init.odc
+			{_LinuxOpenBSD_}/System/Mod/Kernel_so_init.odc
 		http://oberoncore.ru/projects/bb16ru-kras/:
 			Dev/Rsrc/ru/Strings.odc
 			Std/Rsrc/ru/Strings.odc
 			System/Rsrc/ru/Strings.odc
 	modified:
-		OpenBSD/System/Mod/Kernel.odc:
+		_OpenBSD_/System/Mod/Kernel.odc:
 			1.6-rc6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
 				OpenBSD specific:
 					Memory management rewritten (based on mmap)
@@ -57,37 +64,37 @@ Files:
 					IsReadable
 				Kernel.cmdLine support:
 					Kernel.INIT (SetCmdLine2)
-		Linux/System/Mod/Kernel.odc:
-			OpenBSD/System/Mod/Kernel.odc modified for Linux:
+		_Linux_/System/Mod/Kernel.odc:
+			_OpenBSD_/System/Mod/Kernel.odc modified for Linux:
 				Time*
 				TrapHandler
 				mmap: use "/dev/zero" device instead of -1
 				mprotect addresses must be page-aligned
 				do not show warning message if signal install failed
-		OpenBSD/Host/Mod/Files.odc:
+		_OpenBSD_/Host/Mod/Files.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				OpenBSD-specific:
 					size_t
 					__xstat -> stat
 				Kernel.cmdLine support:
 					str := "" -> str := Kernel.cmdLine$
-		Linux/Host/Mod/Files.odc:
+		_Linux_/Host/Mod/Files.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				Kernel.cmdLine support:
 					str := "" -> str := Kernel.cmdLine$
-		OpenBSD/Lin/Mod/Libc.txt:
+		_OpenBSD_/Lin/Mod/Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
-		Linux/Lin/Mod/Libc.odc:
+		_Linux_/Lin/Mod/Libc.odc:
 			OpenBUGS Lin/Mod/Libc.odc:
 				PROT_*, MAP_*, O_*, _SC_PAGESIZE, SIGSTKSZ CONSTs added
 				open, close, read, write, mmap, munmap, mprotect, getenv, sysconf, sigaltstack functions added
-		Linux/Lin/Mod/Dl.odc:
+		_Linux_/Lin/Mod/Dl.odc:
 			OpenBUGS Lin/Mod/Dl.odc
-		Linux/Host/Mod/Dates.odc: from http://oberoncore.ru/
-		OpenBSD/Host/Mod/Dates.odc:
-			Linux/Host/Mod/Dates.odc: OpenBSD-specific
-		Dev0/Mod
+		_Linux_/Host/Mod/Dates.odc: from http://oberoncore.ru/
+		_OpenBSD_/Host/Mod/Dates.odc:
+			_Linux_/Host/Mod/Dates.odc: OpenBSD-specific
+		Dev0/Mod:
 			CP*
 				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.
 			Compiler.odc:
@@ -96,16 +103,16 @@ Files:
 				modified original BlackBox Dev/Mod/Linker.odc
 			ElfLinker16.odc:
 				modified OpenBUGS Dev/Mod/ElfLinker16.odc
-		HostTextConv.odc:
+		_LinuxOpenBSD_/Host/Mod/TextConv.odc:
 			BlackBox 1.6-rc6 Host/Mod/TextConv.odc:
 				Windows-specific converters removed
 	new:
 		Console:
 			System/Mod/Console.odc: Console interface
-			Linux/Host/Mod/Console.odc: Console implementation for Linux
-			OpenBSD/Host/Mod/Console.odc:
-				Linux/Host/Mod/Console.odc: stdin -> SYSTEM.ADR(__sF[0]) (OpenBSD-specific)
-			Windows/Host/Mod/Console.odc:
+			_Linux_/Host/Mod/Console.odc: Console implementation for Linux
+			_OpenBSD_/Host/Mod/Console.odc:
+				_Linux_/Host/Mod/Console.odc: stdin -> SYSTEM.ADR(__sF[0]) (OpenBSD-specific)
+			_Windows_/Host/Mod/Console.odc:
 				Console implementation for Windows
 		Cons/Mod
 			Interp.odc: console interpreter
@@ -113,14 +120,15 @@ Files:
 			Log.odc: Log.Hook console implementation
 		Enc: encodings conversion subsystem
 			typical usage -- from low level modules (from Hosts), as libiconv
-		{OpenBSD,Linux}/Host/Mod/Lang.odc: Dialog.LanguageHook implementation and LANG environment variable support
+		_LinuxOpenBSD_/Host/Mod/Lang.odc: Dialog.LanguageHook implementation and LANG environment variable support
 
-		{OpenBSD,Linux}/libBB.so: compiled and linked shared library to run BlackBox
-		{OpenBSD,Linux}/libBB0.so: compiled and linked shared library to run simple development interpreter
-		Windows/dev0.exe: compiled and linked simple development interpreter
+		{_OpenBSD_,_Linux_}/libBB.so: compiled and linked shared library to run BlackBox
+		{_OpenBSD_,_Linux_}/libBB0.so: compiled and linked shared library to run simple development interpreter
+		_Windows_/dev0.exe: compiled and linked simple development interpreter
 
-		Views.odc: minimal Views implementation required to compile StdInterpreter
-		HostFonts.odc, HostDialog.odc, HostWindows.odc: simple Hosts implementation
+		Dev0/Views.odc: minimal Views implementation required to compile StdInterpreter
+		__Interp/Host/Mod: Fonts.odc, Dialog.odc, Windows.odc: simple Hosts implementation
+		_LinuxOpenBSD_/System/Mod/Init.odc: Init for console interpreter
 
 Notes:
 	Dev0:
