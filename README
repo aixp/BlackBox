@@ -37,6 +37,10 @@ Files:
 			Docu/OpenBUGS-License.odc
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
 			{Linux,OpenBSD}/Lin/Mod/Kernel_so_init.odc
+		http://oberoncore.ru/projects/bb16ru-kras/:
+			Dev/Rsrc/ru/Strings.odc
+			Std/Rsrc/ru/Strings.odc
+			System/Rsrc/ru/Strings.odc
 	modified:
 		OpenBSD/System/Mod/Kernel.odc:
 			1.6-rc6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
