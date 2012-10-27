@@ -15,7 +15,7 @@ BlackBox: BlackBox-dl.c
 	${CC} ${CFLAGS} -o $@ $^ -ldl
 
 dev0: dev0.c
-	${CC} ${CFLAGS} -o $@ $^
+	${CC} ${CFLAGS} -o $@ $^ -ldl
 
 clean:
 	rm -f dev0 BlackBox
