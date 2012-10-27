@@ -17,8 +17,9 @@ none() {
 	checkAndRm || exit 2
 
 	rm -rf *.exe *.so BlackBox dev0 \
-		System/Code/Kernel.ocf System/Sym/Kernel.osf \
-		Code/Kernel.ocf Sym/Kernel.osf \
+		System/Code/Kernel.ocf System/Sym/Kernel.osf Code/Kernel.ocf Sym/Kernel.osf \
+		System/Code/Init.ocf System/Sym/Init.osf Code/Init.ocf Sym/Init.osf \
+		System/Code/Config.ocf System/Sym/Config.osf Code/Config.ocf Sym/Config.osf \
 		Host/Code/*.ocf Host/Sym/*.osf Lin/Code/*.ocf Lin/Sym/*.osf
 }
 
