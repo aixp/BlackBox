@@ -3,7 +3,9 @@ By priority:
 		BB_PRIMARY_DIR
 		BB_SECONDARY_DIR (instead of /USE)
 
-	non-blocking Console
+	Console:
+		non-blocking (input)
+		move to Cons?
 
 	ConsCompiler:
 		interface similar to DevCompiler
