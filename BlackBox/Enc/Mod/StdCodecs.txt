@@ -68,7 +68,7 @@ MODULE EncStdCodecs;
 	END NewDecoder;
 
 
-	PROCEDURE Init;
+	PROCEDURE Init*;
 	BEGIN
 		NEW(dir); Codecs.SetDir(dir)
 	END Init;
