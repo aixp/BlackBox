@@ -18,6 +18,8 @@ By priority:
 				re-implement EncStd generators from Python to Component Pascal
 
 		HostFiles:
+			problem when path to StdMap encoding code file contains character(s) of this encoding:
+				Meta.Lookup -> HostFiles -> CheckEncoding -> Meta.Lookup ...
 			environment variables decoding
 
 	handle SIGTERM in server version (when Kernel.Start used)
