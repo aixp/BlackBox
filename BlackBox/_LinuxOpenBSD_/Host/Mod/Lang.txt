@@ -64,11 +64,11 @@ MODULE HostLang;
 						country[j] := 0X;
 						INC(i);
 						j := 0;
-						WHILE IsValidEncChar(env[i]) & (j < LEN(enc)) DO
+						WHILE IsValidEncChar(env[i]) & (j < LEN(enc) - 1) DO
 							enc[j] := env[i];
 							INC(j); INC(i)
 						END;
-						IF j < LEN(enc) - 1 THEN
+						IF (env[i] = 0X) & (j < LEN(enc)) THEN
 							enc[j] := 0X
 						ELSE Default
 						END
