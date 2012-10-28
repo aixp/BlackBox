@@ -6,7 +6,7 @@ checkAndRm () {
 		find "${line}" \( -type f -o -type l \) -print |
 		while read l; do
 			to=`echo $l | sed "s/^${line}\///"`
-			if [ -e "${to}" -a -h "${to}" ]; then
+			if [ -h "${to}" ]; then
 				rm -f "${to}"
 			fi
 		done
