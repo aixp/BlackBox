@@ -1,6 +1,5 @@
 By priority:
-	do not use command line (Kernel.cmdLine), use env variables instead
-		remove Kernel.cmdLine
+	remove Kernel.cmdLine
 
 	Console:
 		non-blocking (input)
@@ -18,18 +17,13 @@ By priority:
 			low priority:
 				re-implement EncStd generators from Python to Component Pascal
 
-		command line: do not use
-		env variables:
-			decode (encoding = current locale encoding)
-		filenames:
-			HostFiles:
-				store encoded (ARRAY OF SHORTCHAR), encoding = currect locale encoding
-				display decoded (ARRAY OF CHAR)
-				NOTE: Kernel.cmdLine decoded (see ^)
+		HostFiles:
+			filenames
+			environment variables
 
 	handle SIGTERM in server version (when Kernel.Start used)
 
-	Comm
+	CommTCP, CommV24
 
 	printing (to PostScript)
 
