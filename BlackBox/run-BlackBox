@@ -7,16 +7,6 @@ rn=`readlink -f "${0}"`
 d=`dirname "${rn}"`
 
 exe="BlackBox"
-appName=${exe}
-
-p=
-for x in "${@}"; do
-	if [ ! "${x}" = "`echo ${x} | sed s'/ //'`" ]; then
-		p="${p} \"${x}\""
-	else
-		p="${p} ${x}"
-	fi
-done
 
 # export LD_DEBUG=all
-env LD_LIBRARY_PATH="${d}" CMDLINE="${d}/${appName}${p}" "${d}"/${exe}
+env LD_LIBRARY_PATH="${d}" BB_PRIMARY_DIR="${d}" BB_SECONDARY_DIR=. "${d}"/${exe}

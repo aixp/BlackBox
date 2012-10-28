@@ -1,6 +1,6 @@
 MODULE HostFiles;
 
-	(* THIS IS TEXT COPY OF linHostFiles.odc *)
+	(* THIS IS TEXT COPY OF Files.odc *)
 	(* DO NOT EDIT *)
 
 	IMPORT SYSTEM, Kernel, Files, LinLibc;
@@ -107,7 +107,6 @@ MODULE HostFiles;
 		
 	VAR
 		MapParamString*: PROCEDURE(in, p0, p1, p2: ARRAY OF CHAR; OUT out: ARRAY OF CHAR);
-		appName-: FullName;
 		dir: Directory;
 		wildcard: Files.Type;
 		startupDir: FullName;
@@ -170,7 +169,7 @@ MODULE HostFiles;
 		RETURN res
 	END Error;
 
-	PROCEDURE Diff (VAR a, b: ARRAY OF CHAR; caseSens: BOOLEAN): INTEGER;
+	PROCEDURE Diff (IN a, b: ARRAY OF CHAR; caseSens: BOOLEAN): INTEGER;
 		VAR i: INTEGER; cha, chb: CHAR;
 	BEGIN
 		i := 0;
@@ -306,7 +305,7 @@ MODULE HostFiles;
 		RETURN (f.state IN {shared, exclusive}) & (Diff(f.name, id.name, f.loc.caseSens) = 0)
 	END Identified;
 
-	PROCEDURE ThisFile (VAR name: FullName): File;
+	PROCEDURE ThisFile (IN name: FullName): File;
 		VAR id: Identifier; p: ANYPTR;
 	BEGIN
 		id.typ := SYSTEM.TYP(File); id.name := name$;
@@ -399,7 +398,7 @@ MODULE HostFiles;
 		END
 	END OpenFile;
 	
-	PROCEDURE GetTempFileName (VAR path, name: FullName; num: INTEGER);
+	PROCEDURE GetTempFileName (IN path: FullName; OUT name: FullName; num: INTEGER);
 		VAR i: INTEGER; str: ARRAY 16 OF CHAR;
 	BEGIN
 		str := tempName; i := 7;
@@ -423,7 +422,7 @@ MODULE HostFiles;
 		END
 	END CreateFile;
 
-	PROCEDURE Delete (VAR fname, path: FullName; VAR res: INTEGER); 
+	PROCEDURE Delete (IN fname, path: FullName; VAR res: INTEGER); 
 		VAR num, n: INTEGER; f: File; new: FullName; attr: SET; fn, nn: ShortName; buf: LinLibc.stat_t; isDir: BOOLEAN;
 	BEGIN
 		ASSERT(fname # "", 100);
@@ -489,7 +488,7 @@ MODULE HostFiles;
 	PROCEDURE (f: File) NewWriter (old: Files.Writer): Files.Writer;
 		VAR w: Writer;
 	BEGIN	(* portable *)
-		ASSERT(f.state # closed, 20);
+		ASSERT(f.state # closed, 20); ASSERT(f.state # shared, 21);
 		IF (old # NIL) & (old IS Writer) THEN w := old(Writer) ELSE NEW(w) END;
 		IF w.base # f THEN
 			w.base := f; w.buf := NIL; w.SetPos(f.len)
@@ -508,11 +507,10 @@ MODULE HostFiles;
 		i := 0; WHILE i # nofbufs DO FlushBuffer(f, i); INC(i) END
 	END Flush;
 	
-	PROCEDURE GetPath (VAR fname, path: FullName);
+	PROCEDURE GetPath (IN fname: FullName; OUT path: FullName);
 		VAR i: INTEGER;
 	BEGIN
-		path := fname$; i := 0;
-		WHILE path[i] # 0X DO INC(i) END;
+		path := fname$; i := LEN(path$);
 		WHILE (i > 0) & (path[i] # "\") & (path[i] # "/") & (path[i-1] # ":") DO DEC(i) END;
 		path[i] := 0X
 	END GetPath;
@@ -537,7 +535,7 @@ MODULE HostFiles;
 	END CreateDir;
 	
 	PROCEDURE CheckPath (VAR path: FullName; ask: BOOLEAN; VAR res: INTEGER);
-		VAR s: ARRAY 300 OF CHAR; t: ARRAY 32 OF CHAR; 
+		VAR s: ARRAY 300 OF CHAR; t: ARRAY 32 OF CHAR;
 	BEGIN
 		(*IF ask THEN
 			IF MapParamString # NIL THEN
@@ -555,7 +553,7 @@ MODULE HostFiles;
 		END*)
 	END CheckPath;
 
-	PROCEDURE CheckDelete (VAR fname, path: FullName; ask: BOOLEAN; VAR res: INTEGER);
+	PROCEDURE CheckDelete (IN fname, path: FullName; ask: BOOLEAN; VAR res: INTEGER);
 		VAR s: ARRAY 300 OF CHAR; t: ARRAY 16 OF CHAR; 
 	BEGIN
 		REPEAT
@@ -622,21 +620,25 @@ MODULE HostFiles;
 		END;
 		res := Error(res)
 	END Register;
-		
+
 	PROCEDURE (f: File) Close;
 		VAR res: INTEGER;
 	BEGIN	(* portable *)
 		IF f.state # closed THEN
+(*
 			IF f.state = exclusive THEN
-				CloseFile(f, res) 
+				CloseFile(f, res)
 			ELSE
 				CloseFileHandle(f, res)
 			END
+*)
+			CloseFile(f, res)
 		END
 	END Close;
 
+
 	(* Locator *)
-	
+
 	PROCEDURE (loc: Locator) This* (IN path: ARRAY OF CHAR): Locator;
 		VAR new: Locator; i: INTEGER;
 	BEGIN
@@ -1197,7 +1199,8 @@ MODULE HostFiles;
 		startupLen := i
 	END SetRootDir;
 
-	PROCEDURE GetName (VAR p: ARRAY OF CHAR; VAR i: INTEGER; VAR name, opt: FullName);
+(*
+	PROCEDURE GetName (VAR p: ARRAY OF CHAR; VAR i: INTEGER; OUT name, opt: FullName);
 		VAR ch, tch: CHAR; j: INTEGER;
 	BEGIN
 		j := 0; ch := p[i]; tch := " ";
@@ -1298,7 +1301,56 @@ MODULE HostFiles;
 		dir.temp := NewLocator(LinLibc.P_tmpdir);
 		Files.SetDir(dir)
 	END Init;
-	
+*)
+
+	PROCEDURE Init;
+		CONST bbServerDir = "BB_PRIMARY_DIR"; bbWorkDir = "BB_SECONDARY_DIR";
+		VAR res: INTEGER; attr: SET; p: LinLibc.PtrSTR;
+			buf: LinLibc.stat_t; isDir, def1: BOOLEAN;
+	BEGIN
+		wildcard := "*"; NEW(dir);
+		p := LinLibc.getenv(bbServerDir);	(* p = NIL -> undefined *)
+		def1 := p # NIL;
+		IF def1 THEN
+			Stat(p$, buf, res);
+			IF res = ok THEN
+				ModeToAttr(buf.st_mode, attr, isDir);
+				IF isDir THEN res := ok ELSE res := invalidName END
+			END;
+			def1 := res = ok;
+			IF def1 THEN
+				startupDir := p$; startupLen := LEN(startupDir$)
+			ELSE
+				Msg("HostFiles: Value of " + bbServerDir + " isn't directory, using cwd")
+			END
+		END;
+		IF ~def1 THEN
+			p := NIL;
+			p := LinLibc.getcwd(p, 0);
+			startupDir := p$; startupLen := LEN(startupDir$);
+			LinLibc.free(SYSTEM.VAL(LinLibc.PtrVoid, p))
+		END;
+		dir.startup := NewLocator(startupDir);
+		dir.startup.rootLen := 0; 
+		p := LinLibc.getenv(bbWorkDir);	(* p = NIL -> undefined *)
+		IF def1 & (p # NIL) THEN
+			Stat(p$, buf, res);
+			IF res = ok THEN
+				ModeToAttr(buf.st_mode, attr, isDir);
+				IF isDir THEN res := ok ELSE res := invalidName END
+			END;
+			IF ~serverVersion THEN
+				(* - *)
+			ELSIF res = ok THEN
+				dir.startup := NewLocator(p$); dir.startup.rootLen := LEN(p$)
+			ELSE
+				Msg("HostFiles: Value of " + bbWorkDir + " isn't directory, server configuration isn't enabled")
+			END
+		END;
+		dir.temp := NewLocator(LinLibc.P_tmpdir);
+		Files.SetDir(dir)
+	END Init;
+
 BEGIN
 	Init
 END HostFiles.

@@ -72,17 +72,15 @@ Files:
 				mmap: use "/dev/zero" device instead of -1
 				mprotect addresses must be page-aligned
 				do not show warning message if signal install failed
-		_OpenBSD_/Host/Mod/Files.odc:
+		_Linux_/Host/Mod/Files.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
+				synchronized with BlackBox 1.6-rc6
+				server configuration via BB_PRIMARY_DIR and BB_SECONDARY_DIR environment variables (not command line)
+		_OpenBSD_/Host/Mod/Files.odc:
+			_Linux_/Host/Mod/Files.odc:
 				OpenBSD-specific:
 					size_t
 					__xstat -> stat
-				Kernel.cmdLine support:
-					str := "" -> str := Kernel.cmdLine$
-		_Linux_/Host/Mod/Files.odc:
-			OpenBUGS Lin/Mod/linHostFiles.odc:
-				Kernel.cmdLine support:
-					str := "" -> str := Kernel.cmdLine$
 		_OpenBSD_/Lin/Mod/Libc.txt:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
@@ -151,5 +149,10 @@ Notes:
 		in this case, to solve problem, baseStack should be adjusted and
 			should point to stack on which this exported procedure executes
 		if necessary, this can be done using auxiliary module Kernel_so_init
+
+	Command line support removed because there is no easy way to access argc argv from outside main()
+		Environment variables supported instead:
+			BB_PRIMARY_DIR
+			BB_SECONDARY_DIR (was: /USE command line option)
 
 A. V. Shiryaev, 2012

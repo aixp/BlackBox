@@ -1,7 +1,6 @@
 By priority:
 	do not use command line (Kernel.cmdLine), use env variables instead
-		BB_PRIMARY_DIR
-		BB_SECONDARY_DIR (instead of /USE)
+		remove Kernel.cmdLine
 
 	Console:
 		non-blocking (input)
