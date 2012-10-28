@@ -1,7 +1,7 @@
 #!/bin/sh
 
 checkAndRm () {
-	lines=`find . -name "_*" -mindepth 1 -maxdepth 1 -print | sed 's/\.\///'`
+	lines=`find . -mindepth 1 -maxdepth 1 -name "_*" -print | sed 's/\.\///'`
 	for line in $lines; do
 		find "${line}" \( -type f -o -type l \) -print |
 		while read l; do
@@ -24,7 +24,7 @@ none() {
 }
 
 mklinks () {
-	find "${1}" \( -type f -o -type l \) -mindepth ${2} -maxdepth ${2} -print |
+	find "${1}" -mindepth ${2} -maxdepth ${2} \( -type f -o -type l \) -print |
 	while read l; do
 		to=`echo $l | sed "s/^${line}\///"`
 		mkdir -p `dirname "${to}"`
@@ -33,11 +33,11 @@ mklinks () {
 }
 
 dolinks () {
-	lines1=`find . -name "_*${1}*_" -mindepth 1 -maxdepth 1 -print | sed 's/\.\///'`
-	lines2=`find . -name "__*${2}*" -mindepth 1 -maxdepth 1 -print | sed 's/\.\///'`
-	lines3=`find . -name "_*"${1}"*_*${2}*" -mindepth 1 -maxdepth 1 -print | sed 's/\.\///'`
+	lines1=`find . -mindepth 1 -maxdepth 1 -name "_*${1}*_" -print | sed 's/\.\///'`
+	lines2=`find . -mindepth 1 -maxdepth 1 -name "__*${2}*" -print | sed 's/\.\///'`
+	lines3=`find . -mindepth 1 -maxdepth 1 -name "_*"${1}"*_*${2}*" -print | sed 's/\.\///'`
 	for line in  $lines1 $lines2 $lines3; do
-		find "${line}" \( -type f -o -type l \) -mindepth 1 -maxdepth 1 -print |
+		find "${line}" -mindepth 1 -maxdepth 1 \( -type f -o -type l \) -print |
 		while read l; do
 			ln -s $l
 		done
