@@ -3,7 +3,11 @@ MODULE HostFiles;
 	(* THIS IS TEXT COPY OF Files.odc *)
 	(* DO NOT EDIT *)
 
-	IMPORT SYSTEM, Kernel, Files, LinLibc;
+	(*
+		A. V. Shiryaev, 2012.10: filenames encoding translation implemented
+	*)
+
+	IMPORT SYSTEM, Kernel, Files, LinLibc, Codecs := EncCodecs;
 
 	CONST
 		tempName = "odcxxxxx";
@@ -103,7 +107,7 @@ MODULE HostFiles;
 			count: INTEGER
 		END;
 		
-		ShortName = ARRAY pathLen OF SHORTCHAR;
+		ShortName = ARRAY pathLen * 4 OF SHORTCHAR;
 		
 	VAR
 		MapParamString*: PROCEDURE(in, p0, p1, p2: ARRAY OF CHAR; OUT out: ARRAY OF CHAR);
@@ -112,6 +116,7 @@ MODULE HostFiles;
 		startupDir: FullName;
 		startupLen: INTEGER;
 		res: INTEGER;
+		e: Codecs.Encoder;
 		
 	(* debugging functions *)
 
@@ -142,7 +147,88 @@ MODULE HostFiles;
 	END Int;
 	
 	(* end of debugging functions *)
-	
+
+	(* encoding translation *)
+
+	PROCEDURE GetEnc (OUT enc: Codecs.Encoding; OUT ok: BOOLEAN);
+		VAR env: LinLibc.PtrSTR;
+			i, j: INTEGER;
+
+		PROCEDURE IsSLetter (c: SHORTCHAR): BOOLEAN;
+		BEGIN
+			RETURN (c >= 'a') & (c <= 'z')
+		END IsSLetter;
+
+		PROCEDURE IsBLetter (c: SHORTCHAR): BOOLEAN;
+		BEGIN
+			RETURN (c >= 'A') & (c <= 'Z')
+		END IsBLetter;
+
+		PROCEDURE IsValidEncChar (x: SHORTCHAR): BOOLEAN;
+		BEGIN
+			RETURN ((x >= 'A') & (x <= 'Z')) OR ((x >= '0') & (x <= '9')) OR (x = '-') OR (x = '_')
+				OR ((x >= 'a') & (x <= 'z'))
+		END IsValidEncChar;
+
+	BEGIN
+		env := LinLibc.getenv("LANG");
+		IF env # NIL THEN
+			IF env$ = "C" THEN
+				enc := "ASCII"; ok := TRUE
+			ELSE
+				IF IsSLetter(env[0]) & IsSLetter(env[1]) & (env[2] = '_')
+				& IsBLetter(env[3]) & IsBLetter(env[4]) & (env[5] = '.') THEN
+					i := 6; j := 0;
+					WHILE IsValidEncChar(env[i]) & (j < LEN(enc) - 1) DO
+						enc[j] := env[i];
+						INC(j); INC(i)
+					END;
+					IF (env[i] = 0X) & (j < LEN(enc)) THEN
+						enc[j] := 0X; ok := TRUE
+					ELSE ok := FALSE
+					END
+				ELSE ok := FALSE
+				END
+			END
+		ELSE ok := FALSE
+		END
+	END GetEnc;
+
+	PROCEDURE CheckEncoder;
+		VAR enc: Codecs.Encoding; ok: BOOLEAN;
+	BEGIN
+		IF (e = NIL) & (Codecs.dir # NIL) THEN
+			GetEnc(enc, ok);
+			IF ok THEN e := Codecs.dir.NewEncoder(enc) (* !!! *)
+			END
+		END
+	END CheckEncoder;
+
+	PROCEDURE Short (IN f: FullName; OUT t: ShortName; OUT ok: BOOLEAN);
+		VAR fR, fLen, tW: INTEGER;
+	BEGIN
+		(* do not use encoder for basic set of chars *)
+		fR := 0; WHILE (f[fR] >= ' ') & (f[fR] <= '~') DO t[fR] := SHORT(f[fR]); INC(fR) END;
+		IF f[fR] = 0X THEN t[fR] := 0X; ok := TRUE
+		ELSE CheckEncoder;
+			IF e # NIL THEN
+				fR := 0; fLen := LEN(f$); tW := 0;
+				e.Encode(f, fR, fLen, t, tW);
+				IF fLen = 0 THEN t[tW] := 0X; ok := TRUE
+				ELSE t[0] := 0X; ok := FALSE
+				END
+			ELSE (* continue, ASCII *)
+				WHILE (f[fR] > 0X) & (f[fR] < 80X) DO t[fR] := SHORT(f[fR]); INC(fR) END;
+				IF f[fR] = 0X THEN t[fR] := 0X; ok := TRUE
+				ELSE t[0] := 0X; ok := FALSE
+				END
+			END
+		END
+	END Short;
+
+	(* end of encoding translation *)
+
+
 	(*	get error num from linux	*)
 	PROCEDURE LinLibc_errno (): INTEGER;
 		VAR
@@ -193,9 +279,9 @@ MODULE HostFiles;
 	END Diff;
 	
 	PROCEDURE Stat (IN fname: FullName; VAR buf: LinLibc.stat_t; OUT res: INTEGER);
-		VAR s: ShortName;
+		VAR s: ShortName; ok1: BOOLEAN;
 	BEGIN
-		s := SHORT(fname);
+		Short(fname, s, ok1);
 		res := LinLibc.stat(s, buf); (* Shiryaev A. V.: OpenBSD *)
 	END Stat;
 	
@@ -278,7 +364,7 @@ MODULE HostFiles;
 	END CloseFileHandle;
 
 	PROCEDURE CloseFile (f: File; VAR res: INTEGER);
-		VAR s: INTEGER; n: ShortName;
+		VAR s: INTEGER; n: ShortName; ok1: BOOLEAN;
 	BEGIN
 		IF f.state = exclusive THEN 
 			f.Flush;
@@ -287,7 +373,7 @@ MODULE HostFiles;
 		s := f.state; f.state := closed;
 		CloseFileHandle (f, res);
 		IF (s IN {temp, new, hidden}) & (f.name # "") THEN
-			n := SHORT(f.name$);
+			Short(f.name, n, ok1);
 			res := LinLibc.remove(n)
 		END
 	END CloseFile;
@@ -359,9 +445,9 @@ MODULE HostFiles;
 	END MoveFile;
 	
 	PROCEDURE NewFileRef (state: INTEGER; VAR name: FullName; VAR ref, res: INTEGER);
-		VAR n: ShortName;
+		VAR n: ShortName; ok1: BOOLEAN;
 	BEGIN
-		n := SHORT(name$);
+		Short(name, n, ok1);
 		IF state = create THEN (* Create should fail if file already exists *)
 			IF ExistingFile(n) THEN
 				ref := invalid; res := fileExistsErr
@@ -424,9 +510,10 @@ MODULE HostFiles;
 
 	PROCEDURE Delete (IN fname, path: FullName; VAR res: INTEGER); 
 		VAR num, n: INTEGER; f: File; new: FullName; attr: SET; fn, nn: ShortName; buf: LinLibc.stat_t; isDir: BOOLEAN;
+			ok1: BOOLEAN;
 	BEGIN
 		ASSERT(fname # "", 100);
-		f := ThisFile(fname); fn := SHORT(fname$);
+		f := ThisFile(fname); Short(fname, fn, ok1);
 		IF f = NIL THEN
 			IF LinLibc.remove(fn) = 0 THEN 
 				res := ok
@@ -442,7 +529,7 @@ MODULE HostFiles;
 				num := LinLibc.clock(); n := 200;
 				REPEAT
 					GetTempFileName(path, new, num); INC(num); DEC(n);
-					nn := SHORT(new$);
+					Short(new, nn, ok1);
 					MoveFile(fn, nn, res);
 				UNTIL (res # fileExistsErr) OR (n = 0);
 				IF res = ok THEN
@@ -516,10 +603,10 @@ MODULE HostFiles;
 	END GetPath;
 	
 	PROCEDURE CreateDir (VAR path: FullName; VAR res: INTEGER);
-		VAR (*sec: KERNEL32.SecurityAttributes;*) p: FullName; s: ShortName;
+		VAR (*sec: KERNEL32.SecurityAttributes;*) p: FullName; s: ShortName; ok1: BOOLEAN;
 	BEGIN
 		ASSERT(path # "", 100);
-		s := SHORT(path$);
+		Short(path, s, ok1);
 		res := LinLibc.mkdir(s, {0..MAX(SET)}); (* full rights are masked with the umask, is this correct? *)
 		IF res # ok THEN
 			res := LinLibc_errno();
@@ -590,7 +677,7 @@ MODULE HostFiles;
 	END CheckDelete;
 
 	PROCEDURE (f: File) Register (name: Files.Name; type: Files.Type; ask: BOOLEAN; OUT res: INTEGER);
-		VAR b: INTEGER; fname: FullName; fn, nn: ShortName;
+		VAR b: INTEGER; fname: FullName; fn, nn: ShortName; ok1: BOOLEAN;
 	BEGIN
 		ASSERT(f.state = new, 20); ASSERT(name # "", 21);
 		Append(f.loc.path, name, type, f.loc.maxLen, fname);
@@ -602,18 +689,18 @@ MODULE HostFiles;
 				OpenFile(create, f.name, f.ref, res);
 				IF res = ok THEN
 					f.state := exclusive; CloseFile(f, res);
-					fn := SHORT(f.name$);
+					Short(f.name, fn, ok1);
 				END
 			ELSE
 				f.state := exclusive; CloseFile(f, res);
-				fn := SHORT(f.name$); nn := SHORT(fname$);
+				Short(f.name, fn, ok1); Short(fname, nn, ok1);
 				MoveFile(fn, nn, res);
 				IF res = ok THEN
 					f.name := fname$;
-					fn := SHORT(f.name$);
+					Short(f.name, fn, ok1);
 				ELSE
 					ASSERT(res # 87, 101);
-					fn := SHORT(f.name$);
+					Short(f.name, fn, ok1);
 					b := LinLibc.remove(fn);
 				END
 			END
@@ -942,11 +1029,12 @@ MODULE HostFiles;
 
 	PROCEDURE (d: Directory) Rename* (loc: Files.Locator; old, new: Files.Name; ask: BOOLEAN);
 		VAR res, i: INTEGER; oldname, newname: FullName; f: File; on, nn, tn: ShortName; buf: LinLibc.stat_t;
+			ok1: BOOLEAN;
 	BEGIN
 		ASSERT(loc # NIL, 20);
 		WITH loc: Locator DO
 			Append(loc.path, old, "", loc.maxLen, oldname); Append(loc.path, new, "", loc.maxLen, newname);
-			on := SHORT(oldname$); nn := SHORT(newname$);
+			Short(oldname, on, ok1); Short(newname, nn, ok1);
 			Stat(oldname, buf, res);
 			IF res = ok THEN
 				f := ThisFile(oldname);
@@ -992,12 +1080,12 @@ MODULE HostFiles;
 	PROCEDURE (d: Directory) FileList* (loc: Files.Locator): Files.FileInfo;
 		VAR diff, res: INTEGER; first, last, info: Files.FileInfo; s: FullName;
 			ss, fname: ShortName; dirp: LinLibc.PtrDIR; dp: LinLibc.PtrDirent; buf: LinLibc.stat_t; tm: LinLibc.tm;
-			isDir: BOOLEAN; attr: SET;
+			isDir: BOOLEAN; attr: SET; ok1: BOOLEAN;
 	BEGIN
 		ASSERT(loc # NIL, 20);
 		first := NIL; last :=NIL;
 		WITH loc: Locator DO
-			ss := SHORT(loc.path);
+			Short(loc.path, ss, ok1);
 			dirp := LinLibc.opendir(ss);
 			IF dirp # LinLibc.NULL THEN
 				dp := LinLibc.readdir(dirp);
@@ -1034,7 +1122,7 @@ MODULE HostFiles;
 			(* check startup directory *)
 			IF (loc.rootLen > 0) & ((res = ok) OR (res = fileNotFoundErr) OR (res = pathNotFoundErr)) THEN
 				GetShadowDir(loc, s);
-				ss := SHORT(s$);
+				Short(s, ss, ok1);
 				dirp := LinLibc.opendir(ss);
 				IF dirp # LinLibc.NULL THEN
 					dp := LinLibc.readdir(dirp);
@@ -1084,11 +1172,12 @@ MODULE HostFiles;
 	PROCEDURE (d: Directory) LocList* (loc: Files.Locator): Files.LocInfo;
 		VAR diff, res: INTEGER; first, last, info: Files.LocInfo; s: FullName; isDir: BOOLEAN; attr: SET;
 			ss, fname: ShortName; dirp: LinLibc.PtrDIR; dp: LinLibc.PtrDirent; buf: LinLibc.stat_t;
+			ok1: BOOLEAN;
 	BEGIN
 		ASSERT(loc # NIL, 20);
 		first := NIL; last :=NIL;
 		WITH loc: Locator DO
-			ss := SHORT(loc.path);
+			Short(loc.path, ss, ok1);
 			dirp := LinLibc.opendir(ss);
 			IF dirp # LinLibc.NULL THEN
 				dp := LinLibc.readdir(dirp);
@@ -1114,7 +1203,7 @@ MODULE HostFiles;
 			(* check startup directory *)
 			IF (loc.rootLen > 0) & ((res = ok) OR (res = fileNotFoundErr) OR (res = pathNotFoundErr)) THEN
 				GetShadowDir(loc, s);
-				ss := SHORT(s$);
+				Short(s, ss, ok1);
 				dirp := LinLibc.opendir(ss);
 				IF dirp # LinLibc.NULL THEN
 					dp := LinLibc.readdir(dirp);

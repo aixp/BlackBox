@@ -110,8 +110,8 @@ Dev0Compiler.Compile('Cons/Mod', 'Interp.txt')
 
 Dev0Compiler.Compile('System/Mod', 'Init.txt')
 
-Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Files HostFiles StdLoader')
-# Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Kernel_so_init# Files HostFiles StdLoader')
+Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Files EncCodecs HostFiles StdLoader')
+# Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Kernel_so_init# Files EncCodecs HostFiles StdLoader')
 DATA
 
 env LANG=C ./run-BlackBox <<DATA

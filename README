@@ -76,6 +76,7 @@ Files:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				synchronized with BlackBox 1.6-rc6
 				server configuration via BB_PRIMARY_DIR and BB_SECONDARY_DIR environment variables (not command line)
+				filenames encoding translation implemented
 		_OpenBSD_/Host/Mod/Files.odc:
 			_Linux_/Host/Mod/Files.odc:
 				OpenBSD-specific:

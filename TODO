@@ -18,8 +18,7 @@ By priority:
 				re-implement EncStd generators from Python to Component Pascal
 
 		HostFiles:
-			filenames
-			environment variables
+			environment variables decoding
 
 	handle SIGTERM in server version (when Kernel.Start used)
 
