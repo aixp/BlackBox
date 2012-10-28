@@ -25,6 +25,7 @@ How to build:
 Files:
 	original:
 		BlackBox:
+			Comm/*
 			Dev/Mod/*
 				all except ElfLinker16
 			Dev/Rsrc/*

@@ -195,6 +195,7 @@ ConsCompiler.Compile('Enc/Mod', 'StdMap_viscii.txt')
 DATA
 
 ./run-BlackBox <<DATA
+DevCompiler.CompileThis CommStreams
 DevCompiler.CompileThis XhtmlEntitySets XhtmlWriters XhtmlStdFileWriters XhtmlTextTableMarkers XhtmlExporter
 
 DevCompiler.CompileThis ObxHello0 ObxPi ObxRandom ObxTrap
