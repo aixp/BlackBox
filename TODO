@@ -20,6 +20,8 @@ By priority:
 		HostFiles:
 			problem when path to StdMap encoding code file contains character(s) of this encoding:
 				Meta.Lookup -> HostFiles -> CheckEncoding -> Meta.Lookup ...
+				=> Do not use EncStdCodecs, use libiconv or wctomb* instead!
+					=> and do not use EncCodecs too, and do not use and remove Enc subsystem
 			environment variables decoding
 
 	handle SIGTERM in server version (when Kernel.Start used)
