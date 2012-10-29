@@ -7,7 +7,7 @@ MODULE HostFiles;
 		A. V. Shiryaev, 2012.10: filenames encoding translation implemented
 	*)
 
-	IMPORT SYSTEM, Kernel, Files, LinLibc, Codecs := EncCodecs;
+	IMPORT SYSTEM, Kernel, Files, LinLibc, Iconv := LinIconv;
 
 	CONST
 		tempName = "odcxxxxx";
@@ -108,7 +108,9 @@ MODULE HostFiles;
 		END;
 		
 		ShortName = ARRAY pathLen * 4 OF SHORTCHAR;
-		
+
+		Encoding = ARRAY 32 OF SHORTCHAR;
+
 	VAR
 		MapParamString*: PROCEDURE(in, p0, p1, p2: ARRAY OF CHAR; OUT out: ARRAY OF CHAR);
 		dir: Directory;
@@ -116,7 +118,7 @@ MODULE HostFiles;
 		startupDir: FullName;
 		startupLen: INTEGER;
 		res: INTEGER;
-		e: Codecs.Encoder;
+		e, d: Iconv.iconv_t;
 		
 	(* debugging functions *)
 
@@ -150,7 +152,7 @@ MODULE HostFiles;
 
 	(* encoding translation *)
 
-	PROCEDURE GetEnc (OUT enc: Codecs.Encoding; OUT ok: BOOLEAN);
+	PROCEDURE GetEnc (OUT enc: Encoding; OUT ok: BOOLEAN);
 		VAR env: LinLibc.PtrSTR;
 			i, j: INTEGER;
 
@@ -194,37 +196,62 @@ MODULE HostFiles;
 		END
 	END GetEnc;
 
-	PROCEDURE CheckEncoder;
-		VAR enc: Codecs.Encoding; ok: BOOLEAN;
+	PROCEDURE InitConv;
+		VAR enc: Encoding; ok: BOOLEAN;
 	BEGIN
-		IF (e = NIL) & (Codecs.dir # NIL) THEN
-			GetEnc(enc, ok);
-			IF ok THEN e := Codecs.dir.NewEncoder(enc) (* !!! *)
-			END
+		GetEnc(enc, ok);
+		IF ok THEN
+			e := Iconv.iconv_open(enc, "UCS-2LE");
+			d := Iconv.iconv_open("UCS-2LE", enc)
+		ELSE e := -1; d := -1
 		END
-	END CheckEncoder;
+	END InitConv;
 
 	PROCEDURE Short (IN f: FullName; OUT t: ShortName; OUT ok: BOOLEAN);
-		VAR fR, fLen, tW: INTEGER;
+		VAR fR, fLen, tLen: INTEGER;
+			from: Iconv.PtrLSTR; to: Iconv.PtrSTR; res: Iconv.size_t;
 	BEGIN
 		(* do not use encoder for basic set of chars *)
 		fR := 0; WHILE (f[fR] >= ' ') & (f[fR] <= '~') DO t[fR] := SHORT(f[fR]); INC(fR) END;
 		IF f[fR] = 0X THEN t[fR] := 0X; ok := TRUE
-		ELSE CheckEncoder;
-			IF e # NIL THEN
-				fR := 0; fLen := LEN(f$); tW := 0;
-				e.Encode(f, fR, fLen, t, tW);
-				IF fLen = 0 THEN t[tW] := 0X; ok := TRUE
-				ELSE t[0] := 0X; ok := FALSE
-				END
-			ELSE (* continue, ASCII *)
-				WHILE (f[fR] > 0X) & (f[fR] < 80X) DO t[fR] := SHORT(f[fR]); INC(fR) END;
-				IF f[fR] = 0X THEN t[fR] := 0X; ok := TRUE
+		ELSIF e # -1 THEN
+			(* reset e *)
+			fLen := 0; tLen := 0;
+			res := Iconv.iconv(e, NIL, fLen, NIL, tLen);
+			IF res # -1 THEN
+				(* convert *)
+				from := f; to := t; fLen := LEN(f$) * SIZE(CHAR) (* 2 *); tLen := LEN(t) - 1;
+				res := Iconv.iconv_encode(e, from, fLen, to, tLen);
+				IF (res >= 0) & (fLen = 0) & (tLen >= 0) THEN to[0] := 0X; ok := TRUE
 				ELSE t[0] := 0X; ok := FALSE
 				END
 			END
+		ELSE t[0] := 0X; ok := FALSE
 		END
 	END Short;
+
+	PROCEDURE Long (IN f: ShortName; OUT t: FullName; OUT ok: BOOLEAN);
+		VAR fR, fLen, tLen: INTEGER;
+			from: Iconv.PtrSTR; to: Iconv.PtrLSTR; res: Iconv.size_t;
+	BEGIN
+		(* do not use decoder for basic set of chars *)
+		fR := 0; WHILE (f[fR] >= ' ') & (f[fR] <= '~') DO t[fR] := f[fR]; INC(fR) END;
+		IF f[fR] = 0X THEN t[fR] := 0X; ok := TRUE
+		ELSIF d # -1 THEN
+			(* reset d *)
+			fLen := 0; tLen := 0;
+			res := Iconv.iconv(d, NIL, fLen, NIL, tLen);
+			IF res # -1 THEN
+				(* convert *)
+				from := f; to := t; fLen := LEN(f$); tLen := (LEN(t) - 1) * SIZE(CHAR) (* 2 *);
+				res := Iconv.iconv_decode(d, from, fLen, to, tLen);
+				IF (res >= 0) & (fLen = 0) & (tLen >= 0) THEN to[0] := 0X; ok := TRUE
+				ELSE t[0] := 0X; ok := FALSE
+				END
+			END
+		ELSE t[0] := 0X; ok := FALSE
+		END
+	END Long;
 
 	(* end of encoding translation *)
 
@@ -1396,46 +1423,56 @@ MODULE HostFiles;
 		CONST bbServerDir = "BB_PRIMARY_DIR"; bbWorkDir = "BB_SECONDARY_DIR";
 		VAR res: INTEGER; attr: SET; p: LinLibc.PtrSTR;
 			buf: LinLibc.stat_t; isDir, def1: BOOLEAN;
+			ok1: BOOLEAN; fname: FullName;
 	BEGIN
+		InitConv;
+
 		wildcard := "*"; NEW(dir);
+
 		p := LinLibc.getenv(bbServerDir);	(* p = NIL -> undefined *)
-		def1 := p # NIL;
-		IF def1 THEN
-			Stat(p$, buf, res);
-			IF res = ok THEN
-				ModeToAttr(buf.st_mode, attr, isDir);
-				IF isDir THEN res := ok ELSE res := invalidName END
+		def1 := FALSE;
+		IF p # NIL THEN
+			Long(p$, fname, ok1);
+			IF ok1 THEN
+				Stat(fname, buf, res);
+				IF res = ok THEN
+					ModeToAttr(buf.st_mode, attr, isDir);
+					def1 := isDir
+				END
 			END;
-			def1 := res = ok;
-			IF def1 THEN
-				startupDir := p$; startupLen := LEN(startupDir$)
-			ELSE
-				Msg("HostFiles: Value of " + bbServerDir + " isn't directory, using cwd")
-			END
+			IF ~def1 THEN Msg("HostFiles: Value of " + bbServerDir + " isn't directory, using cwd") END
 		END;
 		IF ~def1 THEN
 			p := NIL;
 			p := LinLibc.getcwd(p, 0);
-			startupDir := p$; startupLen := LEN(startupDir$);
+			Long(p$, fname, ok1);
+			IF ~ok1 THEN fname := "." END;
 			LinLibc.free(SYSTEM.VAL(LinLibc.PtrVoid, p))
 		END;
+		startupDir := fname; startupLen := LEN(startupDir$);
 		dir.startup := NewLocator(startupDir);
-		dir.startup.rootLen := 0; 
+		dir.startup.rootLen := 0;
+
 		p := LinLibc.getenv(bbWorkDir);	(* p = NIL -> undefined *)
 		IF def1 & (p # NIL) THEN
-			Stat(p$, buf, res);
-			IF res = ok THEN
-				ModeToAttr(buf.st_mode, attr, isDir);
-				IF isDir THEN res := ok ELSE res := invalidName END
+			Long(p$, fname, ok1);
+			IF ok1 THEN
+				Stat(fname, buf, res);
+				ok1 := res = ok;
+				IF ok1 THEN
+					ModeToAttr(buf.st_mode, attr, isDir);
+					ok1 := isDir
+				END
 			END;
 			IF ~serverVersion THEN
 				(* - *)
-			ELSIF res = ok THEN
-				dir.startup := NewLocator(p$); dir.startup.rootLen := LEN(p$)
+			ELSIF ok1 THEN
+				dir.startup := NewLocator(fname); dir.startup.rootLen := LEN(fname$)
 			ELSE
 				Msg("HostFiles: Value of " + bbWorkDir + " isn't directory, server configuration isn't enabled")
 			END
 		END;
+
 		dir.temp := NewLocator(LinLibc.P_tmpdir);
 		Files.SetDir(dir)
 	END Init;

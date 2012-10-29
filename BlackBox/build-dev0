@@ -3,6 +3,7 @@
 ./run-dev0 <<DATA
 Dev0Compiler.Compile('Lin/Mod', 'Dl.txt')
 Dev0Compiler.Compile('Lin/Mod', 'Libc.txt')
+Dev0Compiler.Compile('Lin/Mod', 'Iconv.txt')
 Dev0Compiler.Compile('System/Mod', 'Kernel.txt')
 
 Dev0Compiler.Compile('System/Mod', 'Files.txt')
@@ -39,5 +40,5 @@ Dev0Compiler.Compile('Std/Mod', 'Interpreter.txt')
 
 Dev0Compiler.Compile('Dev0/Mod', 'Interp.txt')
 
-Dev0ElfLinker.LinkDll('libBB0.so := Kernel+ Files EncCodecs HostFiles Console Math Strings Dev0CPM Dev0CPT Dev0CPS Dev0CPH Dev0CPB Dev0CPP Dev0CPE Dev0CPL486 Dev0CPC486 Dev0CPV486 Dev0Compiler Dev0ElfLinker Dialog Meta Views StdInterpreter HostLang HostConsole Dev0Interp')
+Dev0ElfLinker.LinkDll('libBB0.so := Kernel+ Files HostFiles Console Math Strings Dev0CPM Dev0CPT Dev0CPS Dev0CPH Dev0CPB Dev0CPP Dev0CPE Dev0CPL486 Dev0CPC486 Dev0CPV486 Dev0Compiler Dev0ElfLinker Dialog Meta Views StdInterpreter EncCodecs HostLang HostConsole Dev0Interp')
 DATA
