@@ -1,7 +1,6 @@
 MODULE Init;
 
 	IMPORT
-		EncStdCodecs, (* EncCodecs.SetDir *)
 		HostConsole, (* Console.SetHook *)
 
 		HostFonts (* Fonts.SetHook; required for Texts *),

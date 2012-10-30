@@ -1,23 +1,12 @@
 By priority:
 	remove Kernel.cmdLine
 
-	remove Enc subsystem
-
 	Console:
 		non-blocking (input)
 		move to Cons?
 
 	ConsCompiler:
 		interface similar to DevCompiler
-
-	localization:
-		Enc:
-			utf-8:
-				encoder: special case: high surrogate
-			encodings with not unique codes
-			CJK
-			low priority:
-				re-implement EncStd generators from Python to Component Pascal
 
 	handle SIGTERM in server version (when Kernel.Start used)
 

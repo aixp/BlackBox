@@ -10,7 +10,7 @@ MODULE HostLang;
 		Dialog.LanguageHook implementation
 	*)
 
-	IMPORT Dialog, Libc := LinLibc, Codecs := EncCodecs;
+	IMPORT Dialog, Libc := LinLibc;
 
 	CONST
 		defLang = "";
@@ -20,11 +20,14 @@ MODULE HostLang;
 	TYPE
 		LanguageHook = POINTER TO RECORD (Dialog.LanguageHook) END;
 
+		Country = ARRAY 3 OF SHORTCHAR;
+		Encoding = ARRAY 32 OF SHORTCHAR;
+
 	VAR
 		lang-: Dialog.Language;
-		enc-: Codecs.Encoding;
+		enc-: Encoding;
 
-	PROCEDURE ParseLang (OUT lang, country, enc: ARRAY OF CHAR);
+	PROCEDURE ParseLang (OUT lang: Dialog.Language; OUT country: Country; OUT enc: Encoding);
 		VAR env: Libc.PtrSTR;
 			i, j: INTEGER;
 
@@ -106,9 +109,8 @@ MODULE HostLang;
 	END GetPersistentLanguage;
 
 	PROCEDURE Init;
-		VAR
-			languageHook: LanguageHook;
-			country: ARRAY 3 OF CHAR;
+		VAR languageHook: LanguageHook;
+			country: Country;
 	BEGIN
 		ParseLang(lang, country, enc);
 		NEW(languageHook); Dialog.SetLanguageHook(languageHook); Dialog.ResetLanguage

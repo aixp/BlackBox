@@ -118,8 +118,6 @@ Files:
 			Interp.odc: console interpreter
 			Compiler.odc: console interface to Dev compiler
 			Log.odc: Log.Hook console implementation
-		Enc: encodings conversion subsystem
-			typical usage -- from low level modules (from Hosts), as libiconv
 		{_Linux_,_OpenBSD_}/Lin/Mod/Iconv.odc: interface to libiconv system library
 		_LinuxOpenBSD_/Host/Mod/Lang.odc: Dialog.LanguageHook implementation and LANG environment variable support
 
