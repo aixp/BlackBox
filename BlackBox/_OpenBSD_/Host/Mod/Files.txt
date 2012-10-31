@@ -3,10 +3,6 @@ MODULE HostFiles;
 	(* THIS IS TEXT COPY OF Files.odc *)
 	(* DO NOT EDIT *)
 
-	(*
-		A. V. Shiryaev, 2012.10: filenames encoding translation implemented
-	*)
-
 	IMPORT SYSTEM, Kernel, Files, LinLibc, Iconv := LinIconv;
 
 	CONST
@@ -201,8 +197,13 @@ MODULE HostFiles;
 	BEGIN
 		GetEnc(enc, ok);
 		IF ok THEN
-			e := Iconv.iconv_open(enc, "UCS-2LE");
-			d := Iconv.iconv_open("UCS-2LE", enc)
+			IF Kernel.littleEndian THEN
+				e := Iconv.iconv_open(enc, "UCS-2LE");
+				d := Iconv.iconv_open("UCS-2LE", enc)
+			ELSE
+				e := Iconv.iconv_open(enc, "UCS-2BE");
+				d := Iconv.iconv_open("UCS-2BE", enc)
+			END
 		ELSE e := -1; d := -1
 		END
 	END InitConv;

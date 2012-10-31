@@ -3,13 +3,7 @@ MODULE HostConsole;
 	(* THIS IS TEXT COPY OF Console.odc *)
 	(* DO NOT EDIT *)
 
-	(*
-		A. V. Shiryaev, 2012.10
-
-		Console implementation for Linux
-	*)
-
-	IMPORT SYSTEM, Console, Libc := LinLibc, Iconv := LinIconv, HostLang;
+	IMPORT SYSTEM, Console, Libc := LinLibc, Iconv := LinIconv, HostLang, Kernel;
 
 	CONST
 		defCh = '?';
@@ -136,8 +130,13 @@ MODULE HostConsole;
 
 	PROCEDURE Init;
 	BEGIN
-		e := Iconv.iconv_open(HostLang.enc, "UCS-2LE");
-		d := Iconv.iconv_open("UCS-2LE", HostLang.enc);
+		IF Kernel.littleEndian THEN
+			e := Iconv.iconv_open(HostLang.enc, "UCS-2LE");
+			d := Iconv.iconv_open("UCS-2LE", HostLang.enc)
+		ELSE
+			e := Iconv.iconv_open(HostLang.enc, "UCS-2BE");
+			d := Iconv.iconv_open("UCS-2BE", HostLang.enc)
+		END;
 
 		NEW(cons);
 		Console.SetConsole(cons)
