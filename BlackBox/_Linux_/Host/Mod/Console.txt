@@ -145,8 +145,8 @@ MODULE HostConsole;
 	PROCEDURE Close;
 		VAR res: INTEGER;
 	BEGIN
-		IF e # -1 THEN res := Iconv.iconv_close(e) END;
-		IF d # -1 THEN res := Iconv.iconv_close(d) END
+		IF e # -1 THEN res := Iconv.iconv_close(e); e := -1 END;
+		IF d # -1 THEN res := Iconv.iconv_close(d); d := -1 END
 	END Close;
 
 BEGIN

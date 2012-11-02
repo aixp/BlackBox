@@ -208,6 +208,17 @@ MODULE HostFiles;
 		END
 	END InitConv;
 
+	PROCEDURE CloseConv;
+		VAR res: INTEGER;
+	BEGIN
+		IF e # -1 THEN
+			res := Iconv.iconv_close(e); e := -1
+		END;
+		IF d # -1 THEN
+			res := Iconv.iconv_close(d); d := -1
+		END
+	END CloseConv;
+
 	PROCEDURE Short (IN f: FullName; OUT t: ShortName; OUT ok: BOOLEAN);
 		VAR fR, fLen, tLen: INTEGER;
 			from: Iconv.PtrLSTR; to: Iconv.PtrSTR; res: Iconv.size_t;
@@ -1480,4 +1491,6 @@ MODULE HostFiles;
 
 BEGIN
 	Init
+CLOSE
+	CloseConv
 END HostFiles.
