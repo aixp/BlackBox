@@ -106,6 +106,9 @@ Files:
 		_LinuxOpenBSD_/Host/Mod/TextConv.odc:
 			BlackBox 1.6-rc6 Host/Mod/TextConv.odc:
 				Windows-specific converters removed
+		_LinuxOpenBSD_/System/Mod/Config.odc:
+			BlackBox 1.6-rc6 System/Mod/Config.odc:
+				Windows-specific removed
 	new:
 		Console:
 			System/Mod/Console.odc: Console interface
@@ -127,7 +130,7 @@ Files:
 
 		Dev0/Views.odc: minimal Views implementation required to compile StdInterpreter
 		__Interp/Host/Mod: Fonts.odc, Dialog.odc, Windows.odc: simple Hosts implementation
-		_LinuxOpenBSD_/System/Mod/Init.odc: Init for console interpreter
+		__Interp/System/Mod/Init.odc: Init for console interpreter
 
 Notes:
 	Dev0:

@@ -106,6 +106,7 @@ Dev0Compiler.Compile('Host/Mod', 'TextConv.txt')
 Dev0Compiler.Compile('Cons/Mod', 'Interp.txt')
 
 Dev0Compiler.Compile('System/Mod', 'Init.txt')
+Dev0Compiler.Compile('System/Mod', 'Config.txt')
 
 Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Files HostFiles StdLoader')
 # Dev0ElfLinker.LinkDll('libBB.so := Kernel+ Kernel_so_init# Files HostFiles StdLoader')
