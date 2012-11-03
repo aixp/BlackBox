@@ -1,6 +1,9 @@
 By priority:
 	remove Kernel.cmdLine
 
+	ConsConverter
+		example: ConsConverter.Convert('System/Mod','Kernel.odc','Kernel.txt')
+
 	Console:
 		non-blocking (input)
 		move to Cons?
