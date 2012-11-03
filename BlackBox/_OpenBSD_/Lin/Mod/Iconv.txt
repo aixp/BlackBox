@@ -2,9 +2,6 @@ MODULE LinIconv ["libiconv.so.6"];
 
 	IMPORT Libc := LinLibc;
 
-	CONST
-		NULL* = Libc.NULL;
-
 	TYPE
 		PtrVoid = Libc.PtrVoid;
 		PtrSTR* = Libc.PtrSTR;
