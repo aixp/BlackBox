@@ -211,13 +211,18 @@ MODULE HostFiles;
 	PROCEDURE CloseConv;
 		VAR res: INTEGER;
 	BEGIN
-		IF e # -1 THEN
-			res := Iconv.iconv_close(e); e := -1
-		END;
-		IF d # -1 THEN
-			res := Iconv.iconv_close(d); d := -1
-		END
+		IF e # -1 THEN res := Iconv.iconv_close(e); e := -1 END;
+		IF d # -1 THEN res := Iconv.iconv_close(d); d := -1 END
 	END CloseConv;
+
+	PROCEDURE ResetCodec (c: Iconv.iconv_t): BOOLEAN;
+		VAR res, fLen, tLen: Iconv.size_t;
+	BEGIN
+		ASSERT(c # -1, 20);
+		fLen := 0; tLen := 0;
+		res := Iconv.iconv(c, NIL, fLen, NIL, tLen);
+		RETURN res # -1
+	END ResetCodec;
 
 	PROCEDURE Short (IN f: FullName; OUT t: ShortName; OUT ok: BOOLEAN);
 		VAR fR, fLen, tLen: INTEGER;
@@ -226,17 +231,11 @@ MODULE HostFiles;
 		(* do not use encoder for basic set of chars *)
 		fR := 0; WHILE (f[fR] >= ' ') & (f[fR] <= '~') DO t[fR] := SHORT(f[fR]); INC(fR) END;
 		IF f[fR] = 0X THEN t[fR] := 0X; ok := TRUE
-		ELSIF e # -1 THEN
-			(* reset e *)
-			fLen := 0; tLen := 0;
-			res := Iconv.iconv(e, NIL, fLen, NIL, tLen);
-			IF res # -1 THEN
-				(* convert *)
-				from := f; to := t; fLen := LEN(f$) * SIZE(CHAR) (* 2 *); tLen := LEN(t) - 1;
-				res := Iconv.iconv_encode(e, from, fLen, to, tLen);
-				IF (res >= 0) & (fLen = 0) & (tLen >= 0) THEN to[0] := 0X; ok := TRUE
-				ELSE t[0] := 0X; ok := FALSE
-				END
+		ELSIF (e # -1) & ResetCodec(e) THEN
+			from := f; to := t; fLen := LEN(f$) * SIZE(CHAR) (* 2 *); tLen := LEN(t) - 1;
+			res := Iconv.iconv_encode(e, from, fLen, to, tLen);
+			IF (res >= 0) & (fLen = 0) & (tLen >= 0) THEN to[0] := 0X; ok := TRUE
+			ELSE t[0] := 0X; ok := FALSE
 			END
 		ELSE t[0] := 0X; ok := FALSE
 		END
@@ -247,19 +246,16 @@ MODULE HostFiles;
 			from: Iconv.PtrSTR; to: Iconv.PtrLSTR; res: Iconv.size_t;
 	BEGIN
 		(* do not use decoder for basic set of chars *)
-		fR := 0; WHILE (f[fR] >= ' ') & (f[fR] <= '~') DO t[fR] := f[fR]; INC(fR) END;
-		IF f[fR] = 0X THEN t[fR] := 0X; ok := TRUE
-		ELSIF d # -1 THEN
-			(* reset d *)
-			fLen := 0; tLen := 0;
-			res := Iconv.iconv(d, NIL, fLen, NIL, tLen);
-			IF res # -1 THEN
-				(* convert *)
-				from := f; to := t; fLen := LEN(f$); tLen := (LEN(t) - 1) * SIZE(CHAR) (* 2 *);
-				res := Iconv.iconv_decode(d, from, fLen, to, tLen);
-				IF (res >= 0) & (fLen = 0) & (tLen >= 0) THEN to[0] := 0X; ok := TRUE
-				ELSE t[0] := 0X; ok := FALSE
-				END
+		fR := 0; WHILE (f[fR] >= ' ') & (f[fR] <= '~') & (fR < LEN(t) - 1) DO t[fR] := f[fR]; INC(fR) END;
+		IF f[fR] = 0X THEN
+			IF fR < LEN(t) THEN t[fR] := 0X; ok := TRUE
+			ELSE t[0] := 0X; ok := FALSE (* f is too long *)
+			END
+		ELSIF (d # -1) & ResetCodec(d) THEN
+			from := f; to := t; fLen := LEN(f$); tLen := (LEN(t) - 1) * SIZE(CHAR) (* 2 *);
+			res := Iconv.iconv_decode(d, from, fLen, to, tLen);
+			IF (res >= 0) & (fLen = 0) & (tLen >= 0) THEN to[0] := 0X; ok := TRUE
+			ELSE t[0] := 0X; ok := FALSE
 			END
 		ELSE t[0] := 0X; ok := FALSE
 		END
