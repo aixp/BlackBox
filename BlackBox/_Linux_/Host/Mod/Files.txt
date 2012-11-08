@@ -3,6 +3,10 @@ MODULE HostFiles;
 	(* THIS IS TEXT COPY OF Files.odc *)
 	(* DO NOT EDIT *)
 
+	(*
+		A. V. Shiryaev, 2012.11: filenames encoding translation implemented
+	*)
+
 	IMPORT SYSTEM, Kernel, Files, LinLibc, Iconv := LinIconv;
 
 	CONST
@@ -1064,7 +1068,7 @@ MODULE HostFiles;
 
 	PROCEDURE (d: Directory) Rename* (loc: Files.Locator; old, new: Files.Name; ask: BOOLEAN);
 		VAR res, i: INTEGER; oldname, newname: FullName; f: File; on, nn, tn: ShortName; buf: LinLibc.stat_t;
-			ok1: BOOLEAN;
+			ok1: BOOLEAN; tName: FullName;
 	BEGIN
 		ASSERT(loc # NIL, 20);
 		WITH loc: Locator DO
@@ -1085,9 +1089,10 @@ MODULE HostFiles;
 						END
 					END
 				ELSE	(* destination is same file as source *)
-					tn := on$; i := LEN(tn$) - 1;
+					tName := oldname; i := LEN(tName$) - 1;
 					REPEAT
-						tn[i] := SHORT(CHR(ORD(tn[i]) + 1));
+						tName[i] := CHR(ORD(tName[i]) + 1);
+						Short(tName, tn, ok1);
 						MoveFile(on, tn, res);
 					UNTIL (res # fileExistsErr) & (res # alreadyExistsErr) & (res # 87);
 					IF res = ok THEN
@@ -1115,7 +1120,7 @@ MODULE HostFiles;
 	PROCEDURE (d: Directory) FileList* (loc: Files.Locator): Files.FileInfo;
 		VAR diff, res: INTEGER; first, last, info: Files.FileInfo; s: FullName;
 			ss, fname: ShortName; dirp: LinLibc.PtrDIR; dp: LinLibc.PtrDirent; buf: LinLibc.stat_t; tm: LinLibc.tm;
-			isDir: BOOLEAN; attr: SET; ok1: BOOLEAN;
+			isDir: BOOLEAN; attr: SET; ok1: BOOLEAN; dName: FullName;
 	BEGIN
 		ASSERT(loc # NIL, 20);
 		first := NIL; last :=NIL;
@@ -1125,15 +1130,16 @@ MODULE HostFiles;
 			IF dirp # LinLibc.NULL THEN
 				dp := LinLibc.readdir(dirp);
 				WHILE dp # NIL DO
-					IF (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dp.d_name$) < LEN(info.name)) THEN
+					Long(dp.d_name$, dName, ok1);
+					IF ok1 & (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dName$) < LEN(info.name)) THEN
 						fname := ss + "/" + dp.d_name;
 						res := LinLibc.__xstat(3, fname, buf); (* macro expansion of "stat" *)
 						ModeToAttr(buf.st_mode, attr, isDir);
-						IF ~isDir THEN	
-							info := first; last := NIL; s := dp.d_name$;
+						IF ~isDir THEN
+							info := first; last := NIL; s := dName;
 							WHILE (info # NIL) & (Diff(info.name, s, loc.caseSens) < 0) DO last := info; info := info.next END;
 							NEW(info);
-							info.name := dp.d_name$;
+							info.name := dName$;
 							GetType(info.name, info.type);
 							info.length := buf.st_size; 
 							tm := LinLibc.localtime(buf.st_mtime);
@@ -1162,12 +1168,13 @@ MODULE HostFiles;
 				IF dirp # LinLibc.NULL THEN
 					dp := LinLibc.readdir(dirp);
 					WHILE dp # NIL DO
-						IF (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dp.d_name$) < LEN(info.name)) THEN
+						Long(dp.d_name$, dName, ok1);
+						IF ok1 & (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dName$) < LEN(info.name)) THEN
 							fname := ss + "/" + dp.d_name;
 							res := LinLibc.__xstat(3, fname, buf); (* macro expansion of "stat" *)
 							ModeToAttr(buf.st_mode, attr, isDir);
 							IF ~isDir THEN	
-								info := first; last := NIL; s := dp.d_name$;
+								info := first; last := NIL; s := dName;
 								IF info # NIL THEN diff := Diff(info.name, s, loc.caseSens) END;
 								WHILE (info # NIL) & (diff < 0) DO 
 									last := info; info := info.next; 
@@ -1175,7 +1182,7 @@ MODULE HostFiles;
 								END;
 								IF (info = NIL) OR (diff # 0) THEN
 									NEW(info);
-									info.name := dp.d_name$;
+									info.name := dName$;
 									GetType(info.name, info.type);
 									info.length := buf.st_size; 
 									tm := LinLibc.localtime(buf.st_mtime);
@@ -1207,7 +1214,7 @@ MODULE HostFiles;
 	PROCEDURE (d: Directory) LocList* (loc: Files.Locator): Files.LocInfo;
 		VAR diff, res: INTEGER; first, last, info: Files.LocInfo; s: FullName; isDir: BOOLEAN; attr: SET;
 			ss, fname: ShortName; dirp: LinLibc.PtrDIR; dp: LinLibc.PtrDirent; buf: LinLibc.stat_t;
-			ok1: BOOLEAN;
+			ok1: BOOLEAN; dName: FullName;
 	BEGIN
 		ASSERT(loc # NIL, 20);
 		first := NIL; last :=NIL;
@@ -1217,15 +1224,16 @@ MODULE HostFiles;
 			IF dirp # LinLibc.NULL THEN
 				dp := LinLibc.readdir(dirp);
 				WHILE dp # NIL DO
-					IF (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dp.d_name$) < LEN(info.name)) THEN
+					Long(dp.d_name$, dName, ok1);
+					IF ok1 & (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dName$) < LEN(info.name)) THEN
 						fname := ss + "/" + dp.d_name;
 						res := LinLibc.__xstat(3, fname, buf); (* macro expansion of "stat" *)
 						ModeToAttr(buf.st_mode, attr, isDir);
 						IF isDir THEN	
-							info := first; last := NIL; s := dp.d_name$;
+							info := first; last := NIL; s := dName;
 							WHILE (info # NIL) & (Diff(info.name, s, loc.caseSens) < 0) DO last := info; info := info.next END;
 							NEW(info);
-							info.name := dp.d_name$;
+							info.name := dName$;
 							info.attr := attr;
 							IF last = NIL THEN info.next := first; first := info ELSE info.next := last.next; last.next := info END
 						END
@@ -1243,12 +1251,13 @@ MODULE HostFiles;
 				IF dirp # LinLibc.NULL THEN
 					dp := LinLibc.readdir(dirp);
 					WHILE dp # NIL DO
-						IF (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dp.d_name$) < LEN(info.name)) THEN
+						Long(dp.d_name$, dName, ok1);
+						IF ok1 & (dp.d_name # ".") & (dp.d_name # "..") & (LEN(dName$) < LEN(info.name)) THEN
 							fname := ss + "/" + dp.d_name;
 							res := LinLibc.__xstat(3, fname, buf); (* macro expansion of "stat" *)
 							ModeToAttr(buf.st_mode, attr, isDir);
 							IF isDir THEN	
-								info := first; last := NIL; s := dp.d_name$;
+								info := first; last := NIL; s := dName;
 								IF info # NIL THEN diff := Diff(info.name, s, loc.caseSens) END;
 								WHILE (info # NIL) & (diff < 0) DO 
 									last := info; info := info.next; 
@@ -1256,7 +1265,7 @@ MODULE HostFiles;
 								END;
 								IF (info = NIL) OR (diff # 0) THEN
 									NEW(info);
-									info.name := dp.d_name$;
+									info.name := dName$;
 									info.attr := attr;
 									IF last = NIL THEN info.next := first; first := info ELSE info.next := last.next; last.next := info END
 								END
