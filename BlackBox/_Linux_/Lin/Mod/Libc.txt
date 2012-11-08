@@ -304,7 +304,7 @@ MODULE LinLibc ["libc.so.6"];
 		sigset_t* = ARRAY [untagged] 128 OF BYTE;
 		Ptrsigset_t* = INTEGER;
 		sigaction_t* = RECORD [untagged]
-			sa_sigaction*: PROCEDURE (sig: INTEGER; siginfo: Ptrsiginfo_t; ptr: Ptrucontext_t); (* union with sa_handler*: PtrProc;*)
+			sa_sigaction*: PROCEDURE [ccall] (sig: INTEGER; siginfo: Ptrsiginfo_t; ptr: Ptrucontext_t); (* union with sa_handler*: PtrProc;*)
 			sa_mask*: sigset_t;
 			sa_flags*: SET;
 			sa_restorer*: LONGINT;

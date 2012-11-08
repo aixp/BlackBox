@@ -1828,7 +1828,7 @@ MODULE Kernel;
 		FLDCW
 	END InitFpu;
 
-	PROCEDURE (* [ccall] *) TrapHandler (sig: INTEGER; siginfo: Libc.Ptrsiginfo_t; context: Libc.Ptrucontext_t);
+	PROCEDURE [ccall] TrapHandler (sig: INTEGER; siginfo: Libc.Ptrsiginfo_t; context: Libc.Ptrucontext_t);
 	BEGIN
 		IF isReadableCheck THEN
 			isReadableCheck := FALSE;

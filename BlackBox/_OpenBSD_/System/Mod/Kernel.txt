@@ -16,7 +16,6 @@ MODULE Kernel;
 
 		TODO:
 			handle stack overflow exceptions
-			correct cmdLine
 			Quit from TrapHandler
 	*)
 
@@ -277,8 +276,6 @@ MODULE Kernel;
 		isReadableCheck: BOOLEAN;
 		
 		guiHook: GuiHook;
-		
-		cmdLine-: ARRAY 1024 OF CHAR;
 
 		(* !!! This variable has to be the last variable in the list.  !!! *)
 		bootInfo-: BootInfo;
@@ -1986,7 +1983,9 @@ MODULE Kernel;
 				DefaultTrapViewer
 			ELSE
 				trapped := TRUE;
+				
 				trapViewer();
+				
 				trapped := FALSE
 			END
 		END;
@@ -2088,32 +2087,13 @@ MODULE Kernel;
 		told := 0; shift := 0
 	END Init;
 
-	PROCEDURE SetCmdLine;
-		VAR i, l: INTEGER;
-	BEGIN
-		l := LEN(cmdLine);
-		cmdLine := bootInfo.argv[0]$;
-		FOR i := 1 TO bootInfo.argc - 1 DO cmdLine := cmdLine + " " + bootInfo.argv[i]END
-	END SetCmdLine;
-	
-	PROCEDURE SetCmdLine2;
-		VAR x: Libc.PtrSTR;
-	BEGIN
-		x := Libc.getenv("CMDLINE");
-		IF x # NIL THEN
-			cmdLine := x$
-		END
-	END SetCmdLine2;
-
 BEGIN
 	IF modList = NIL THEN	(* only once *)
 		S.GETREG(SP, baseStack); (* TODO: Check that this is ok. *)
 		IF bootInfo # NIL THEN
-			modList := bootInfo.modList; (* boot loader initializes the bootInfo struct *)
-			SetCmdLine
+			modList := bootInfo.modList (* boot loader initializes the bootInfo struct *)
 		ELSE
-			S.GETREG(ML, modList);	(* linker loads module list to BX *)
-			SetCmdLine2
+			S.GETREG(ML, modList)	(* linker loads module list to BX *)
 		END;
 		static := init IN modList.opts;
 		inDll := dll IN modList.opts;

@@ -63,8 +63,6 @@ Files:
 					Kernel.InstallSignals:
 						do not install signal handler for SIGTHR (when executable linked with -pthread)
 					IsReadable
-				Kernel.cmdLine support:
-					Kernel.INIT (SetCmdLine2)
 		_Linux_/System/Mod/Kernel.odc:
 			_OpenBSD_/System/Mod/Kernel.odc modified for Linux:
 				Time*
