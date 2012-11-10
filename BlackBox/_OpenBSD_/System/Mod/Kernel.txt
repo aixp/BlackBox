@@ -3,7 +3,7 @@ MODULE Kernel;
 	(* THIS IS TEXT COPY OF Kernel.odc *)
 	(* DO NOT EDIT *)
 
-	(* A. V. Shiryaev, 2012.10
+	(* A. V. Shiryaev, 2012.11
 		OpenBSD Kernel
 		Based on 1.6-rc6 Windows Kernel
 		+ 20120822 Marc changes
@@ -1139,18 +1139,64 @@ MODULE Kernel;
 		END
 	END GetRefProc;
 
+	(* A. V. Shiryaev, 2012.11 *)
+	PROCEDURE CheckRefVarReadable (ref: INTEGER): BOOLEAN;
+		VAR ok: BOOLEAN; ch: SHORTCHAR;
+			p: INTEGER; (* address *)
+
+		PROCEDURE Get;
+		BEGIN
+			IF ok THEN
+				IF IsReadable(ref, ref+1) THEN (* S.GET(ref, ch); INC(ref) *) RefCh(ref, ch)
+				ELSE ok := FALSE
+				END
+			END
+		END Get;
+
+		PROCEDURE Num;
+		BEGIN
+			Get; WHILE ok & (ORD(ch) >= 128) DO Get END
+		END Num;
+
+		PROCEDURE Name;
+		BEGIN
+			Get; WHILE ok & (ch # 0X) DO Get END
+		END Name;
+
+	BEGIN
+		ok := TRUE;
+		Get; (* mode *)
+		IF ok & (ch >= 0FDX) THEN
+			Get; (* form *)
+			IF ok & (ch = 10X) THEN
+				IF IsReadable(ref, ref + 4) THEN (* desc *)
+					S.GET(ref, p); INC(ref, 4);
+					ok := IsReadable(p + 2 * 4, p + 3 * 4) (* desc.id *)
+				ELSE ok := FALSE
+				END
+			END;
+			Num; Name
+		END;
+		RETURN ok
+	END CheckRefVarReadable;
+
 	PROCEDURE GetRefVar* (VAR ref: INTEGER; VAR mode, form: SHORTCHAR; VAR desc: Type;
 																VAR adr: INTEGER; VAR name: Name);
 	BEGIN
-		S.GET(ref, mode); desc := NIL;
-		IF mode >= 0FDX THEN
-			mode := SHORT(CHR(ORD(mode) - 0FCH));
-			INC(ref); RefCh(ref, form);
-			IF form = 10X THEN
-				S.GET(ref, desc); INC(ref, 4); form := SHORT(CHR(16 + desc.id MOD 4))
-			END;
-			RefNum(ref, adr); RefName(ref, name)
+		IF CheckRefVarReadable(ref) THEN
+			S.GET(ref, mode); desc := NIL;
+			IF mode >= 0FDX THEN
+				mode := SHORT(CHR(ORD(mode) - 0FCH));
+				INC(ref); RefCh(ref, form);
+				IF form = 10X THEN
+					S.GET(ref, desc); INC(ref, 4); form := SHORT(CHR(16 + desc.id MOD 4))
+				END;
+				RefNum(ref, adr); RefName(ref, name)
+			ELSE
+				mode := 0X; form := 0X; adr := 0
+			END
 		ELSE
+			Msg("Kernel.GetRefVar failed!"); Int(ref);
 			mode := 0X; form := 0X; adr := 0
 		END
 	END GetRefVar;
