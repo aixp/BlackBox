@@ -121,7 +121,10 @@ Files:
 			Compiler.odc: console interface to Dev compiler
 			Log.odc: Log.Hook console implementation
 		{_Linux_,_OpenBSD_}/Lin/Mod/Iconv.odc: interface to libiconv system library
+		{_Linux_,_OpenBSD_}/Lin/Mod/Ioctl.odc: interface to ioctl
+		{_Linux_,_OpenBSD_}/Lin/Mod/Termios.odc: interface to termios
 		_LinuxOpenBSD_/Host/Mod/Lang.odc: Dialog.LanguageHook implementation and LANG environment variable support
+		_LinuxOpenBSD_/Comm/Mod/V24.odc: CommV24 implementation for Linux and OpenBSD
 
 		{_OpenBSD_,_Linux_}/libBB.so: compiled and linked shared library to run BlackBox
 		{_OpenBSD_,_Linux_}/libBB0.so: compiled and linked shared library to run simple development interpreter

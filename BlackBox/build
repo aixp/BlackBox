@@ -123,3 +123,9 @@ DevCompiler.CompileThis XhtmlEntitySets XhtmlWriters XhtmlStdFileWriters XhtmlTe
 
 DevCompiler.CompileThis ObxHello0 ObxPi ObxRandom ObxTrap
 DATA
+
+./run-BlackBox <<DATA
+ConsCompiler.Compile('Lin/Mod', 'Termios.txt')
+ConsCompiler.Compile('Lin/Mod', 'Ioctl.txt')
+DevCompiler.CompileThis CommV24
+DATA
