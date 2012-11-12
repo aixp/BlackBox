@@ -1,6 +1,7 @@
 By priority:
-	ConsConverter
-		example: ConsConverter.Convert('System/Mod','Kernel.odc','Kernel.txt')
+	Dev0 .odc
+
+	semi-automatic generation of interface modules (by templates)
 
 	Console:
 		non-blocking (input)
