@@ -1,8 +1,6 @@
 By priority:
 	Dev0 .odc
 
-	semi-automatic generation of interface modules (by templates)
-
 	Console:
 		non-blocking (input)
 		move to Cons?
