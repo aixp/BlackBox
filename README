@@ -25,7 +25,8 @@ How to build:
 Files:
 	original:
 		BlackBox:
-			Comm/*
+			Comm/Mod/Streams.odc
+			Comm/Docu/*
 			Dev/Mod/*
 				all except ElfLinker16
 			Dev/Rsrc/*
