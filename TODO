@@ -12,7 +12,7 @@ By priority:
 
 	uncomment baseStack change in Kernel.Start?
 
-	CommTCP
+	Linux CommTCP
 
 	printing (to PostScript)
 
