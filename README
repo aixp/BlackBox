@@ -124,10 +124,11 @@ Files:
 		{_Linux_,_OpenBSD_}/Lin/Mod/Iconv.odc: interface to libiconv system library
 		{_Linux_,_OpenBSD_}/Lin/Mod/Ioctl.odc: interface to ioctl
 		{_Linux_,_OpenBSD_}/Lin/Mod/Termios.odc: interface to termios
-		_OpenBSD_/Lin/Mod/Net.odc: interface to network functionality
+		{_Linux_,_OpenBSD_}/Lin/Mod/Net.odc: interface to network functionality
 		_LinuxOpenBSD_/Host/Mod/Lang.odc: Dialog.LanguageHook implementation and LANG environment variable support
 		_LinuxOpenBSD_/Comm/Mod/V24.odc: CommV24 implementation for Linux and OpenBSD
 		_OpenBSD_/Comm/Mod/TCP.odc: CommTCP implementation for OpenBSD
+		_Linux_/Comm/Mod/TCP.odc: CommTCP implementation for Linux
 
 		{_OpenBSD_,_Linux_}/libBB.so: compiled and linked shared library to run BlackBox
 		{_OpenBSD_,_Linux_}/libBB0.so: compiled and linked shared library to run simple development interpreter
