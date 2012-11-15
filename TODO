@@ -10,9 +10,9 @@ By priority:
 
 	handle SIGTERM in server version (when Kernel.Start used)
 
-	uncomment baseStack change in Kernel.Start?
-
 	printing (to PostScript)
+
+	HostPackedFiles
 
 	GUI:
 		...
