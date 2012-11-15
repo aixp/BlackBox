@@ -157,7 +157,8 @@ Notes:
 			Thus, MarkLocals and TrapViewer will work incorrectly.
 		in this case, to solve problem, baseStack should be adjusted and
 			should point to stack on which this exported procedure executes
-		if necessary, this can be done using auxiliary module Kernel_so_init
+		if necessary, this can be done using auxiliary module Kernel_so_init,
+			or by using Kernel.Start
 
 	Command line support removed because there is no easy way to access argc argv from outside main()
 		Environment variables supported instead:
