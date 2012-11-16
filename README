@@ -18,8 +18,8 @@ How to build:
 
 	compile self:
 		cd BlackBox
-		./build-dev0
 		./build
+		./pack-dev0
 
 Files:
 	original:
@@ -144,10 +144,7 @@ Files:
 		__Interp/System/Mod/Init.odc: Init for console interpreter
 
 Notes:
-	Dev0:
-		I will not remove Dev0 because I can not link .so library based on ConsInterp and Dev
-
-	Kernel.baseStack issue (preliminary description):
+	Kernel.baseStack issue:
 		baseStack is upper border:
 			* of garbage collector stack scan range (see Kernel.MarkLocals)
 			* of TrapViewer stack show range (see Kernel.TrapHandler)

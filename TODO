@@ -1,9 +1,11 @@
 By priority:
-	Dev0 .odc
+	separate dev0 and target
 
 	Console:
 		non-blocking (input)
 		move to Cons?
+
+		HostConsole, ConsInterp: line length limit
 
 	ConsCompiler:
 		interface similar to DevCompiler

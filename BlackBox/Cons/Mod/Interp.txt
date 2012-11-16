@@ -115,7 +115,7 @@ MODULE ConsInterp;
 	END Call;
 
 	PROCEDURE Run*;
-		VAR s: ARRAY 1024 OF CHAR;
+		VAR s: ARRAY 2048 OF CHAR;
 	BEGIN
 		Console.ReadLn(s);
 		WHILE Call(s) DO
