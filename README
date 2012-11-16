@@ -10,11 +10,11 @@ How to build:
 	./clean
 	./switch-target `uname -s`
 
-	compile loader executables (for BlackBox itself and for simple develompent interpreter):
+	compile loader executable:
 		cd BlackBox/Lin/Rsrc/loader
 		make clean
 		make
-		mv loader ../../../_`uname -s`_/
+		mv loader ../../../_`uname -s`_/Lin/Rsrc/loader/
 
 	compile self:
 		cd BlackBox
