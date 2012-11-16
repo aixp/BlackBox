@@ -29,6 +29,8 @@ Files:
 			Comm/Docu/*
 			Dev/Mod/*
 				all except ElfLinker16
+			Dev/Docu/*
+				all except ElfLinker
 			Dev/Rsrc/*
 			Docu/BB-License.odc
 			Docu/BB-Licensing-Policy.odc
