@@ -15,7 +15,6 @@ How to build:
 		make clean
 		make
 		mv BlackBox dev0 ../../../_`uname -s`_/Lin/Rsrc/loader/
-		OpenBSD: move also libdlobsdwrap.so
 
 	compile self:
 		cd BlackBox
@@ -108,6 +107,10 @@ Files:
 		_LinuxOpenBSD_/Host/Mod/TextConv.odc:
 			BlackBox 1.6-rc6 Host/Mod/TextConv.odc:
 				Windows-specific converters removed
+		_LinuxOpenBSD_/Host/Mod/PackedFiles.odc:
+			BlackBox 1.6-rc6 Host/Mod/PackedFiles.odc:
+				use BB_PACKED_NAME environment variable instead of appName
+				GetNextSubLoc, GetLoc: filenames-specific
 		_LinuxOpenBSD_/System/Mod/Config.odc:
 			BlackBox 1.6-rc6 System/Mod/Config.odc:
 				Windows-specific removed
@@ -166,5 +169,6 @@ Notes:
 		Environment variables supported instead:
 			BB_PRIMARY_DIR
 			BB_SECONDARY_DIR (was: /USE command line option)
+			BB_PACKED_NAME
 
 A. V. Shiryaev, 2012

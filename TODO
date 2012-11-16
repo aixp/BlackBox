@@ -12,8 +12,6 @@ By priority:
 
 	printing (to PostScript)
 
-	HostPackedFiles
-
 	Kernel: handle stack overflows
 		OpenBSD: 2012.11: sigaltstack & siglongjmp problem,
 			see /usr/src/regress/sys/kern/stackjmp
