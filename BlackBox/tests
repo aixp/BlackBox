@@ -10,10 +10,27 @@ ConsCompiler.Compile('Obx/Mod', 'Pi.odc')
 
 ConsCompiler.Compile('', 'HostFonts.txt')
 
-DevElfLinker.LinkDll libBB.so := Kernel+ Kernel_so_init# Files HostFiles StdLoader
+#DevElfLinker.LinkDll libBB.so := Kernel+ Kernel_so_init# Files HostFiles StdLoader
 DATA
 
 ./run-BlackBox <<DATA
 DevCompiler.CompileThis DevLinker
 DevLinker.LinkDll BlackBox.exe := Kernel$+ Files HostFiles StdLoader
 DATA
+
+### test PackedFiles:
+
+./run-BlackBox <<DATA
+DevElfLinker.LinkDll libBB1.so := Kernel+ Files HostFiles HostPackedFiles StdLoader
+DevPacker.PackThis libBB1.so := Code/Init.ocf ~
+DATA
+
+mv Code/Init.ocf Code/Init.ocf.bak
+env BB_PACKED_NAME=libBB1.so ./loader ./libBB1.so <<DATA
+#ConsCompiler.Compile('System/Mod', 'Init.txt')
+Log.String('PackedFiles works!')
+Log.Ln
+DATA
+mv Code/Init.ocf.bak Code/Init.ocf
+
+### end of test PackedFiles
