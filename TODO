@@ -19,7 +19,7 @@ By priority:
 			see /usr/src/regress/sys/kern/stackjmp
 		Linux: no sigaltstack & siglongjmp problem,
 			but, before stack overflow SEGV signal, memory of shared library
-			on top of stack is corrupted
+			on low (active) stack border, is corrupted
 
 	GUI:
 		...
