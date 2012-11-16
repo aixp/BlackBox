@@ -7,12 +7,11 @@ rn=`readlink -f "${0}"`
 pd=`dirname "${rn}"`
 sd=`readlink -f .`
 
-exe="loader"
+loader="loader"
 lib="libBB.so"
 
 # export LD_DEBUG=all
 env \
-	LD_LIBRARY_PATH="${pd}" \
 	BB_PRIMARY_DIR="${pd}" BB_SECONDARY_DIR="${sd}" \
 	BB_PACKED_NAME="${lib}" \
-	"${pd}"/${exe} "${lib}"
+	"${pd}"/${loader} "${pd}"/${lib}
