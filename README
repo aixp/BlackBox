@@ -14,7 +14,7 @@ How to build:
 		cd BlackBox/Lin/Rsrc/loader
 		make clean
 		make
-		mv BlackBox dev0 ../../../_`uname -s`_/Lin/Rsrc/loader/
+		mv loader ../../../_`uname -s`_/
 
 	compile self:
 		cd BlackBox

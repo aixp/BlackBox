@@ -7,7 +7,7 @@ rn=`readlink -f "${0}"`
 pd=`dirname "${rn}"`
 sd=`readlink -f .`
 
-exe="BlackBox"
+exe="loader"
 lib="libBB.so"
 
 # export LD_DEBUG=all
