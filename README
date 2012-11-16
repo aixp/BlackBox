@@ -83,7 +83,7 @@ Files:
 				OpenBSD-specific:
 					size_t
 					__xstat -> stat
-		_OpenBSD_/Lin/Mod/Libc.txt:
+		_OpenBSD_/Lin/Mod/Libc.odc:
 			OpenBUGS Lin/Mod/Libc.odc:
 				OpenBSD-specific
 		_Linux_/Lin/Mod/Libc.odc:

@@ -26,11 +26,11 @@ DevCompiler.CompileThis StdLoader
 DevCompiler.CompileThis Kernel_so_init
 
 # before StdLog
-ConsCompiler.Compile('Host/Mod', 'Dialog.txt')
+DevCompiler.CompileThis HostDialog
 
 DevCompiler.CompileThis StdLog
 DevCompiler.CompileThis Out
-ConsCompiler.Compile('Cons/Mod', 'Log.txt')
+DevCompiler.CompileThis ConsLog
 
 DevCompiler.CompileThis DevMarkers DevCommanders DevSelectors DevCPM DevCPT DevCPH DevCPB DevCPE DevCPS DevCPP DevCPL486 DevCPC486 DevCPV486 DevCompiler DevElfLinker16 DevLinker
 DevCompiler.CompileThis ConsCompiler
@@ -39,15 +39,13 @@ DevCompiler.CompileThis StdInterpreter
 
 ### BlackBox
 
-ConsCompiler.Compile('Host/Mod', 'Fonts.txt')
-ConsCompiler.Compile('Host/Mod', 'Windows.txt')
+DevCompiler.CompileThis HostFonts HostWindows
 DevCompiler.CompileThis HostDates
 DevCompiler.CompileThis HostTextConv
 
-ConsCompiler.Compile('Cons/Mod', 'Interp.txt')
+DevCompiler.CompileThis ConsInterp
 
-ConsCompiler.Compile('System/Mod', 'Init.txt')
-DevCompiler.CompileThis Config
+DevCompiler.CompileThis Init Config
 
 DevElfLinker.LinkDll libBB.so := Kernel+ Files HostFiles StdLoader
 
