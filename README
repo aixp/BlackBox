@@ -95,15 +95,6 @@ Files:
 		_Linux_/Host/Mod/Dates.odc: from http://oberoncore.ru/
 		_OpenBSD_/Host/Mod/Dates.odc:
 			_Linux_/Host/Mod/Dates.odc: OpenBSD-specific
-		Dev0/Mod:
-			CP*
-				BlackBox 1.6-rc6 Dev CP* modified to not depend on Dates, Texts etc.
-			Compiler.odc:
-				modified original BlackBox Dev/Mod/Compiler.odc
-			Linker.odc:
-				modified original BlackBox Dev/Mod/Linker.odc
-			ElfLinker16.odc:
-				modified OpenBUGS Dev/Mod/ElfLinker16.odc
 		_LinuxOpenBSD_/Host/Mod/TextConv.odc:
 			BlackBox 1.6-rc6 Host/Mod/TextConv.odc:
 				Windows-specific converters removed
@@ -136,11 +127,11 @@ Files:
 		_Linux_/Comm/Mod/TCP.odc: CommTCP implementation for Linux
 
 		{_OpenBSD_,_Linux_}/libBB.so: compiled and linked shared library to run BlackBox
-		{_OpenBSD_,_Linux_}/libBB0.so: compiled and linked shared library to run simple development interpreter
+		{_OpenBSD_,_Linux_}/libBB0.so: compiled, linked and packed shared library to run console interpreter
 		_Windows_/dev0.exe: compiled and linked simple development interpreter
 
 		Dev0/Views.odc: minimal Views implementation required to compile StdInterpreter
-		__Interp/Host/Mod: Fonts.odc, Dialog.odc, Windows.odc: simple Hosts implementation
+		__Interp/Host/Mod: Fonts.odc, Dialog.odc, Windows.odc: simple Host implementation
 		__Interp/System/Mod/Init.odc: Init for console interpreter
 
 Notes:
