@@ -21,5 +21,7 @@ By priority:
 			but, before stack overflow SEGV signal, memory of shared library
 			on low (active) stack border, is corrupted
 
+	DevProfiler
+
 	GUI:
 		...
