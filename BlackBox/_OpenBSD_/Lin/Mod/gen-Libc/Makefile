@@ -23,9 +23,6 @@ defs-errno:
 	./dumpdefs.py 2 0 i /usr/include/sys/errno.h > ${.TARGET}
 	./dumpdefs.py 2 1 i /usr/include/sys/errno.h >> ${.TARGET}
 
-defs-tftp:
-	./dumpdefs.py 2 1 i /usr/include/arpa/tftp.h | grep EACCESS > ${.TARGET}
-
 defs-signal:
 	./dumpdefs.py 2 1 i /usr/include/sys/signal.h > ${.TARGET}
 	./dumpdefs.py 2 2 i /usr/include/sys/signal.h | grep SIGWINCH >> ${.TARGET}
