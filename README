@@ -102,6 +102,9 @@ Files:
 			BlackBox 1.6-rc6 Host/Mod/PackedFiles.odc:
 				use BB_PACKED_NAME environment variable instead of appName
 				GetNextSubLoc, GetLoc: filenames-specific
+		_LinuxOpenBSD_Interp/Host/Mod/DevPackedFiles.odc:
+			_LinuxOpenBSD_/Host/Mod/PackedFiles.odc:
+				with priority to packed files
 		_LinuxOpenBSD_/System/Mod/Config.odc:
 			BlackBox 1.6-rc6 System/Mod/Config.odc:
 				Windows-specific removed
