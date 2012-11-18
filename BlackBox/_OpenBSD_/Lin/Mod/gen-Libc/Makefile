@@ -54,21 +54,21 @@ defs-fcntlo: /usr/include/fcntl.h
 defs-basictypes: sizeofs
 	./sizeofs > ${.TARGET}
 
-defs-sc:
-	./dumpdefs.py 2 1 i /usr/include/unistd.h | grep _SC_ > ${.TARGET}
+defs-sc: /usr/include/unistd.h
+	./dumpdefs.py 2 1 i ${.ALLSRC} | grep _SC_ > ${.TARGET}
 
-#defs-siginfo:
-#	./dumpdefs.py 2 1 i /usr/include/sys/siginfo.h > ${.TARGET}
-#	./dumpdefs.py 2 2 i /usr/include/sys/siginfo.h >> ${.TARGET}
+#defs-siginfo: /usr/include/sys/siginfo.h
+#	./dumpdefs.py 2 1 i ${.ALLSRC} > ${.TARGET}
+#	./dumpdefs.py 2 2 i ${.ALLSRC} >> ${.TARGET}
 #
-#defs-madv:
-#	./dumpdefs.py 2 0 i /usr/include/sys/mman.h | grep MADV > ${.TARGET}
-#	./dumpdefs.py 2 1 i /usr/include/sys/mman.h | grep MADV >> ${.TARGET}
+#defs-madv: /usr/include/sys/mman.h
+#	./dumpdefs.py 2 0 i ${.ALLSRC} | grep MADV > ${.TARGET}
+#	./dumpdefs.py 2 1 i ${.ALLSRC} | grep MADV >> ${.TARGET}
 #
-#defs-siginfo1:
-#	./dumpdefs.py 2 2 i /usr/include/sys/siginfo.h | grep ILL_ >> ${.TARGET}
-#	./dumpdefs.py 2 2 i /usr/include/sys/siginfo.h | grep SEGV_ >> ${.TARGET}
-#	./dumpdefs.py 2 2 i /usr/include/sys/siginfo.h | grep BUS_ >> ${.TARGET}
+#defs-siginfo1: /usr/include/sys/siginfo.h
+#	./dumpdefs.py 2 2 i ${.ALLSRC} | grep ILL_ >> ${.TARGET}
+#	./dumpdefs.py 2 2 i ${.ALLSRC} | grep SEGV_ >> ${.TARGET}
+#	./dumpdefs.py 2 2 i ${.ALLSRC} | grep BUS_ >> ${.TARGET}
 
 dumpstrerrno.c: defs-errno
 	grep -v ERESTART ${.ALLSRC} | grep -v EJUSTRETURN | ./mkdumpstrerrno.py > ${.TARGET}

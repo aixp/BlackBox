@@ -15,8 +15,8 @@ defs-ioctl: mkioctl
 Ioctl.txt: Ioctl.txt.templ ${DEFS}
 	${PY} ./untempl.py Ioctl.txt.templ $@
 
-defs-ioctl1:
-	./dumpdefs.py 3 0 s /usr/include/i386-linux-gnu/bits/ioctl-types.h | grep TIOCM_ > $@
+defs-ioctl1: /usr/include/i386-linux-gnu/bits/ioctl-types.h
+	./dumpdefs.py 3 0 s $^ | grep TIOCM_ > $@
 
 clean:
 	rm -f mkioctl Ioctl.txt ${DEFS}
