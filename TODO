@@ -25,5 +25,7 @@ By priority:
 	FreeBSD Kernel: fix Time*
 	FreeBSD: add LinIoctl, LinTermios, LinNet interfaces; CommV24, CommTCP
 
+	CommTCP: use sockaddr_storage for accept?
+
 	GUI:
 		...
