@@ -1,7 +1,7 @@
 Oberon Microsystems BlackBox Component Builder (http://www.oberon.ch/)
-Port for OpenBSD/i386, GNU/Linux/i386
+Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 
-Tested on OpenBSD 5.2, Fedora Core 17, Ubuntu 12.04 LTS
+Tested on OpenBSD 5.2, Fedora Core 17, Ubuntu 12.04 LTS, FreeBSD 9.0
 
 Some significant parts taken from OpenBUGS (http://www.openbugs.info/)
 
@@ -73,6 +73,11 @@ Files:
 				mmap: use "/dev/zero" device instead of -1
 				mprotect addresses must be page-aligned
 				do not show warning message if signal install failed
+		_FreeBSD_/System/Mod/Kernel.odc:
+			_OpenBSD_/System/Mod/Kernel.odc modified for FreeBSD:
+				Time*
+				TrapHandler
+				SetupModListAccess: initial module list must be writeable (read only by default in FreeBSD)
 		_Linux_/Host/Mod/Files.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
 				synchronized with BlackBox 1.6-rc6
@@ -83,9 +88,12 @@ Files:
 				OpenBSD-specific:
 					size_t
 					__xstat -> stat
-		_OpenBSD_/Lin/Mod/Libc.odc:
-			OpenBUGS Lin/Mod/Libc.odc:
-				OpenBSD-specific
+		_FreeBSD_/Host/Mod/Files.odc:
+			_Linux_/Host/Mod/Files.odc:
+				FreeBSD-specific:
+					size_t
+					__xstat -> stat
+					mode_t
 		_Linux_/Lin/Mod/Libc.odc:
 			OpenBUGS Lin/Mod/Libc.odc:
 				PROT_*, MAP_*, O_*, _SC_PAGESIZE, SIGSTKSZ CONSTs added
@@ -93,8 +101,8 @@ Files:
 		_Linux_/Lin/Mod/Dl.odc:
 			OpenBUGS Lin/Mod/Dl.odc
 		_Linux_/Host/Mod/Dates.odc: from http://oberoncore.ru/
-		_OpenBSD_/Host/Mod/Dates.odc:
-			_Linux_/Host/Mod/Dates.odc: OpenBSD-specific
+		_FreeBSDOpenBSD_/Host/Mod/Dates.odc:
+			_Linux_/Host/Mod/Dates.odc: OpenBSD and FreeBSD specific
 		_LinuxOpenBSD_/Host/Mod/TextConv.odc:
 			BlackBox 1.6-rc6 Host/Mod/TextConv.odc:
 				Windows-specific converters removed
@@ -111,7 +119,7 @@ Files:
 	new:
 		Console:
 			System/Mod/Console.odc: Console interface
-			_Linux_/Host/Mod/Console.odc: Console implementation for Linux
+			_FreeBSDLinux_/Host/Mod/Console.odc: Console implementation for Linux and FreeBSD
 			_OpenBSD_/Host/Mod/Console.odc:
 				_Linux_/Host/Mod/Console.odc: stdin -> SYSTEM.ADR(__sF[0]) (OpenBSD-specific)
 			_Windows_/Host/Mod/Console.odc:
@@ -120,7 +128,9 @@ Files:
 			Interp.odc: console interpreter
 			Compiler.odc: console interface to Dev compiler
 			Log.odc: Log.Hook console implementation
-		{_Linux_,_OpenBSD_}/Lin/Mod/Iconv.odc: interface to libiconv system library
+		{_OpenBSD_,_FreeBSD_}/Lin/Mod/Libc.odc: OpenBSD and FreeBSD specific libc interface
+		{_OpenBSD_,_FreeBSD_}/Lin/Mod/Dl.odc: OpenBSD and FreeBSD specific interface to dl
+		{_Linux_,_OpenBSD_,_FreeBSD_}/Lin/Mod/Iconv.odc: interface to iconv
 		{_Linux_,_OpenBSD_}/Lin/Mod/Ioctl.odc: interface to ioctl
 		{_Linux_,_OpenBSD_}/Lin/Mod/Termios.odc: interface to termios
 		{_Linux_,_OpenBSD_}/Lin/Mod/Net.odc: interface to network functionality

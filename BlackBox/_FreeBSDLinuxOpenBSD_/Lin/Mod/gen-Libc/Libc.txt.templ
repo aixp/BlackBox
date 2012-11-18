@@ -64,18 +64,19 @@ MODULE LinLibc ["libc.so%%libver%%"];
 
 		tm* = POINTER TO tmDesc;
 		tmDesc* = RECORD [untagged]
+			(* NOTE: check record size *)
 			(* tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec, tm_wday [ , tm_gmtoff ] *)
 %%fields-tm%%
 		END;
 
 		Ptrsiginfo_t* = POINTER TO siginfo_t;
-		siginfo_t* = RECORD [untagged]
+		siginfo_t = RECORD [untagged]
 			(* si_code, fault address *)
 %%fields-siginfo%%
 		END;
 
 		Ptrucontext_t* = POINTER TO ucontext_t;
-		ucontext_t* = RECORD [untagged]
+		ucontext_t = RECORD [untagged]
 			(* IP, SP, FP *)
 %%fields-ucontext%%
 		END;
@@ -97,6 +98,7 @@ MODULE LinLibc ["libc.so%%libver%%"];
 
 		stat_t* = RECORD [untagged]
 (*
+			NOTE: check record size
 			st_mode*: mode_t, st_size*: off_t, st_mtime*: time_t
 *)
 %%fields-stat%%
