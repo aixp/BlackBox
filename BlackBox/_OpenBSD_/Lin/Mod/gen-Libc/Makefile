@@ -23,7 +23,7 @@ defs-prot: /usr/include/sys/mman.h
 	./dumpdefs.py 2 0 s ${.ALLSRC} | grep "	PROT_" > ${.TARGET}
 
 defs-sigmask: /usr/include/sys/signal.h
-	./dumpdefs.py 2 2 i ${.ALLSRC} | grep SIG_ > ${.TARGET}
+	./dumpdefs.py 2 2 i ${.ALLSRC} | grep "	SIG_" > ${.TARGET}
 
 defs-signo: /usr/include/sys/signal.h
 	./dumpdefs.py 2 1 i ${.ALLSRC} | grep "	SIG" > ${.TARGET}
