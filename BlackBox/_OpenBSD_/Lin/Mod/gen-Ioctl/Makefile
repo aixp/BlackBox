@@ -15,8 +15,8 @@ defs-ioctl: mkioctl
 Ioctl.txt: Ioctl.txt.templ ${DEFS}
 	${PY} ./untempl.py Ioctl.txt.templ ${.TARGET}
 
-defs-ttycom: /usr/include/sys/ttycom.h
-	./dumpdefs.py 3 1 s ${.ALLSRC} | grep TIOCM_ > ${.TARGET}
+defs-ttycom:
+	./dumpdefs.py 3 1 s /usr/include/sys/ttycom.h | grep TIOCM_ > ${.TARGET}
 
 clean:
 	rm -f mkioctl Ioctl.txt ${DEFS}
