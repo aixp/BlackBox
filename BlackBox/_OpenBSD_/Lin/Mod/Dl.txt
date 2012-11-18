@@ -7,8 +7,6 @@ MODULE LinDl ["ld.so"];
 		32-bit
 	*)
 
-	IMPORT SYSTEM;
-
 	CONST
 		NULL* = 0H;
 
