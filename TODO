@@ -22,5 +22,8 @@ By priority:
 			on low (active) stack border, is corrupted
 		FreeBSD: ???
 
+	FreeBSD Kernel: fix Time*
+	FreeBSD: add LinIoctl, LinTermios, LinNet interfaces; CommV24, CommTCP
+
 	GUI:
 		...
