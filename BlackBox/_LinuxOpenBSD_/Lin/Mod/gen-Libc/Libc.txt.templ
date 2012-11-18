@@ -29,9 +29,9 @@ MODULE LinLibc ["libc.so%%libver%%"];
 		(* SA_SIGINFO (intFlags) *)
 %%defs-sa%%
 
-		_NSIG* = %%nsig%%;
 		(* SIGINT, SIGILL, SIGFPE, SIGSEGV, SIGKILL, SIGSTOP, SIGWINCH, SIGTHR (int) *)
 %%defs-signo%%
+		_NSIG* = %%nsig%%;
 
 (*
 		PAGE_SIZE* = 4096;
