@@ -6,11 +6,18 @@
 
 #define TABS "\t\t"
 
-static void D (const char *s, int sz, int set)
+#define FALSE (0)
+#define TRUE (1)
+
+static void D (const char *s, int sz, int set, int export)
 {
 	int res;
 
-	res = printf("%s%s* = ", TABS, s);
+	res = printf("%s%s", TABS, s);
+	if (export) {
+		res = printf("*");
+	}
+	res = printf(" = ");
 	if (sz == 1) {
 		res = printf("SHORTCHAR");
 	} else if (sz == 2) {
@@ -44,35 +51,35 @@ static void D (const char *s, int sz, int set)
 
 int main ()
 {
-	D("PtrVoid", sizeof(void *), 0);
-	D("int", sizeof(int), 0);
-	D("long", sizeof(long), 0);
-	D("ulong", sizeof(unsigned long), 0);
-	D("size_t", sizeof(size_t), 0);
-	D("ssize_t", sizeof(ssize_t), 0);
-	D("off_t", sizeof(off_t), 0);
-	D("clock_t", sizeof(clock_t), 0);
-	D("time_t", sizeof(time_t), 0);
-	D("mode_t", sizeof(mode_t), 1);
-	D("pid_t", sizeof(pid_t), 0);
-	D("uid_t", sizeof(uid_t), 0);
-	D("gid_t", sizeof(gid_t), 0);
-	D("dev_t", sizeof(dev_t), 0);
-	D("ino_t", sizeof(ino_t), 0);
-	D("nlink_t", sizeof(nlink_t), 0);
-	D("int8_t", sizeof(int8_t), 0);
-	D("u_int8_t", sizeof(u_int8_t), 0);
-	D("int16_t", sizeof(int16_t), 0);
-	D("u_int16_t", sizeof(u_int16_t), 0);
-	D("int32_t", sizeof(int32_t), 0);
-	D("u_int32_t", sizeof(u_int32_t), 0);
-	D("int64_t", sizeof(int64_t), 0);
-	D("u_int64_t", sizeof(u_int64_t), 0);
-	D("wchar_t", sizeof(wchar_t), 0);
-	D("sigset_t", sizeof(sigset_t), 1);
-	D("sigjmp_buf", sizeof(sigjmp_buf), 0);
-	D("intFlags", sizeof(int), 1);
-	D("FILE", sizeof(FILE), 0);
+	D("PtrVoid", sizeof(void *), FALSE, TRUE);
+	D("int", sizeof(int), FALSE, TRUE);
+	D("long", sizeof(long), FALSE, TRUE);
+	D("ulong", sizeof(unsigned long), FALSE, TRUE);
+	D("size_t", sizeof(size_t), FALSE, TRUE);
+	D("ssize_t", sizeof(ssize_t), FALSE, TRUE);
+	D("off_t", sizeof(off_t), FALSE, TRUE);
+	D("clock_t", sizeof(clock_t), FALSE, TRUE);
+	D("time_t", sizeof(time_t), FALSE, TRUE);
+	D("mode_t", sizeof(mode_t), TRUE, TRUE);
+	D("pid_t", sizeof(pid_t), FALSE, TRUE);
+	D("uid_t", sizeof(uid_t), FALSE, TRUE);
+	D("gid_t", sizeof(gid_t), FALSE, TRUE);
+	D("dev_t", sizeof(dev_t), FALSE, TRUE);
+	D("ino_t", sizeof(ino_t), FALSE, TRUE);
+	D("nlink_t", sizeof(nlink_t), FALSE, TRUE);
+	D("int8_t", sizeof(int8_t), FALSE, TRUE);
+	D("u_int8_t", sizeof(u_int8_t), FALSE, TRUE);
+	D("int16_t", sizeof(int16_t), FALSE, TRUE);
+	D("u_int16_t", sizeof(u_int16_t), FALSE, TRUE);
+	D("int32_t", sizeof(int32_t), FALSE, TRUE);
+	D("u_int32_t", sizeof(u_int32_t), FALSE, TRUE);
+	D("int64_t", sizeof(int64_t), FALSE, TRUE);
+	D("u_int64_t", sizeof(u_int64_t), FALSE, TRUE);
+	D("wchar_t", sizeof(wchar_t), FALSE, TRUE);
+	D("sigset_t", sizeof(sigset_t), TRUE, TRUE);
+	D("sigjmp_buf", sizeof(sigjmp_buf), FALSE, TRUE);
+	D("intFlags", sizeof(int), TRUE, TRUE);
+	D("FILE", sizeof(FILE), FALSE, FALSE);
 
 	return 0;
 }

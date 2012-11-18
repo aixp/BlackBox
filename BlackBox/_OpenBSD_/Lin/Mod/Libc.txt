@@ -399,7 +399,7 @@ MODULE LinLibc ["libc.so.66.0"];
 		sigset_t* = SET;
 		sigjmp_buf* = ARRAY [untagged] 11 OF INTEGER;
 		intFlags* = SET;
-		FILE* = ARRAY [untagged] 22 OF INTEGER;
+		FILE = ARRAY [untagged] 22 OF INTEGER;
 
 
 		tm* = POINTER TO tmDesc;
