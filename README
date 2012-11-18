@@ -46,7 +46,7 @@ Files:
 			Dev/Docu/ElfLinker.odc
 			Docu/OpenBUGS-License.odc
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
-			_LinuxOpenBSD_/System/Mod/Kernel_so_init.odc
+			_FreeBSDLinuxOpenBSD_/System/Mod/Kernel_so_init.odc
 		http://oberoncore.ru/projects/bb16ru-kras/:
 			Dev/Rsrc/ru/Strings.odc
 			Std/Rsrc/ru/Strings.odc
@@ -103,17 +103,17 @@ Files:
 		_Linux_/Host/Mod/Dates.odc: from http://oberoncore.ru/
 		_FreeBSDOpenBSD_/Host/Mod/Dates.odc:
 			_Linux_/Host/Mod/Dates.odc: OpenBSD and FreeBSD specific
-		_LinuxOpenBSD_/Host/Mod/TextConv.odc:
+		_FreeBSDLinuxOpenBSD_/Host/Mod/TextConv.odc:
 			BlackBox 1.6-rc6 Host/Mod/TextConv.odc:
 				Windows-specific converters removed
-		_LinuxOpenBSD_/Host/Mod/PackedFiles.odc:
+		_FreeBSDLinuxOpenBSD_/Host/Mod/PackedFiles.odc:
 			BlackBox 1.6-rc6 Host/Mod/PackedFiles.odc:
 				use BB_PACKED_NAME environment variable instead of appName
 				GetNextSubLoc, GetLoc: filenames-specific
-		_LinuxOpenBSD_Interp/Host/Mod/DevPackedFiles.odc:
-			_LinuxOpenBSD_/Host/Mod/PackedFiles.odc:
+		_FreeBSDLinuxOpenBSD_Interp/Host/Mod/DevPackedFiles.odc:
+			_FreeBSDLinuxOpenBSD_/Host/Mod/PackedFiles.odc:
 				with priority to packed files
-		_LinuxOpenBSD_/System/Mod/Config.odc:
+		_FreeBSDLinuxOpenBSD_/System/Mod/Config.odc:
 			BlackBox 1.6-rc6 System/Mod/Config.odc:
 				Windows-specific removed
 	new:
@@ -134,7 +134,7 @@ Files:
 		{_Linux_,_OpenBSD_}/Lin/Mod/Ioctl.odc: interface to ioctl
 		{_Linux_,_OpenBSD_}/Lin/Mod/Termios.odc: interface to termios
 		{_Linux_,_OpenBSD_}/Lin/Mod/Net.odc: interface to network functionality
-		_LinuxOpenBSD_/Host/Mod/Lang.odc: Dialog.LanguageHook implementation and LANG environment variable support
+		_FreeBSDLinuxOpenBSD_/Host/Mod/Lang.odc: Dialog.LanguageHook implementation and LANG environment variable support
 		_LinuxOpenBSD_/Comm/Mod/V24.odc: CommV24 implementation for Linux and OpenBSD
 		_OpenBSD_/Comm/Mod/TCP.odc: CommTCP implementation for OpenBSD
 		_Linux_/Comm/Mod/TCP.odc: CommTCP implementation for Linux
