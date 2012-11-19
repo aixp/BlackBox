@@ -4,9 +4,9 @@
 # ${.ALLSRC}    $^
 # ${.IMPSRC}    $<
 
-PY = python2.7
-
 INCDIR ?= /usr/include
+
+PY = python2.7
 
 DEFS = clockspersec defs-map defs-prot defs-sigmask defs-signo defs-fpe defs-sa defs-errno namemax defs-fcntlo defs-basictypes defs-sc
 
