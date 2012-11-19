@@ -1,5 +1,5 @@
 By priority:
-	separate dev0 and target
+	switch-target -> switch-dev0, switch-target?
 
 	Console:
 		non-blocking (input)
