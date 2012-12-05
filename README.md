@@ -1,7 +1,7 @@
-Oberon Microsystems BlackBox Component Builder (http://www.oberon.ch/)
+[Oberon Microsystems](http://www.oberon.ch/) [BlackBox Component Builder](http://www.oberon.ch/blackbox.html)
 Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 
-Some significant parts taken from OpenBUGS (http://www.openbugs.info/)
+Some significant parts taken from [OpenBUGS](http://www.openbugs.info/)
 
 Tested on:
 * OpenBSD 5.2
@@ -9,7 +9,7 @@ Tested on:
 * Ubuntu 12.04 LTS, 12.10
 * FreeBSD 9.0
 
-Status: stable, but [TODO](TODO) list is not empty
+Status: stable, but [TODO](BlackBox/TODO) list is not empty
 
 How to build:
 
