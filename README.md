@@ -29,4 +29,4 @@ How to build:
 		./build
 		./pack-dev0
 
-A. V. Shiryaev, 2012
+Alexander V. Shiryaev, 2012
