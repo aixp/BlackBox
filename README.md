@@ -10,7 +10,7 @@ Tested on:
 * Ubuntu 12.04 LTS, 12.10
 * FreeBSD 9.0
 
-Status: stable, but [TODO](BlackBox/TODO) list is not empty
+Status: stable, but [TODO](BlackBox/blob/master/TODO) list is not empty
 
 How to build:
 
