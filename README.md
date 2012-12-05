@@ -12,6 +12,7 @@ Tested on:
 Status: stable, but TODO list is not empty
 
 How to build:
+
 	cd BlackBox
 	./clean
 	./switch-target `uname -s`
