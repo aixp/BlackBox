@@ -122,6 +122,8 @@ Files:
 		_FreeBSDLinuxOpenBSD_/System/Mod/Config.odc:
 			BlackBox 1.6-rc6 System/Mod/Config.odc:
 				Windows-specific removed
+		_FreeBSDLinuxOpenBSD_/Host/Mod/Registry.odc:
+			BlackBox 1.6-rc6 Host/Mod/Registry.odc
 	new:
 		Console:
 			System/Mod/Console.odc: Console interface
