@@ -5,7 +5,7 @@ Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 Some significant parts taken from [OpenBUGS](http://www.openbugs.info/)
 
 Tested on:
-* OpenBSD 5.2
+* OpenBSD 5.4
 * Fedora Core 17
 * Ubuntu 12.04 LTS, 12.10
 * FreeBSD 9.0
@@ -29,4 +29,4 @@ How to build:
 		./build
 		./pack-dev0
 
-Alexander V. Shiryaev, 2012
+Alexander V. Shiryaev, 2013

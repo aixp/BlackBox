@@ -4,7 +4,7 @@ Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 Some significant parts taken from OpenBUGS (http://www.openbugs.info/)
 
 Tested on:
-	OpenBSD 5.2
+	OpenBSD 5.4
 	Fedora Core 17
 	Ubuntu 12.04 LTS, 12.10
 	FreeBSD 9.0
@@ -66,6 +66,7 @@ Files:
 						OpenBSD sigcontext-specific
 					Kernel.Time
 						CLOCKS_PER_SEC related
+						LEN(clock_t) = 8
 					Kernel.InitModule
 						mprotect call added
 					Kernel.InstallSignals:
@@ -94,6 +95,7 @@ Files:
 				OpenBSD-specific:
 					size_t
 					__xstat -> stat
+					LEN(clock_t) = 8
 		_FreeBSD_/Host/Mod/Files.odc:
 			_Linux_/Host/Mod/Files.odc:
 				FreeBSD-specific:
@@ -180,4 +182,4 @@ Notes:
 			BB_SECONDARY_DIR (was: /USE command line option)
 			BB_PACKED_NAME
 
-Alexander V. Shiryaev, 2012
+Alexander V. Shiryaev, 2013
