@@ -1,5 +1,4 @@
 By priority:
-	synchronize Kernel with original BlackBox 1.6
 	update Linux and FreeBSD libBB*.so
 
 	switch-target -> switch-dev0, switch-target?

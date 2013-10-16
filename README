@@ -61,7 +61,7 @@ Files:
 			System/Rsrc/ru/Strings.odc
 	modified:
 		_OpenBSD_/System/Mod/Kernel.odc:
-			1.6-rc6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
+			1.6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
 				OpenBSD specific:
 					Memory management rewritten (based on mmap)
 					Kernel.TrapHandler
