@@ -40,9 +40,8 @@ Files:
 			Dev/Docu/*
 				all except ElfLinker
 			Dev/Rsrc/*
+			Dev/Spec/*
 			Docu/BB-License.odc
-			Docu/BB-Licensing-Policy.odc
-			Docu/BB-Open-Source-License.odc
 			Obx/*
 			Std/*
 			System/Mod/
@@ -90,7 +89,7 @@ Files:
 				SetupModListAccess: initial module list must be writeable (read only by default in FreeBSD)
 		_Linux_/Host/Mod/Files.odc:
 			OpenBUGS Lin/Mod/linHostFiles.odc:
-				synchronized with BlackBox 1.6-rc6
+				synchronized with BlackBox 1.6
 				server configuration via BB_PRIMARY_DIR and BB_SECONDARY_DIR environment variables (not command line)
 				filenames encoding translation implemented
 		_OpenBSD_/Host/Mod/Files.odc:
@@ -115,20 +114,20 @@ Files:
 		_FreeBSDOpenBSD_/Host/Mod/Dates.odc:
 			_Linux_/Host/Mod/Dates.odc: OpenBSD and FreeBSD specific
 		_FreeBSDLinuxOpenBSD_/Host/Mod/TextConv.odc:
-			BlackBox 1.6-rc6 Host/Mod/TextConv.odc:
+			BlackBox 1.6 Host/Mod/TextConv.odc:
 				Windows-specific converters removed
 		_FreeBSDLinuxOpenBSD_/Host/Mod/PackedFiles.odc:
-			BlackBox 1.6-rc6 Host/Mod/PackedFiles.odc:
+			BlackBox 1.6 Host/Mod/PackedFiles.odc:
 				use BB_PACKED_NAME environment variable instead of appName
 				GetNextSubLoc, GetLoc: filenames-specific
 		_FreeBSDLinuxOpenBSD_Interp/Host/Mod/DevPackedFiles.odc:
 			_FreeBSDLinuxOpenBSD_/Host/Mod/PackedFiles.odc:
 				with priority to packed files
 		_FreeBSDLinuxOpenBSD_/System/Mod/Config.odc:
-			BlackBox 1.6-rc6 System/Mod/Config.odc:
+			BlackBox 1.6 System/Mod/Config.odc:
 				Windows-specific removed
 		_FreeBSDLinuxOpenBSD_/Host/Mod/Registry.odc:
-			BlackBox 1.6-rc6 Host/Mod/Registry.odc
+			BlackBox 1.6 Host/Mod/Registry.odc
 	new:
 		Console:
 			System/Mod/Console.odc: Console interface
