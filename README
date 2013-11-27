@@ -61,7 +61,7 @@ Files:
 			System/Rsrc/ru/Strings.odc
 	modified:
 		_OpenBSD_/System/Mod/Kernel.odc:
-			1.6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
+			BlackBox 1.6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
 				OpenBSD specific:
 					Memory management rewritten (based on mmap)
 					Kernel.TrapHandler
@@ -128,6 +128,11 @@ Files:
 				Windows-specific removed
 		_FreeBSDLinuxOpenBSD_/Host/Mod/Registry.odc:
 			BlackBox 1.6 Host/Mod/Registry.odc
+		_Windows_Interp/Host/Mod/{Dates.odc,Lang.odc}:
+			part of BlackBox 1.6 Host/Mod/Dialog.odc
+		_Windows_Interp/Host/Mod/DevPackedFiles.odc:
+			BlackBox 1.6 Host/Mod/PackedFiles.odc:
+				with priority to packed files
 	new:
 		Console:
 			System/Mod/Console.odc: Console interface
