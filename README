@@ -153,6 +153,7 @@ Files:
 		_LinuxOpenBSD_/Comm/Mod/V24.odc: CommV24 implementation for Linux and OpenBSD
 		_OpenBSD_/Comm/Mod/TCP.odc: CommTCP implementation for OpenBSD
 		_Linux_/Comm/Mod/TCP.odc: CommTCP implementation for Linux
+		_Linux_/Lin/Mod/Rt.odc: interface to librt
 
 		{_OpenBSD_,_Linux_}/libBB.so: compiled and linked shared library to run BlackBox
 		{_OpenBSD_,_Linux_}/libBB0.so: compiled, linked and packed shared library to run console interpreter
