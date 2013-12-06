@@ -67,8 +67,6 @@ Files:
 					Kernel.TrapHandler
 						OpenBSD sigcontext-specific
 					Kernel.Time
-						CLOCKS_PER_SEC related
-						LEN(clock_t) = 8
 					Kernel.InitModule
 						mprotect call added
 					Kernel.InstallSignals:
