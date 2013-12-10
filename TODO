@@ -1,5 +1,4 @@
 By priority:
-	Linux Kernel.Time: clock -> clock_gettime
 	FreeBSD Kernel.Time: clock -> clock_gettime
 
 	update FreeBSD libBB*.so
