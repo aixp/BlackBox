@@ -6,7 +6,7 @@ Some significant parts taken from OpenBUGS (http://www.openbugs.info/)
 Tested on:
 	OpenBSD 5.4
 	Fedora Core 17
-	Ubuntu 12.04 LTS, 12.10
+	Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
 	FreeBSD 9.0
 
 Status: stable, but TODO list is not empty
@@ -49,6 +49,9 @@ Files:
 			System/Rsrc/*
 			Text/*
 			Xhtml
+			_Windows_/{Comm,BlackBox.exe,BlackBox.exe.manifest}
+			_Windows_GUI/*
+			__GUI/{Comm,Dev,Form,Host/Rsrc/*.odc,Obx,Std,System,Empty.odc,Tour.odc}
 		OpenBUGS:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
@@ -59,6 +62,9 @@ Files:
 			Dev/Rsrc/ru/Strings.odc
 			Std/Rsrc/ru/Strings.odc
 			System/Rsrc/ru/Strings.odc
+			__GUI/Host/Rsrc/ru/Strings.odc
+		http://gitlab.molpit.com/oberon/blackbox-freenix/:
+			_{LinuxOpenBSD,Linux,OpenBSD}_GUI
 	modified:
 		_OpenBSD_/System/Mod/Kernel.odc:
 			BlackBox 1.6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
@@ -124,7 +130,7 @@ Files:
 		_FreeBSDLinuxOpenBSD_/System/Mod/Config.odc:
 			BlackBox 1.6 System/Mod/Config.odc:
 				Windows-specific removed
-		_FreeBSDLinuxOpenBSD_/Host/Mod/Registry.odc:
+		_FreeBSDLinuxOpenBSD_GUI/Host/Mod/Registry.odc:
 			BlackBox 1.6 Host/Mod/Registry.odc
 		_Windows_Interp/Host/Mod/{Dates.odc,Lang.odc}:
 			part of BlackBox 1.6 Host/Mod/Dialog.odc
@@ -188,4 +194,4 @@ Notes:
 			BB_SECONDARY_DIR (was: /USE command line option)
 			BB_PACKED_NAME
 
-Alexander V. Shiryaev, 2013
+Alexander V. Shiryaev, 2014

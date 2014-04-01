@@ -7,7 +7,7 @@ Some significant parts taken from [OpenBUGS](http://www.openbugs.info/)
 Tested on:
 * OpenBSD 5.4
 * Fedora Core 17
-* Ubuntu 12.04 LTS, 12.10
+* Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
 * FreeBSD 9.0
 
 Status: stable, but [TODO](TODO) list is not empty
@@ -32,4 +32,4 @@ How to build:
 		./build
 		./pack-dev0
 
-Alexander V. Shiryaev, 2013
+Alexander V. Shiryaev, 2014
