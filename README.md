@@ -19,7 +19,7 @@ How to build:
 
 	cd BlackBox
 	./clean
-	./switch-target `uname -s`
+	./switch-target `uname -s` [ GUI ]
 
 	compile loader executable:
 		cd BlackBox/Lin/Rsrc/loader
