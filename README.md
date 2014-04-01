@@ -10,7 +10,9 @@ Tested on:
 * Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
 * FreeBSD 9.0
 
-Status: stable, but [TODO](TODO) list is not empty
+Status:
+	non-GUI: stable, but [TODO](TODO) list is not empty
+	GUI: incomplete, but runnable implementation
 
 How to build:
 
