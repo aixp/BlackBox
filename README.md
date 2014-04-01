@@ -2,8 +2,6 @@
 
 Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 
-Some significant parts taken from [OpenBUGS](http://www.openbugs.net/)
-
 Tested on:
 * OpenBSD 5.4
 * Fedora Core 17
