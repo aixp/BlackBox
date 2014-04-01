@@ -34,4 +34,12 @@ How to build:
 		./build
 		./pack-dev0
 
+How to run (after build):
+
+	if you have 64-bit version of Ubuntu and want to run GUI version, do this:
+		sudo apt-get install libgtk2.0-0:i386
+
+	cd BlackBox
+	./run-BlackBox
+
 Alexander V. Shiryaev, 2014
