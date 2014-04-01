@@ -11,8 +11,8 @@ Tested on:
 * FreeBSD 9.0
 
 Status:
-* non-GUI: stable, but [TODO](TODO) list is not empty
-* GUI: incomplete, but runnable implementation
+* non-GUI part: stable, but [TODO](TODO) list is not empty
+* GUI part: incomplete, but runnable implementation
 
 How to build:
 

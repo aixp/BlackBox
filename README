@@ -1,8 +1,6 @@
 Oberon Microsystems BlackBox Component Builder (http://www.oberon.ch/)
 Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 
-Some significant parts taken from OpenBUGS (http://www.openbugs.net/)
-
 Tested on:
 	OpenBSD 5.4
 	Fedora Core 17
@@ -10,8 +8,8 @@ Tested on:
 	FreeBSD 9.0
 
 Status:
-	non-GUI: stable, but TODO list is not empty
-	GUI: incomplete, but runnable implementation
+	non-GUI part: stable, but TODO list is not empty
+	GUI part: incomplete, but runnable implementation
 
 How to build:
 	if you have 64-bit version of Ubuntu, do this:
@@ -62,7 +60,7 @@ Files:
 			_Windows_/{Comm,BlackBox.exe,BlackBox.exe.manifest}
 			_Windows_GUI/*
 			__GUI/{Comm,Dev,Form,Host/Rsrc/*.odc,Obx,Std,System,Empty.odc,Tour.odc}
-		OpenBUGS:
+		OpenBUGS (http://www.openbugs.net/):
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
 			Docu/OpenBUGS-License.odc
