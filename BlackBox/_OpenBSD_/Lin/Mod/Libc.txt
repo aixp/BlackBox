@@ -1,7 +1,7 @@
-MODULE LinLibc ["libc.so.70.0"];
+MODULE LinLibc ["libc.so.77.0"];
 
 	(*
-		OpenBSD 5.4
+		OpenBSD 5.6
 		i386
 	*)
 
@@ -17,20 +17,14 @@ MODULE LinLibc ["libc.so.70.0"];
 		(* MAP_PRIVATE, MAP_ANON (intFlags) *)
 		MAP_SHARED* = {0}; (* share changes *)
 		MAP_PRIVATE* = {1}; (* changes are private *)
-		MAP_COPY* = {2}; (* "copy" region at mmap time *)
 		MAP_FIXED* = {4}; (* map addr must be exactly as requested *)
-		MAP_RENAME* = {5}; (* Sun: rename private pages to file *)
-		MAP_NORESERVE* = {6}; (* Sun: don't reserve needed swap area *)
-		MAP_INHERIT* = {7}; (* region is retained after exec *)
-		MAP_NOEXTEND* = {8}; (* for MAP_FILE, don't change file size *)
-		MAP_HASSEMAPHORE* = {9}; (* region may contain semaphores *)
-		MAP_TRYFIXED* = {10}; (* attempt hint address, even within heap *)
-		MAP_FILE* = {}; (* map from file (default) *)
 		MAP_ANON* = {12}; (* allocated from memory, swap space *)
+		MAP_ANONYMOUS* = MAP_ANON; (* alternate POSIX spelling *)
 		MAP_FLAGMASK* = {0..2,4..12};
 		MAP_INHERIT_SHARE* = {}; (* share with child *)
 		MAP_INHERIT_COPY* = {0}; (* copy into child *)
 		MAP_INHERIT_NONE* = {1}; (* absent from child *)
+		MAP_INHERIT_ZERO* = {0,1}; (* zero in child *)
 
 
 		(* PROT_READ, PROT_WRITE, PROT_EXEC (intFlags) *)

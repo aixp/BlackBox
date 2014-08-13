@@ -3,7 +3,7 @@ MODULE LinDl ["ld.so"];
 	(*
 		A. V. Shiryaev, 2012.09, 2013.08
 
-		OpenBSD 5.4
+		OpenBSD 5.6
 		32-bit
 	*)
 

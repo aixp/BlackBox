@@ -54,6 +54,8 @@ MODULE LinLibc ["libc.so%%libver%%"];
 		(* O_RDWR, O_NONBLOCK (intFlags) *)
 %%defs-fcntlo%%
 
+%%defs-clockid%%
+
 	TYPE
 		StrArray* = POINTER TO ARRAY [untagged] OF PtrSTR;
 		PtrSTR* = POINTER TO ARRAY [untagged] OF SHORTCHAR;
@@ -115,6 +117,10 @@ MODULE LinLibc ["libc.so%%libver%%"];
 %%fields-dirent%%
 		END;
 
+		timespec_t* = RECORD [untagged]
+%%fields-timespec%%
+		END;
+
 (*
 	VAR
 		stdin*: INTEGER;
@@ -131,6 +137,9 @@ MODULE LinLibc ["libc.so%%libver%%"];
 
 	(* ANSI C 89 *)
 		PROCEDURE [ccall] clock* (): clock_t;
+
+	(* POSIX.1 *)
+		PROCEDURE [ccall] clock_gettime* (clock_id: clockid_t; VAR tp: timespec_t): int;
 
 	PROCEDURE [ccall] mmap* (adr: PtrVoid; len: size_t; prot: intFlags; flags: intFlags; fd: int; offset: off_t): PtrVoid;
 	(* BSD *)
