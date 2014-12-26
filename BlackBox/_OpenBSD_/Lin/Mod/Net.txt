@@ -1,4 +1,4 @@
-MODULE LinNet ["libc.so.77.0"];
+MODULE LinNet ["libc.so.78.0"];
 
 	(*
 		A. V. Shiryaev, 2012.11, 2013.08
@@ -92,6 +92,7 @@ MODULE LinNet ["libc.so.77.0"];
 			MSG_BCAST* = {8}; (* this message rec'd as broadcast *)
 			MSG_MCAST* = {9}; (* this message rec'd as multicast *)
 			MSG_NOSIGNAL* = {10}; (* do not send SIGPIPE *)
+			MSG_CMSG_CLOEXEC* = {11}; (* set FD_CLOEXEC on received fds *)
 
 		(* /usr/include/netinet/in.h *)
 			INADDR_NONE* = -1;

@@ -1,4 +1,4 @@
-MODULE LinLibc ["libc.so.77.0"];
+MODULE LinLibc ["libc.so.78.0"];
 
 	(*
 		OpenBSD 5.6
@@ -20,7 +20,7 @@ MODULE LinLibc ["libc.so.77.0"];
 		MAP_FIXED* = {4}; (* map addr must be exactly as requested *)
 		MAP_ANON* = {12}; (* allocated from memory, swap space *)
 		MAP_ANONYMOUS* = MAP_ANON; (* alternate POSIX spelling *)
-		MAP_FLAGMASK* = {0..2,4..12};
+		MAP_FLAGMASK* = {0..2,4..13};
 		MAP_INHERIT_SHARE* = {}; (* share with child *)
 		MAP_INHERIT_COPY* = {0}; (* copy into child *)
 		MAP_INHERIT_NONE* = {1}; (* absent from child *)
@@ -291,12 +291,15 @@ MODULE LinLibc ["libc.so.77.0"];
 		ECONNREFUSED* = 61; (* Connection refused *)
 		ELOOP* = 62; (* Too many levels of symbolic links *)
 		ENAMETOOLONG* = 63; (* File name too long *)
+		EHOSTUNREACH* = 65; (* No route to host *)
 		ENOTEMPTY* = 66; (* Directory not empty *)
 		EDQUOT* = 69; (* Disk quota exceeded *)
 		ESTALE* = 70; (* Stale NFS file handle *)
 		ENOLCK* = 77; (* No locks available *)
 		ENOSYS* = 78; (* Function not implemented *)
 		EILSEQ* = 84; (* Illegal byte sequence *)
+		EOVERFLOW* = 87; (* Conversion overflow *)
+		ECANCELED* = 88; (* Operation canceled *)
 		EIDRM* = 89; (* Identifier removed *)
 		ENOMSG* = 90; (* No message of desired type *)
 		ENOTSUP* = 91; (* Not supported *)
@@ -306,7 +309,6 @@ MODULE LinLibc ["libc.so.77.0"];
 		ESHUTDOWN* = 58; (* Can't send after socket shutdown *)
 		ETOOMANYREFS* = 59; (* Too many references: can't splice *)
 		EHOSTDOWN* = 64; (* Host is down *)
-		EHOSTUNREACH* = 65; (* No route to host *)
 		EPROCLIM* = 67; (* Too many processes *)
 		EUSERS* = 68; (* Too many users *)
 		EREMOTE* = 71; (* Too many levels of remote in path *)
@@ -322,8 +324,6 @@ MODULE LinLibc ["libc.so.77.0"];
 		ENOATTR* = 83; (* Attribute not found *)
 		ENOMEDIUM* = 85; (* No medium found *)
 		EMEDIUMTYPE* = 86; (* Wrong Medium Type *)
-		EOVERFLOW* = 87; (* Conversion overflow *)
-		ECANCELED* = 88; (* Operation canceled *)
 		ELAST* = 91; (* Must be equal largest errno *)
 		ERESTART* = -1; (* restart syscall *)
 		EJUSTRETURN* = -2; (* don't modify regs, just return *)
@@ -360,7 +360,6 @@ MODULE LinLibc ["libc.so.77.0"];
 
 
 		CLOCK_REALTIME* = 0;
-		CLOCK_VIRTUAL* = 1;
 		CLOCK_PROCESS_CPUTIME_ID* = 2;
 		CLOCK_MONOTONIC* = 3;
 		CLOCK_THREAD_CPUTIME_ID* = 4;
