@@ -146,7 +146,7 @@ MODULE LinNet ["libc.so.78.0"];
 			NO_RECOVERY* = 3; (* Non recoverable errors, FORMERR, REFUSED, NOTIMP *)
 			NO_DATA* = 4; (* Valid name, no data record of requested type *)
 			NO_ADDRESS* = NO_DATA; (* no address *)
-			NI_MAXHOST* = MAXHOSTNAMELEN; (* max host name returned by getnameinfo *)
+			NI_MAXHOST* = 256; (* max host name from getnameinfo (MAXHOSTNAMELEN) *)
 			NI_MAXSERV* = 32; (* max serv. name length returned by getnameinfo *)
 			RRSET_VALIDATED* = 1;
 			ERRSET_SUCCESS* = 0;
