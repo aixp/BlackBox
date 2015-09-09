@@ -1,9 +1,9 @@
-MODULE LinNet ["libc.so.78.0"];
+MODULE LinNet ["libc.so.81.0"];
 
 	(*
-		A. V. Shiryaev, 2012.11, 2013.08
+		A. V. Shiryaev, 2012.11, 2013.08, 2015.09
 
-		OpenBSD 5.6
+		OpenBSD 5.8
 		32-bit
 	*)
 
@@ -168,6 +168,8 @@ MODULE LinNet ["libc.so.78.0"];
 			sa_family_t* = SHORTCHAR;
 			in_addr_t* = INTEGER;
 			in_port_t* = SHORTINT;
+			time_t = LONGINT;
+			suseconds_t = INTEGER;
 
 		(* /usr/include/sys/socket.h *)
 			sockaddr* = RECORD [untagged]
@@ -225,8 +227,8 @@ MODULE LinNet ["libc.so.78.0"];
 
 		(* /usr/include/sys/time.h *)
 			timeval* = RECORD [untagged]
-				tv_sec*: INTEGER; (* seconds *)
-				tv_usec*: INTEGER; (* and microseconds *)
+				tv_sec*: time_t; (* seconds *)
+				tv_usec*: suseconds_t; (* and microseconds *)
 			END;
 
 		(* /usr/include/sys/select.h *)

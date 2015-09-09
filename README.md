@@ -3,7 +3,7 @@
 Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 
 Tested on:
-* OpenBSD 5.6
+* OpenBSD 5.8
 * Fedora Core 17
 * Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
 * FreeBSD 9.0 (non-GUI part only)
@@ -40,4 +40,4 @@ How to run (after build):
 	cd BlackBox
 	./run-BlackBox
 
-Alexander V. Shiryaev, 2014
+Alexander V. Shiryaev, 2015
