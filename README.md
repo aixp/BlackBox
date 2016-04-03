@@ -40,4 +40,4 @@ How to run (after build):
 	cd BlackBox
 	./run-BlackBox
 
-Alexander V. Shiryaev, 2015
+Alexander V. Shiryaev, 2016

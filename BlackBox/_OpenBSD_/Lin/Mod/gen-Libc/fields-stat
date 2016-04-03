@@ -1,4 +1,4 @@
-			(* OpenBSD 5.8 /usr/include/sys/stat.h *)
+			(* OpenBSD 5.9 /usr/include/sys/stat.h *)
 				st_mode*: mode_t;
 				st_dev*: dev_t;
 				st_ino*: ino_t;
