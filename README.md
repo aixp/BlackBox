@@ -3,7 +3,7 @@
 Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 
 Tested on:
-* OpenBSD 5.8
+* OpenBSD 6.0
 * Fedora Core 17
 * Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
 * FreeBSD 9.0 (non-GUI part only)

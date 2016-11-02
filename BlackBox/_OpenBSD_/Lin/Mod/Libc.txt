@@ -1,7 +1,7 @@
-MODULE LinLibc ["libc.so.86.0"];
+MODULE LinLibc ["libc.so.89.2"];
 
 	(*
-		OpenBSD 5.9
+		OpenBSD 6.0
 		i386
 	*)
 
@@ -410,7 +410,7 @@ MODULE LinLibc ["libc.so.86.0"];
 		tmDesc* = RECORD [untagged]
 			(* NOTE: check record size *)
 			(* tm_year, tm_mon, tm_mday, tm_hour, tm_min, tm_sec, tm_wday [ , tm_gmtoff ] *)
-			(* OpenBSD 5.9 /usr/include/time.h *)
+			(* OpenBSD 6.0 /usr/include/time.h *)
 				tm_sec*: int; (* seconds after the minute [0-60] *)
 				tm_min*: int; (* minutes after the hour [0-59] *)
 				tm_hour*: int; (* hours since midnight [0-23] *)

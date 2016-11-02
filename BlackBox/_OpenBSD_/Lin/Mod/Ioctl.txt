@@ -1,4 +1,4 @@
-MODULE LinIoctl ["libc.so.86.0"];
+MODULE LinIoctl ["libc.so.89.2"];
 
 	(*
 		A. V. Shiryaev, 2012.11, 2013.08, 2015.09
