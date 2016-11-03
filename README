@@ -74,6 +74,8 @@ Files:
 			__GUI/Host/Rsrc/ru/Strings.odc
 		http://gitlab.molpit.com/oberon/blackbox-freenix/:
 			_{LinuxOpenBSD,Linux,OpenBSD}_GUI
+		alternative linker (http://forum.oberoncore.ru/viewtopic.php?f=34&t=5459&start=40#p99038):
+			Dev2/*
 	modified:
 		_OpenBSD_/System/Mod/Kernel.odc:
 			BlackBox 1.6 System/Mod/Kernel.odc, OpenBUGS Lin/Mod/linKernel.odc:
@@ -83,7 +85,6 @@ Files:
 						OpenBSD sigcontext-specific
 					Kernel.Time
 					Kernel.InitModule
-						mprotect call added
 					Kernel.InstallSignals:
 						do not install signal handler for SIGTHR (when executable linked with -pthread)
 					IsReadable
@@ -146,6 +147,8 @@ Files:
 		_Windows_Interp/Host/Mod/DevPackedFiles.odc:
 			BlackBox 1.6 Host/Mod/PackedFiles.odc:
 				with priority to packed files
+		Dev2/Mod/{LnkWriteElf.odc,Linker.odc}:
+			OpenBSD-specific
 	new:
 		Console:
 			System/Mod/Console.odc: Console interface
@@ -177,7 +180,6 @@ Files:
 		Dev0/Views.odc: minimal Views implementation required to compile StdInterpreter
 		__Interp/Host/Mod: Fonts.odc, Dialog.odc, Windows.odc: simple Host implementation
 		__Interp/System/Mod/Init.odc: Init for console interpreter
-		Dev2: alternative linker
 
 Notes:
 	Kernel.baseStack issue:
