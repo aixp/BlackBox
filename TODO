@@ -1,8 +1,6 @@
 By priority:
 	FreeBSD Kernel.Time: clock -> clock_gettime
 
-	update FreeBSD libBB*.so
-
 	switch-target -> switch-dev0, switch-target?
 
 	Console:
@@ -32,5 +30,4 @@ By priority:
 	CommTCP: use sockaddr_storage for accept?
 
 	GUI:
-		FreeBSD
 		...
