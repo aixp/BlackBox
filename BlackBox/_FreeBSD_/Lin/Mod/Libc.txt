@@ -1,7 +1,7 @@
 MODULE LinLibc ["libc.so.7"];
 
 	(*
-		FreeBSD 9.0
+		FreeBSD 11.0
 		i386
 	*)
 
