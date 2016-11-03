@@ -5,7 +5,7 @@ Tested on:
 	OpenBSD 6.0
 	Fedora Core 17
 	Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
-	FreeBSD 9.0, 11.0
+	FreeBSD 11.0
 
 Status:
 	non-GUI part: stable, but TODO list is not empty
@@ -173,8 +173,8 @@ Files:
 		_Linux_/Comm/Mod/TCP.odc: CommTCP implementation for Linux
 		_Linux_/Lin/Mod/Rt.odc: interface to librt
 
-		{_OpenBSD_,_Linux_}/libBB.so: compiled and linked shared library to run BlackBox
-		{_OpenBSD_,_Linux_}/libBB0.so: compiled, linked and packed shared library to run console interpreter
+		{_FreeBSD_,_OpenBSD_,_Linux_}/libBB.so: compiled and linked shared library to run BlackBox
+		{_FreeBSD_,_OpenBSD_,_Linux_}/libBB0.so: compiled, linked and packed shared library to run console interpreter
 		_Windows_/dev0.exe: compiled and linked simple development interpreter
 
 		Dev0/Views.odc: minimal Views implementation required to compile StdInterpreter
