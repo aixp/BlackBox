@@ -37,6 +37,7 @@ How to run (after build):
 
 	cd BlackBox
 	./run-BlackBox
+		or ./run-BlackBox1
 
 Files:
 	original:
@@ -176,6 +177,7 @@ Files:
 		Dev0/Views.odc: minimal Views implementation required to compile StdInterpreter
 		__Interp/Host/Mod: Fonts.odc, Dialog.odc, Windows.odc: simple Host implementation
 		__Interp/System/Mod/Init.odc: Init for console interpreter
+		Dev2: alternative linker
 
 Notes:
 	Kernel.baseStack issue:

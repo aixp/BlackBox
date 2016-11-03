@@ -39,5 +39,6 @@ How to run (after build):
 
 	cd BlackBox
 	./run-BlackBox
+		or ./run-BlackBox1
 
 Alexander V. Shiryaev, 2016

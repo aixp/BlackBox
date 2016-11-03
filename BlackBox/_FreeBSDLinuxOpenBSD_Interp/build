@@ -64,4 +64,11 @@ DevCompiler.CompileThis CommV24 CommTCP
 DevCompiler.CompileThis XhtmlEntitySets XhtmlWriters XhtmlStdFileWriters XhtmlTextTableMarkers XhtmlExporter
 
 DevCompiler.CompileThis ObxHello0 ObxPi ObxRandom ObxTrap
+
+### Dev2
+
+DevCompiler.CompileThis Dev2LnkBase Dev2LnkLoad Dev2LnkWritePe Dev2LnkWriteElf Dev2LnkWriteElfStatic Dev2Linker
+Dev2Linker.BlackBoxElf`uname -s`
 DATA
+
+chmod +x BlackBox1.run
