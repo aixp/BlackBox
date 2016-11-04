@@ -1,6 +1,8 @@
 	VAR
-		errno*: INTEGER;
+		(* errno*: INTEGER; *)
 		stdin* ["__stdinp"]: PtrFILE;
+
+	PROCEDURE __error* (): INTEGER;
 
 	(* POSIX.1 *)
 		PROCEDURE [ccall] stat* (path: PtrSTR; VAR sp: stat_t): int;
