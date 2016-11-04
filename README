@@ -147,8 +147,8 @@ Files:
 		_Windows_Interp/Host/Mod/DevPackedFiles.odc:
 			BlackBox 1.6 Host/Mod/PackedFiles.odc:
 				with priority to packed files
-		Dev2/Mod/{LnkWriteElf.odc,Linker.odc}:
-			OpenBSD-specific
+		Dev2/Mod/{LnkBase.odc,LnkLoad.odc,LnkWriteElf.odc,Linker.odc}:
+			FreeBSD, OpenBSD-specific
 	new:
 		Console:
 			System/Mod/Console.odc: Console interface
