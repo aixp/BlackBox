@@ -317,6 +317,10 @@ MODULE LinLibc ["libc.so.7"];
 		SEEK_CUR* = 1;
 		SEEK_END* = 2;
 
+		STDIN_FILENO* = 0;
+		STDOUT_FILENO* = 1;
+		STDERR_FILENO* = 2;
+
 		P_tmpdir* = "/tmp";
 
 		(* O_RDWR, O_NONBLOCK (intFlags) *)
@@ -591,9 +595,11 @@ MODULE LinLibc ["libc.so.7"];
 	(* POSIX.1 *)
 		PROCEDURE [ccall] stat* (path: PtrSTR; VAR sp: stat_t): int;
 *)
+(*
 	VAR
-		(* errno*: INTEGER; *)
+		errno*: INTEGER;
 		stdin* ["__stdinp"]: PtrFILE;
+*)
 
 	PROCEDURE [ccall] __errno_location* ["__error"] (): PtrVoid;
 
@@ -645,6 +651,7 @@ MODULE LinLibc ["libc.so.7"];
 
 	(* ANSI C 89 *)
 		PROCEDURE [ccall] fopen* (path, mode: PtrSTR): PtrFILE;
+		PROCEDURE [ccall] fdopen* (fildes: int; mode: PtrSTR): PtrFILE;
 		PROCEDURE [ccall] fclose* (stream: PtrFILE): int;
 		PROCEDURE [ccall] fread* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;
 		PROCEDURE [ccall] fwrite* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;
