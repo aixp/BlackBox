@@ -335,6 +335,10 @@ MODULE LinLibc ["libc.so.89.2"];
 		SEEK_CUR* = 1;
 		SEEK_END* = 2;
 
+		STDIN_FILENO* = 0;
+		STDOUT_FILENO* = 1;
+		STDERR_FILENO* = 2;
+
 		P_tmpdir* = "/tmp";
 
 		(* O_RDWR, O_NONBLOCK (intFlags) *)
@@ -586,6 +590,7 @@ MODULE LinLibc ["libc.so.89.2"];
 	(* POSIX.1 *)
 		PROCEDURE [ccall] stat* (path: PtrSTR; VAR sp: stat_t): int;
 *)
+(*
 	VAR
 		(* OpenBSD: stdin, stdout, stderr *)
 			__sF*: ARRAY [untagged] 3 OF FILE; (* OpenBSD 5.8 /usr/include/stdio.h *)
@@ -594,6 +599,7 @@ MODULE LinLibc ["libc.so.89.2"];
 					stdout = SYSTEM.ADR(__sF[1])
 					stderr = SYSTEM.ADR(__sF[2])
 				*)
+*)
 
 	PROCEDURE [ccall] __errno_location* ["__errno"] (): PtrVoid;
 
@@ -645,6 +651,7 @@ MODULE LinLibc ["libc.so.89.2"];
 
 	(* ANSI C 89 *)
 		PROCEDURE [ccall] fopen* (path, mode: PtrSTR): PtrFILE;
+		PROCEDURE [ccall] fdopen* (fildes: int; mode: PtrSTR): PtrFILE;
 		PROCEDURE [ccall] fclose* (stream: PtrFILE): int;
 		PROCEDURE [ccall] fread* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;
 		PROCEDURE [ccall] fwrite* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;

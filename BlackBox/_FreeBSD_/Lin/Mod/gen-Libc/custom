@@ -1,6 +1,8 @@
+(*
 	VAR
-		(* errno*: INTEGER; *)
+		errno*: INTEGER;
 		stdin* ["__stdinp"]: PtrFILE;
+*)
 
 	PROCEDURE [ccall] __errno_location* ["__error"] (): PtrVoid;
 

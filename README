@@ -152,9 +152,8 @@ Files:
 	new:
 		Console:
 			System/Mod/Console.odc: Console interface
-			_FreeBSDLinux_/Host/Mod/Console.odc: Console implementation for Linux and FreeBSD
-			_OpenBSD_/Host/Mod/Console.odc:
-				_Linux_/Host/Mod/Console.odc: stdin -> SYSTEM.ADR(__sF[0]) (OpenBSD-specific)
+			_FreeBSDLinuxOpenBSD_/Host/Mod/Console.odc:
+				Console implementation for Linux and FreeBSD, and OpenBSD
 			_Windows_{GUI,Interp}/Host/Mod/Console.odc:
 				Console implementation for Windows
 		Cons/Mod
