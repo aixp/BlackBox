@@ -1,7 +1,7 @@
 MODULE LinNet ["libc.so.6"];
 
 	(*
-		A. V. Shiryaev, 2012.11
+		A. V. Shiryaev, 2012.11, 2016.11
 
 		GNU/Linux
 		32-bit
@@ -216,8 +216,7 @@ MODULE LinNet ["libc.so.6"];
 			__fd_mask = SET;
 			fd_set* = ARRAY [untagged] __FD_SETSIZE DIV (SIZE(__fd_mask) * 8) OF __fd_mask;
 
-	VAR
-		h_errno*: INTEGER;
+	PROCEDURE [ccall] __h_errno_location* (): INTEGER;
 
 	PROCEDURE [ccall] socket* (domain: INTEGER; type: INTEGER; protocol: INTEGER): SOCKET;
 	PROCEDURE [ccall] accept* (sockfd: SOCKET; VAR addr: sockaddr; VAR addrlen: socklen_t): SOCKET;
