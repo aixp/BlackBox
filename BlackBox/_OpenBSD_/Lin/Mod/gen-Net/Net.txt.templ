@@ -1,9 +1,9 @@
-MODULE LinNet ["libc.so.86.0"];
+MODULE LinNet ["libc.so.89.2"];
 
 	(*
-		A. V. Shiryaev, 2012.11, 2013.08, 2015.09
+		A. V. Shiryaev, 2012.11, 2013.08, 2015.09, 2016.11
 
-		OpenBSD 5.8
+		OpenBSD 6.0
 		32-bit
 	*)
 
@@ -17,10 +17,10 @@ MODULE LinNet ["libc.so.86.0"];
 %%defs-socket%%
 		(* /usr/include/netinet/in.h *)
 			INADDR_NONE* = -1;
+			INADDR_ANY* = 0;
 %%defs-in%%
 		(* /usr/include/sys/param.h *)
-			MAXHOSTNAMELEN* = 256; (* max hostname size *)
-
+%%defs-param%%
 		(* /usr/include/netdb.h *)
 %%defs-netdb%%
 		(* /usr/include/sys/select.h *)
@@ -28,17 +28,11 @@ MODULE LinNet ["libc.so.86.0"];
 			__NBBY = 8;
 
 	TYPE
-		SOCKET* = INTEGER;
-
-		(* /usr/include/sys/_types.h *)
-			socklen_t* = INTEGER;
-			sa_family_t* = SHORTCHAR;
-			in_addr_t* = INTEGER;
-			in_port_t* = SHORTINT;
-			time_t = LONGINT;
-			suseconds_t = INTEGER;
+%%defs-basictypes%%
+		SOCKET* = int;
 
 		(* /usr/include/sys/socket.h *)
+			Ptrsockaddr* = POINTER [untagged] TO sockaddr;
 			sockaddr* = RECORD [untagged]
 				sa_len*: SHORTCHAR; (* total length *)
 				sa_family*: sa_family_t; (* address family *)
@@ -74,22 +68,37 @@ MODULE LinNet ["libc.so.86.0"];
 				END;
 			END;
 
+			Ptrsockaddr_in* = POINTER [untagged] TO sockaddr_in;
 			sockaddr_in* = RECORD [untagged]
-				sin_len*: SHORTCHAR;
+				sin_len*: u_int8_t;
 				sin_family*: sa_family_t;
 				sin_port*: in_port_t;
 				sin_addr*: in_addr;
-				sin_zero*: ARRAY [untagged] 8 OF SHORTCHAR;
+				sin_zero*: ARRAY [untagged] 8 OF int8_t;
 			END;
 
 		(* /usr/include/netdb.h *)
-			Ptrhostent* = POINTER TO hostent;
+(* deprecated
+			Ptrhostent* = POINTER [untagged] TO hostent;
 			hostent* = RECORD [untagged]
 				h_name*: Libc.PtrSTR; (* official name of host *)
-				h_aliases*: POINTER TO ARRAY [untagged] OF Libc.PtrSTR; (* alias list *)
+				h_aliases*: POINTER [untagged] TO ARRAY [untagged] OF Libc.PtrSTR; (* alias list *)
 				h_addrtype*: INTEGER; (* host address type *)
 				h_length*: INTEGER; (* length of address *)
-				h_addr_list*: POINTER TO ARRAY [untagged] OF POINTER TO ARRAY [untagged] OF in_addr; (* list of addresses from name server *)
+				h_addr_list*: POINTER [untagged] TO ARRAY [untagged] OF POINTER [untagged] TO ARRAY [untagged] OF in_addr; (* list of addresses from name server *)
+			END;
+*)
+
+			Ptraddrinfo* = POINTER [untagged] TO addrinfo;
+			addrinfo* = RECORD [untagged]
+				ai_flags*: SET; (* input flags *)
+				ai_family*: int; (* protocol family for socket *)
+				ai_socktype*: int; (* socket type *)
+				ai_protocol*: int; (* protocol for socket *)
+				ai_addrlen*: socklen_t; (* length of socket-address *)
+				ai_addr*: Ptrsockaddr; (* socket-address for socket *)
+				ai_canonname*: Libc.PtrSTR; (* canonical name for service location (iff req) *)
+				ai_next*: Ptraddrinfo; (* pointer to next in list *)
 			END;
 
 		(* /usr/include/sys/time.h *)
@@ -102,28 +111,34 @@ MODULE LinNet ["libc.so.86.0"];
 			__fd_mask = SET;
 			fd_set* = ARRAY [untagged] (FD_SETSIZE + (SIZE(__fd_mask) * __NBBY - 1)) DIV (SIZE(__fd_mask) * __NBBY) OF __fd_mask;
 
+(* deprecated
 	VAR
 		h_errno*: INTEGER;
+*)
 
-	PROCEDURE [ccall] socket* (domain: INTEGER; type: INTEGER; protocol: INTEGER): SOCKET;
+	PROCEDURE [ccall] socket* (domain: int; type: int; protocol: int): SOCKET;
 	PROCEDURE [ccall] accept* (s: SOCKET; VAR addr: sockaddr; VAR addrlen: socklen_t): SOCKET;
 	PROCEDURE [ccall] bind* (s: SOCKET; VAR name: sockaddr; namelen: socklen_t): INTEGER;
 	PROCEDURE [ccall] connect* (s: SOCKET; VAR name: sockaddr; namelen: socklen_t): INTEGER;
 	PROCEDURE [ccall] listen* (s: SOCKET; backlog: INTEGER): INTEGER;
-	PROCEDURE [ccall] recv* (s: SOCKET; buf: Libc.PtrVoid; len: Libc.size_t; flags: SET): Libc.ssize_t;
-	PROCEDURE [ccall] send* (s: SOCKET; msg: Libc.PtrVoid; len: Libc.size_t; flags: SET): Libc.ssize_t;
+	PROCEDURE [ccall] recv* (s: SOCKET; buf: PtrVoid; len: size_t; flags: SET): ssize_t;
+	PROCEDURE [ccall] send* (s: SOCKET; msg: PtrVoid; len: size_t; flags: SET): ssize_t;
 	PROCEDURE [ccall] shutdown* (s: SOCKET; how: INTEGER): INTEGER;
-	PROCEDURE [ccall] getsockopt* (s: SOCKET; level: INTEGER; optname: SET; optval: Libc.PtrVoid; VAR optlen: socklen_t): INTEGER;
-	PROCEDURE [ccall] setsockopt* (s: SOCKET; level: INTEGER; optname: SET; optval: Libc.PtrVoid; optlen: socklen_t): INTEGER;
+	PROCEDURE [ccall] getsockopt* (s: SOCKET; level: INTEGER; optname: SET; optval: PtrVoid; VAR optlen: socklen_t): INTEGER;
+	PROCEDURE [ccall] setsockopt* (s: SOCKET; level: INTEGER; optname: SET; optval: PtrVoid; optlen: socklen_t): INTEGER;
 
 	PROCEDURE [ccall] htons* (host16: SHORTINT): SHORTINT;
 
+(* deprecated
 	PROCEDURE [ccall] gethostbyname* (name: Libc.PtrSTR): Ptrhostent;
+*)
 	PROCEDURE [ccall] inet_addr* (cp: Libc.PtrSTR): in_addr_t;
 
 	PROCEDURE [ccall] getsockname* (s: SOCKET; VAR name: sockaddr; VAR namelen: socklen_t): INTEGER;
 
+(* deprecated
 	PROCEDURE [ccall] hstrerror* (err: INTEGER): Libc.PtrSTR;
+*)
 
 (*
 	PROCEDURE FD_ZERO (VAR set: Net.fd_set);
@@ -139,5 +154,10 @@ MODULE LinNet ["libc.so.86.0"];
 *)
 
 	PROCEDURE [ccall] select* (nfds: INTEGER; VAR [nil] readfds: fd_set; VAR [nil] writefds: fd_set; VAR [nil] exceptfds: fd_set; VAR timeout: timeval): INTEGER;
+
+	PROCEDURE [ccall] getaddrinfo* (hostname, servname: Libc.PtrSTR; VAR [nil] hints: addrinfo; VAR res: Ptraddrinfo): int;
+	PROCEDURE [ccall] freeaddrinfo* (ai: Ptraddrinfo);
+
+	PROCEDURE [ccall] gai_strerror* (ecode: int): Libc.PtrSTR;
 
 END LinNet.

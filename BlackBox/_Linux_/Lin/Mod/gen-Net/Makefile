@@ -6,7 +6,7 @@
 
 INCDIR ?= /usr/include
 
-all: Net.txt dumphstrerrno
+all: Net.txt
 
 PY = python2.7
 DEFS = defs-socket defs-so
@@ -22,4 +22,4 @@ defs-so:
 	./dumpdefs.py 3 1 s ${INCDIR}/asm-generic/socket.h | grep "	SO_" > $@
 
 clean:
-	rm -f Net.txt ${DEFS} dumphstrerrno
+	rm -f Net.txt ${DEFS}

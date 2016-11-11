@@ -6,7 +6,7 @@
 
 INCDIR ?= /usr/include
 
-all: Net.txt dumphstrerrno
+all: Net.txt
 
 PY = python2.7
 DEFS = defs-socket defs-in defs-netdb
@@ -30,4 +30,4 @@ defs-netdb:
 	./dumpdefs.py 3 2 i ${INCDIR}/netdb.h > ${.TARGET}
 
 clean:
-	rm -f Net.txt ${DEFS} dumphstrerrno
+	rm -f Net.txt ${DEFS}
