@@ -66,7 +66,8 @@ MODULE LinNet ["libc.so.6"];
 			PF_CAIF* = 37; (* CAIF sockets. *)
 			PF_ALG* = 38; (* Algorithm sockets. *)
 			PF_NFC* = 39; (* NFC sockets. *)
-			PF_MAX* = 40; (* For now.. *)
+			PF_VSOCK* = 40; (* vSockets. *)
+			PF_MAX* = 41; (* For now.. *)
 			SOMAXCONN* = 128;
 
 		(* /usr/include/asm-generic/socket.h *)
@@ -86,6 +87,7 @@ MODULE LinNet ["libc.so.6"];
 			SO_PRIORITY* = {2,3};
 			SO_LINGER* = {0,2,3};
 			SO_BSDCOMPAT* = {1..3};
+			SO_REUSEPORT* = {0..3};
 			SO_SECURITY_AUTHENTICATION* = {1,2,4};
 			SO_SECURITY_ENCRYPTION_TRANSPORT* = {0..2,4};
 			SO_SECURITY_ENCRYPTION_NETWORK* = {3,4};
@@ -103,9 +105,17 @@ MODULE LinNet ["libc.so.6"];
 			SO_PROTOCOL* = {1,2,5};
 			SO_DOMAIN* = {0..2,5};
 			SO_RXQ_OVFL* = {3,5};
+			SO_WIFI_STATUS* = {0,3,5};
+			SO_PEEK_OFF* = {1,3,5};
+			SO_NOFCS* = {0,1,3,5};
+			SO_LOCK_FILTER* = {2,3,5};
+			SO_SELECT_ERR_QUEUE* = {0,2,3,5};
+			SO_BUSY_POLL* = {1..3,5};
+			SO_MAX_PACING_RATE* = {0..3,5};
 
 		(* /usr/include/netinet/in.h *)
 			INADDR_NONE* = -1;
+			INADDR_ANY* = 0;
 			IPPROTO_IP = 0; (* Dummy protocol for TCP. *)
 			IPPROTO_HOPOPTS* = 0; (* IPv6 Hop-by-Hop options. *)
 			IPPROTO_ICMP* = 1; (* Internet Control Message Protocol. *)
@@ -140,18 +150,41 @@ MODULE LinNet ["libc.so.6"];
 			MAXHOSTNAMELEN* = 64; (* max length of hostname *)
 
 		(* /usr/include/netdb.h *)
+(*
 			NETDB_INTERNAL* = -1; (* See errno. *)
 			NETDB_SUCCESS* = 0; (* No problem. *)
 			HOST_NOT_FOUND* = 1; (* Authoritative Answer Host not found. *)
 			TRY_AGAIN* = 2; (* Non-Authoritative Host not found, or SERVERFAIL. *)
 			NO_RECOVERY* = 3; (* Non recoverable errors, FORMERR, REFUSED, NOTIMP. *)
 			NO_DATA* = 4; (* Valid name, no data record of requested type. *)
+*)
+
+			EAI_BADFLAGS* = -1; (* Invalid value for `ai_flags' field *)
+			EAI_NONAME* = -2; (* NAME or SERVICE is unknown *)
+			EAI_AGAIN* = -3; (* Temporary failure in name resolution *)
+			EAI_FAIL* = -4; (* Non-recoverable failure in name res *)
+			EAI_FAMILY* = -6; (* `ai_family' not supported *)
+			EAI_SOCKTYPE* = -7; (* `ai_socktype' not supported *)
+			EAI_SERVICE* = -8; (* SERVICE not supported for `ai_socktype' *)
+			EAI_MEMORY* = -10; (* Memory allocation failure *)
+			EAI_SYSTEM* = -11; (* System error returned in `errno' *)
+			EAI_OVERFLOW* = -12; (* Argument buffer overflow *)
+			EAI_NODATA* = -5; (* No address associated with NAME *)
+			EAI_ADDRFAMILY* = -9; (* Address family for NAME not supported *)
+			EAI_INPROGRESS* = -100; (* Processing request in progress *)
+			EAI_CANCELED* = -101; (* Request canceled *)
+			EAI_NOTCANCELED* = -102; (* Request not canceled *)
+			EAI_ALLDONE* = -103; (* All requests done *)
+			EAI_INTR* = -104; (* Interrupted by a signal *)
+			EAI_IDN_ENCODE* = -105; (* IDN encoding failed *)
 
 		(* /usr/include/i386-linux-gnu/bits/typesizes.h *)
 			__FD_SETSIZE = 1024;
 
 	TYPE
-		SOCKET* = INTEGER;
+		int* = INTEGER;
+
+		SOCKET* = int;
 
 		(* /usr/include/i386-linux-gnu/bits/types.h *)
 			socklen_t* = INTEGER;
@@ -162,6 +195,7 @@ MODULE LinNet ["libc.so.6"];
 			in_port_t* = SHORTINT;
 
 		(* /usr/include/i386-linux-gnu/bits/socket.h *)
+			Ptrsockaddr* = POINTER [untagged] TO sockaddr;
 			sockaddr* = RECORD [untagged]
 				sa_family: sa_family_t;
 				sa_data: ARRAY [untagged] 14 OF SHORTCHAR;
@@ -188,6 +222,7 @@ MODULE LinNet ["libc.so.6"];
 			END;
 
 		(* /usr/include/linux/in.h *)
+			Ptrsockaddr_in* = POINTER [untagged] TO sockaddr_in;
 			sockaddr_in* = RECORD [untagged]
 				sin_family*: sa_family_t; (* address family *)
 				sin_port*: SHORTINT; (* port number *)
@@ -196,13 +231,27 @@ MODULE LinNet ["libc.so.6"];
 			END;
 
 		(* /usr/include/netdb.h *)
-			Ptrhostent* = POINTER TO hostent;
+(* deprecated
+			Ptrhostent* = POINTER [untagged] TO hostent;
 			hostent* = RECORD [untagged]
 				h_name*: Libc.PtrSTR; (* official name of host *)
-				h_aliases*: POINTER TO ARRAY [untagged] OF Libc.PtrSTR; (* alias list *)
+				h_aliases*: POINTER [untagged] TO ARRAY [untagged] OF Libc.PtrSTR; (* alias list *)
 				h_addrtype*: INTEGER; (* host address type *)
 				h_length*: INTEGER; (* length of address *)
-				h_addr_list*: POINTER TO ARRAY [untagged] OF POINTER TO ARRAY [untagged] OF in_addr; (* list of addresses from name server *)
+				h_addr_list*: POINTER [untagged] TO ARRAY [untagged] OF POINTER [untagged] TO ARRAY [untagged] OF in_addr; (* list of addresses from name server *)
+			END;
+*)
+
+			Ptraddrinfo* = POINTER [untagged] TO addrinfo;
+			addrinfo* = RECORD [untagged]
+				ai_flags*: SET; (* input flags *)
+				ai_family*: int; (* protocol family for socket *)
+				ai_socktype*: int; (* socket type *)
+				ai_protocol*: int; (* protocol for socket *)
+				ai_addrlen*: socklen_t; (* length of socket-address *)
+				ai_addr*: Ptrsockaddr; (* socket-address for socket *)
+				ai_canonname*: Libc.PtrSTR; (* canonical name for service location (iff req) *)
+				ai_next*: Ptraddrinfo; (* pointer to next in list *)
 			END;
 
 		(* /usr/include/linux/time.h *)
@@ -216,7 +265,9 @@ MODULE LinNet ["libc.so.6"];
 			__fd_mask = SET;
 			fd_set* = ARRAY [untagged] __FD_SETSIZE DIV (SIZE(__fd_mask) * 8) OF __fd_mask;
 
+(* deprecated
 	PROCEDURE [ccall] __h_errno_location* (): INTEGER;
+*)
 
 	PROCEDURE [ccall] socket* (domain: INTEGER; type: INTEGER; protocol: INTEGER): SOCKET;
 	PROCEDURE [ccall] accept* (sockfd: SOCKET; VAR addr: sockaddr; VAR addrlen: socklen_t): SOCKET;
@@ -231,12 +282,16 @@ MODULE LinNet ["libc.so.6"];
 
 	PROCEDURE [ccall] htons* (hostshort: SHORTINT): SHORTINT;
 
+(* deprecated
 	PROCEDURE [ccall] gethostbyname* (name: Libc.PtrSTR): Ptrhostent;
+*)
 	PROCEDURE [ccall] inet_addr* (cp: Libc.PtrSTR): in_addr_t;
 
 	PROCEDURE [ccall] getsockname* (sockfd: SOCKET; VAR addr: sockaddr; VAR addrlen: socklen_t): INTEGER;
 
+(* deprecated
 	PROCEDURE [ccall] hstrerror* (err: INTEGER): Libc.PtrSTR;
+*)
 
 (*
 	PROCEDURE FD_ZERO (VAR set: Net.fd_set);
@@ -252,5 +307,10 @@ MODULE LinNet ["libc.so.6"];
 *)
 
 	PROCEDURE [ccall] select* (nfds: INTEGER; VAR [nil] readfds: fd_set; VAR [nil] writefds: fd_set; VAR [nil] exceptfds: fd_set; VAR timeout: timeval): INTEGER;
+
+	PROCEDURE [ccall] getaddrinfo* (hostname, servname: Libc.PtrSTR; VAR [nil] hints: addrinfo; VAR res: Ptraddrinfo): int;
+	PROCEDURE [ccall] freeaddrinfo* (ai: Ptraddrinfo);
+
+	PROCEDURE [ccall] gai_strerror* (ecode: int): Libc.PtrSTR;
 
 END LinNet.
