@@ -1,15 +1,12 @@
-MODULE LinIoctl ["libc.so.6"];
+MODULE LinIoctl ["libc.so%%libver%%"];
 
 	(*
-		A. V. Shiryaev, 2012.11
-
-		GNU/Linux
-		i386
+		%%osname%%
+		%%machine%%
 	*)
 
 	CONST
-		(* /usr/include/i386-linux-gnu/bits/ioctl-types.h *)
-%%defs-ioctl1%%
+%%defs-tiocm%%
 %%defs-ioctl%%
 	PROCEDURE [ccall] ioctl0* ["ioctl"] (d: INTEGER; req: INTEGER): INTEGER;
 	PROCEDURE [ccall] ioctl1* ["ioctl"] (d: INTEGER; req: INTEGER; VAR arg: INTEGER): INTEGER;
