@@ -244,7 +244,7 @@ MODULE LinNet ["libc.so.89.2"];
 
 		Ptraddrinfo* = POINTER [untagged] TO addrinfo;
 		addrinfo* = RECORD [untagged]
-			(* Linux, FreeBSD, OpenBSD *)
+			(* OpenBSD 6.0 /usr/include/netdb.h *)
 				ai_flags*: intFlags; (* input flags *)
 				ai_family*: int; (* protocol family for socket *)
 				ai_socktype*: int; (* socket type *)

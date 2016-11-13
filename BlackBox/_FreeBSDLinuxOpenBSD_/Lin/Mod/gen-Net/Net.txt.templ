@@ -78,15 +78,7 @@ MODULE LinNet ["libc.so%%libver%%"];
 
 		Ptraddrinfo* = POINTER [untagged] TO addrinfo;
 		addrinfo* = RECORD [untagged]
-			(* Linux, FreeBSD, OpenBSD *)
-				ai_flags*: intFlags; (* input flags *)
-				ai_family*: int; (* protocol family for socket *)
-				ai_socktype*: int; (* socket type *)
-				ai_protocol*: int; (* protocol for socket *)
-				ai_addrlen*: socklen_t; (* length of socket-address *)
-				ai_addr*: Ptrsockaddr; (* socket-address for socket *)
-				ai_canonname*: PtrSTR; (* canonical name for service location (iff req) *)
-				ai_next*: Ptraddrinfo; (* pointer to next in list *)
+%%fields-addrinfo%%
 		END;
 
 		timeval* = RECORD [untagged]
