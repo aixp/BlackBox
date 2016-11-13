@@ -162,16 +162,18 @@ Files:
 			Log.odc: Log.Hook console implementation
 		{_OpenBSD_,_FreeBSD_}/Lin/Mod/Libc.odc: OpenBSD and FreeBSD specific libc interface
 		{_OpenBSD_,_FreeBSD_}/Lin/Mod/Dl.odc: OpenBSD and FreeBSD specific interface to dl
-		{_Linux_,_OpenBSD_,_FreeBSD_}/Lin/Mod/Iconv.odc: interface to iconv
-		{_Linux_,_OpenBSD_}/Lin/Mod/Ioctl.odc: interface to ioctl
+		{_FreeBSD_,_Linux_,_OpenBSD_}/Lin/Mod/Iconv.odc: interface to iconv
+		{_FreeBSD_,_Linux_,_OpenBSD_}/Lin/Mod/Ioctl.odc: interface to ioctl
 		{_Linux_,_OpenBSD_}/Lin/Mod/Termios.odc: interface to termios
-		{_Linux_,_OpenBSD_}/Lin/Mod/Net.odc: interface to network functionality
+		{_FreeBSD_,_Linux_,_OpenBSD_}/Lin/Mod/Net.odc: interface to network functionality
 		_FreeBSDLinuxOpenBSD_/Host/Mod/Lang.odc: Dialog.LanguageHook implementation and LANG environment variable support
 		_LinuxOpenBSD_/Comm/Mod/V24.odc: CommV24 implementation for Linux and OpenBSD
 		_OpenBSD_/Comm/Mod/TCP.odc: CommTCP implementation for OpenBSD
 		_Linux_/Comm/Mod/TCP.odc: CommTCP implementation for Linux
+		_FreeBSD_/Comm/Mod/TCP.odc: CommTCP implementation for FreeBSD
 		_Linux_/Lin/Mod/Rt.odc: interface to librt
 
+		{_FreeBSD_,_OpenBSD_,_Linux_}/BlackBox1.run: compiled and linked BlackBox executable
 		{_FreeBSD_,_OpenBSD_,_Linux_}/libBB.so: compiled and linked shared library to run BlackBox
 		{_FreeBSD_,_OpenBSD_,_Linux_}/libBB0.so: compiled, linked and packed shared library to run console interpreter
 		_Windows_/dev0.exe: compiled and linked simple development interpreter
