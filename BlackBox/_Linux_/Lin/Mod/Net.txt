@@ -169,6 +169,8 @@ MODULE LinNet ["libc.so.6"];
 			MSG_MORE* = {15};
 			MSG_WAITFORONE* = {16};
 
+		SOMAXCONN* = 128;
+
 		(* addrinfo.ai_flags *)
 			AI_PASSIVE* = {0}; (* Socket address is intended for `bind'. *)
 			AI_CANONNAME* = {1}; (* Request for canonical name. *)

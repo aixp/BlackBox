@@ -66,6 +66,8 @@ MODULE LinNet ["libc.so.7"];
 		MSG_CTRUNC* = {5}; (* control data lost before delivery *)
 		MSG_WAITALL* = {6}; (* wait for full request or error *)
 
+		SOMAXCONN* = 128;
+
 		(* addrinfo.ai_flags *)
 			AI_PASSIVE* = {0}; (* get address to use bind() *)
 			AI_CANONNAME* = {1}; (* fill ai_canonname *)
