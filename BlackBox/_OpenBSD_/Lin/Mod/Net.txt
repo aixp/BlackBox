@@ -141,6 +141,8 @@ MODULE LinNet ["libc.so.89.2"];
 		MSG_NOSIGNAL* = {10}; (* do not send SIGPIPE *)
 		MSG_CMSG_CLOEXEC* = {11}; (* set FD_CLOEXEC on received fds *)
 
+		SOMAXCONN* = 128;
+
 		(* addrinfo.ai_flags *)
 			AI_PASSIVE* = {0}; (* socket address is intended for bind() *)
 			AI_CANONNAME* = {1}; (* request for canonical name *)

@@ -8,7 +8,7 @@ INCDIR ?= /usr/include
 
 PY = python2.7
 
-DEFS = defs-basictypes defs-af defs-so defs-sol defs-ai defs-eai
+DEFS = defs-basictypes defs-af defs-so defs-sol defs-ai defs-eai defs-somaxconn
 
 all: Net.txt ${DEFS}
 
@@ -24,8 +24,8 @@ defs-af:
 defs-sol:
 	./dumpdefs.py 2 1 i ${INCDIR}/asm-generic/socket.h | grep "	SOL_" > $@
 
-#somaxconn:
-#	./dumpdefs.py 3 1 i ${INCDIR}/i386-linux-gnu/bits/socket.h | grep "	SOMAXCONN" > $@
+defs-somaxconn:
+	./dumpdefs.py 2 1 i ${INCDIR}/i386-linux-gnu/bits/socket.h | grep "	SOMAXCONN" > $@
 
 defs-so:
 	./dumpdefs.py 3 1 s ${INCDIR}/asm-generic/socket.h | grep "	SO_" > $@

@@ -8,7 +8,7 @@ INCDIR ?= /usr/include
 
 PY = python2.7
 
-DEFS = defs-basictypes defs-af defs-sock defs-proto defs-shut defs-so defs-sol defs-msg defs-ai defs-eai
+DEFS = defs-basictypes defs-af defs-sock defs-proto defs-shut defs-so defs-sol defs-msg defs-ai defs-eai defs-somaxconn
 
 all: Net.txt ${DEFS}
 
@@ -33,8 +33,8 @@ defs-sol:
 defs-msg:
 	./dumpdefs.py 2 1 s ${INCDIR}/sys/socket.h | grep "	MSG_" > ${.TARGET}
 
-#somaxconn:
-#	./dumpdefs.py 3 1 i ${INCDIR}/sys/socket.h | grep "	SOMAXCONN" > ${.TARGET}
+defs-somaxconn:
+	./dumpdefs.py 2 1 i ${INCDIR}/sys/socket.h | grep "	SOMAXCONN" > ${.TARGET}
 
 defs-so:
 	./dumpdefs.py 3 1 s ${INCDIR}/sys/socket.h | grep "	SO_" > ${.TARGET}
