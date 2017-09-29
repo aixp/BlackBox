@@ -2,7 +2,7 @@ Oberon Microsystems BlackBox Component Builder (http://www.oberon.ch/)
 Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 
 Tested on:
-	OpenBSD 6.0
+	OpenBSD 6.2
 	Fedora Core 17
 	Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
 	FreeBSD 11.0
@@ -207,4 +207,4 @@ Notes:
 			BB_SECONDARY_DIR (was: /USE command line option)
 			BB_PACKED_NAME
 
-Alexander V. Shiryaev, 2016
+Alexander V. Shiryaev, 2017
