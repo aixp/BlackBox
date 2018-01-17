@@ -165,14 +165,16 @@ MODULE LinLibc ["libc.so%%libver%%"];
 	PROCEDURE [ccall] localtime* (VAR [nil] t: time_t): tm;
 
 	(* POSIX.1 *)
+(*
 		PROCEDURE [ccall] sigsetjmp* (VAR env: sigjmp_buf; savemask: int): int;
+*)
 		PROCEDURE [ccall] siglongjmp* (VAR env: sigjmp_buf; val: int);
 
 	(* POSIX.1 *)
-		PROCEDURE [ccall] sigemptyset* (VAR set: sigset_t): int;
-		PROCEDURE [ccall] sigfillset* (VAR set: sigset_t): int;
-		PROCEDURE [ccall] sigaddset* (VAR set: sigset_t; signo: int): int;
-		PROCEDURE [ccall] sigprocmask* (how: int; VAR [nil] set: sigset_t; VAR [nil] oset: sigset_t): int;
+		PROCEDURE [ccall] sigemptyset* (set: PtrSigset_t): int;
+		PROCEDURE [ccall] sigfillset* (set: PtrSigset_t): int;
+		PROCEDURE [ccall] sigaddset* (set: PtrSigset_t; signo: int): int;
+		PROCEDURE [ccall] sigprocmask* (how: int; set: PtrSigset_t; oset: PtrSigset_t): int;
 
 	(* POSIX.1 *)
 		PROCEDURE [ccall] sigaction* (sig: int; VAR [nil] act: sigaction_t; VAR [nil] oact: sigaction_t): int;
@@ -226,9 +228,7 @@ MODULE LinLibc ["libc.so%%libver%%"];
 		PROCEDURE [ccall] lseek* (d: int; offset: off_t; whence: int): off_t;
 
 	(* POSIX.1 *)
-(*
 		PROCEDURE [ccall] chmod* (path: PtrSTR; mode: mode_t): int;
-*)
 		PROCEDURE [ccall] fchmod* (fd: int; mode: mode_t): int;
 
 	(* POSIX.1 *)
@@ -239,7 +239,13 @@ MODULE LinLibc ["libc.so%%libver%%"];
 		PROCEDURE [ccall] execv* (path: PtrSTR; argv: POINTER [untagged] TO ARRAY [untagged] OF PtrSTR): int;
 		PROCEDURE [ccall] execvp* (file: PtrSTR; argv: POINTER [untagged] TO ARRAY [untagged] OF PtrSTR): int;
 
+	(* POSIX.2 *)
+		PROCEDURE [ccall] system* (string: PtrSTR): int;
+
 	(* POSIX.1 *)
 		PROCEDURE [ccall] sysconf* (name: int): long;
+
+	PROCEDURE [ccall] popen* (command, type: PtrSTR): PtrFILE;
+	PROCEDURE [ccall] pclose* (stream: PtrFILE): int;
 
 END LinLibc.
