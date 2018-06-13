@@ -41,4 +41,4 @@ How to run (after build):
 	./run-BlackBox
 		or ./run-BlackBox1
 
-Alexander V. Shiryaev, 2017
+Alexander V. Shiryaev, 2018
