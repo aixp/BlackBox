@@ -1,7 +1,5 @@
 #!/bin/sh
 
-make -C Dev/Rsrc clean all || exit 1
-
 ./run-dev0 <<DATA
 ConsCompiler.Compile('Lin/Mod', 'Dl.txt')
 ConsCompiler.Compile('Lin/Mod', 'Libc.txt')
