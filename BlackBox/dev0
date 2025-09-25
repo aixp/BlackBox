@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# ulimit -s 32000
+# ulimit -a
+
+rn=`readlink -f "${0}"`
+pd=`dirname "${rn}"`
+sd=`readlink -f .`
+
+exe="dev0.run"
+
+# export LD_DEBUG=all
+exec env \
+	BB_PRIMARY_DIR="${pd}" BB_SECONDARY_DIR="${sd}" \
+	BB_PACKED_NAME="${exe}" \
+	"${pd}"/${exe}
