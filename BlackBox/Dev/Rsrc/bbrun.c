@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 /* #define BB_FILE "bb.boot" */
 #define BB_FILE argv[0]
