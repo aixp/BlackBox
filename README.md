@@ -23,13 +23,10 @@ Switch tree to current OS:
 ```sh
 cd BlackBox
 ./clean
-./switch-target $(uname -s) variant
+./switch-target $(uname -s) configuration
 ```
 
-Variants available:
-
-* `Interp`: command-line interpreter
-* `GUI`: GUI version
+Configurations available: `CLI`, `GUI`
 
 Compile DevElfLinker16 ELF `.so` loader executable:
 
