@@ -1,51 +1,103 @@
-[Oberon Microsystems](http://www.oberon.ch/) [BlackBox Component Builder](http://www.oberon.ch/blackbox.html)
+# [Oberon Microsystems](http://www.oberon.ch/) [BlackBox Component Builder](https://en.wikipedia.org/wiki/BlackBox_Component_Builder) [1.6](https://blackboxframework.org/stable/SetupBlackBox16.exe)
+# Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 
-Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
+## Tested on
 
-Tested on:
 * OpenBSD 6.2
 * Fedora Core 17
 * Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
 * FreeBSD 11.0
 
-Status:
-* non-GUI part: stable, but [TODO](TODO) list is not empty
-* GUI part: incomplete, but runnable implementation
+## Install build dependencies
 
-How to build:
+Ubuntu:
 
-	if you have 64-bit version of Ubuntu, do this:
-		sudo apt-get install libc6-dev-i386
+```sh
+sudo apt-get install libc6-dev-i386
+```
 
-	cd BlackBox
-	./clean
-	./switch-target $(uname -s) [ GUI ]
+## Build
 
-	compile loader executable:
-		cd BlackBox/Lin/Rsrc/loader
-		make clean
-		make
-		mv loader ../../../_$(uname -s)_/Lin/Rsrc/loader/
+Switch tree to current OS:
 
-	compile exe.img (required for DevBootLinker):
-		cd BlackBox/Dev/Rsrc
-		make clean
-		make
-		cp exe.img ../../_$(uname -s)_/Dev/Rsrc/
+```sh
+cd BlackBox
+./clean
+./switch-target $(uname -s) variant
+```
 
-	compile self:
-		cd BlackBox
-		./build
-		./pack-dev0
+Variants available:
 
-How to run (after build):
+* `Interp`: command-line interpreter
+* `GUI`: GUI version
 
-	if you have 64-bit version of Ubuntu and want to run GUI version, do this:
-		sudo apt-get install libgtk2.0-0:i386
+Compile DevElfLinker16 ELF `.so` loader executable:
 
-	cd BlackBox
-	./run-BlackBox
-		or ./run-BlackBox1
-		or ./run-BlackBox2
+```sh
+cd BlackBox/Lin/Rsrc/loader
+make clean
+make
+mv loader ../../../_$(uname -s)_/Lin/Rsrc/loader/
+```
+
+Compile `exe.img` (required for DevBootLinker):
+
+```sh
+cd BlackBox/Dev/Rsrc
+make clean
+make
+cp exe.img ../../_$(uname -s)_/Dev/Rsrc/
+```
+
+Build the framework:
+
+```sh
+cd BlackBox
+./build
+```
+
+Create the standalone development bundle (`dev0`):
+
+```sh
+cd BlackBox
+./pack-dev0
+```
+
+`dev0` is a self-contained executable including compiler, linker, and other essential tools required to bootstrap the build process.
+
+## Install runtime dependencies
+
+Ubuntu:
+
+```sh
+sudo apt-get install libgtk2.0-0:i386
+```
+
+## Run
+
+There are 3 methods to run the framework:
+
+1. DevElfLinker16-based:
+
+```sh
+cd BlackBox
+./run-BlackBox
+```
+
+2. Dev2Linker-based:
+
+```sh
+cd BlackBox
+./run-BlackBox1
+```
+
+3. DevBootLinker-based:
+
+```sh
+cd BlackBox
+./run-BlackBox2
+```
+
+## Authors
 
 Alexander Shiryaev, 2025
