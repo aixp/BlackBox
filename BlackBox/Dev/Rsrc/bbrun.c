@@ -6,15 +6,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <malloc.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <stdint.h>
 
 /* #define BB_FILE "bb.boot" */
 #define BB_FILE argv[0]
 /* #define BB_FILE argv[1] */
-/* #define exeSize 10948 */
 /* the exact size (in bytes) of the executable part of the file. */
 /* this constant needs to be updated everytime a change is made to this file */
-#define exeSize  EXESIZE /* = sise of exe.img */
+#define exeSize  EXESIZE /* = size of exe.img */
 
 /* fixup types */
 #define absolute 100
@@ -115,16 +116,43 @@ BootInfo* bootInfo;
 int newRecAdr, newArrAdr;
 int newRecFP, newArrFP;
 
-void donothing(char* fmt, ...) {}
+static void donothing(char* fmt, ...) {}
 
-void DumpMod()
+static void *AllocMem (size_t size, bool mark_exec) {
+    // Allocate memory (zero-initialized)
+    void *mem = calloc(1, size);
+    if (!mem) {
+        perror("calloc");
+        return NULL;
+    }
+
+    if (mark_exec)  {
+        // Make entire memory region executable
+        size_t pagesize = getpagesize();
+        uintptr_t start = (uintptr_t)mem & ~(pagesize - 1); // page-aligned start
+        uintptr_t end = (uintptr_t)mem + size;
+        size_t len = end - start;
+        // Round up to full pages
+        len = (len + pagesize - 1) & ~(pagesize - 1);
+
+        if (mprotect((void *)start, len, PROT_READ | PROT_WRITE | PROT_EXEC) != 0) {
+            perror("mprotect");
+            free(mem);
+            return NULL;
+        }
+    }
+
+    return mem;
+}
+
+static void DumpMod()
 {
     dprintf("\n\n---- Mod info:\n");
     dprintf("        hs, ms, ds, cs, vs = %d, %d, %d, %d, %d\n", mod.hs, mod.ms, mod.ds, mod.cs, mod.vs);
     dprintf("        mad, dad = %d, %d\n\n", mod.mad, mod.dad);
 }
 
-void RegisterModule()
+static void RegisterModule()
 {
     Module* m;
     m = (Module*) mod.dad;
@@ -133,7 +161,7 @@ void RegisterModule()
     printf("Registred module %s\n", mod.name);
 }
 
-void PrintMods()
+static void PrintMods()
 {
     Module* ml;
     ml = modlist;
@@ -146,7 +174,7 @@ void PrintMods()
 }
 
 
-Module* ThisModule(char* name)
+static Module* ThisModule(char* name)
 {
     Module* ml;
     ml = modlist;
@@ -154,7 +182,7 @@ Module* ThisModule(char* name)
     return ml;
 }
 
-Object* ThisObject(Module* mod, char* name)
+static Object* ThisObject(Module* mod, char* name)
 {
     int l, r, m;
     char* p;
@@ -172,7 +200,7 @@ Object* ThisObject(Module* mod, char* name)
     return NULL;
 }
 
-Object* ThisDesc(Module* mod, int fprint)
+static Object* ThisDesc(Module* mod, int fprint)
 {
     int i, n;
     i = 0; n = mod->export->num;
@@ -184,7 +212,7 @@ Object* ThisDesc(Module* mod, int fprint)
     return NULL;
 }
 
-int LoadDll (char* name)
+static int LoadDll (char* name)
 {
     void *handle;
     printf("loading: %s\n", name);
@@ -197,7 +225,7 @@ int LoadDll (char* name)
 }
 
 
-int ThisDllObj (int mode, int fprint, char* dll, char* name)
+static int ThisDllObj (int mode, int fprint, char* dll, char* name)
 {
     void *handle;
     int ad = 0;
@@ -219,7 +247,7 @@ int ThisDllObj (int mode, int fprint, char* dll, char* name)
     return ad;
 }
 
-int Read4 ()
+static int Read4 ()
 {
     unsigned char b;
     int   w;
@@ -230,7 +258,7 @@ int Read4 ()
     return w;
 }
 
-int RNum()
+static int RNum()
 {
     char b;
     int   s, y;
@@ -244,7 +272,7 @@ int RNum()
     return (((b + 64) % 128 - 64) << s) + y;
 }
 
-void ReadName (char* str)
+static void ReadName (char* str)
 {
     unsigned char b;
     int i;
@@ -256,7 +284,7 @@ void ReadName (char* str)
     str[i] = 0;
 }
 
-void Fixup (int adr)
+static void Fixup (int adr)
 {
     int link, offset, linkadr, n, x, t;
 
@@ -311,7 +339,7 @@ void Fixup (int adr)
     dprintf("\n");
 }
 
-int ReadBootHeader()
+static int ReadBootHeader()
 {
     int tag, version;
     fseek(f, exeSize, SEEK_SET);
@@ -330,7 +358,7 @@ int ReadBootHeader()
     return 1;
 }
 
-int ReadHeader ()
+static int ReadHeader ()
 {
     int ofTag, i, nofImps, processor;
     // char str[80];
@@ -360,7 +388,7 @@ int ReadHeader ()
     mod.imp = NULL;
     for (i = 0; i < nofImps; i++)
     {
-        imp = (ImpList*)calloc(1, sizeof(ImpList));
+        imp = (ImpList*)AllocMem(sizeof(ImpList), false);
         ReadName(imp->name);
         if (mod.imp == NULL)
             mod.imp = imp;
@@ -380,11 +408,11 @@ int ReadHeader ()
             }
         }
     }
-    dprintf("Pos: %d\n", ftell(f));
+    dprintf("Pos: %ld\n", ftell(f));
     return 1;
 }
 
-int ReadModule ()
+static int ReadModule ()
 {
     char *dp, *mp;
     unsigned int cnt;
@@ -397,8 +425,8 @@ int ReadModule ()
     int isLib;
     char* im;
 
-    mod.dad = (int) calloc(1, mod.ds);
-    mod.mad = (int) calloc(1, mod.ms + mod.cs + mod.vs);
+    mod.dad = (int) AllocMem(mod.ds, false);
+    mod.mad = (int) AllocMem(mod.ms + mod.cs + mod.vs, true);
     if ((mod.dad == 0) || (mod.mad == 0))
     {
         printf("BootLoader: Couldn't initalize heap\n");
@@ -409,16 +437,16 @@ int ReadModule ()
     dp = (char*) mod.dad;
     mp = (char*) mod.mad;
     fseek(f, mod.start + mod.hs, SEEK_SET);
-    dprintf("ReadModule after fseek pos: %d\n", ftell(f));
+    dprintf("ReadModule after fseek pos: %ld\n", ftell(f));
     cnt = fread(mp, 1, mod.ms, f);
-    dprintf("Read meta bulk (%d bytes. New pos: %d)\n", cnt, ftell(f));
+    dprintf("Read meta bulk (%d bytes. New pos: %ld)\n", cnt, ftell(f));
     cnt = fread(dp, 1, mod.ds, f);
-    dprintf("Read desc bulk (%d bytes. New pos: %d)\n", cnt, ftell(f));
+    dprintf("Read desc bulk (%d bytes. New pos: %ld)\n", cnt, ftell(f));
     mp = (char*)(mod.mad + mod.ms);
     cnt = fread(mp, 1, mod.cs, f);
-    dprintf("Read code bulk (%d bytes. New pos: %d)\n", cnt, ftell(f));
+    dprintf("Read code bulk (%d bytes. New pos: %ld)\n", cnt, ftell(f));
     DumpMod();
-    dprintf("before fixup: pos = %d\n", ftell(f));
+    dprintf("before fixup: pos = %ld\n", ftell(f));
 
     if ((!newRecAdr) || (!newArrAdr)){
         k = ThisModule(kernel);
@@ -443,7 +471,7 @@ int ReadModule ()
     Fixup(mod.dad);
     Fixup(mod.mad + mod.ms);
     Fixup(mod.mad + mod.ms + mod.cs);
-    dprintf("after fixup: pos = %d\n", ftell(f));
+    dprintf("after fixup: pos = %ld\n", ftell(f));
     imp = mod.imp;
     imptab = (int)((Module*)(mod.dad))->imports;
     while (imp != NULL){
@@ -565,7 +593,7 @@ int main (int argc, char *argv[])
                     else
                     {
                         /* assign the boot info to first variable in Kernel */
-                        bootInfo = calloc(1, sizeof(BootInfo));
+                        bootInfo = AllocMem(sizeof(BootInfo), false);
                         bootInfo->modList = modlist;
                         bootInfo->argc = argc;
                         bootInfo->argv = argv;
