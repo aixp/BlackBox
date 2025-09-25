@@ -27,7 +27,7 @@ How to build:
 		make
 		mv loader ../../../_$(uname -s)_/Lin/Rsrc/loader/
 
-	compile exe.img (required for DevBootLoader):
+	compile exe.img (required for DevBootLinker):
 		cd BlackBox/Dev/Rsrc
 		make clean
 		make
@@ -48,4 +48,4 @@ How to run (after build):
 		or ./run-BlackBox1
 		or ./run-BlackBox2
 
-Alexander V. Shiryaev, 2025
+Alexander Shiryaev, 2025
