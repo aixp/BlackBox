@@ -13,7 +13,7 @@ ${IMG}: ${SRC}
 	    echo "Compiling with EXESIZE=$$SIZE"; \
 	    ${CC} ${CFLAGS} -DEXESIZE=$$SIZE -o "${IMG}" "${SRC}"; \
 	    SIZE0=$$SIZE; \
-	    SIZE=$$(wc -c <"${IMG}"); \
+	    SIZE=$$(wc -c "${IMG}" | awk '{print $$1}'); \
 	done; \
 	echo "Final size: $$SIZE"
 
