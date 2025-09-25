@@ -19,13 +19,19 @@ How to build:
 
 	cd BlackBox
 	./clean
-	./switch-target `uname -s` [ GUI ]
+	./switch-target $(uname -s) [ GUI ]
 
 	compile loader executable:
 		cd BlackBox/Lin/Rsrc/loader
 		make clean
 		make
-		mv loader ../../../_`uname -s`_/Lin/Rsrc/loader/
+		mv loader ../../../_$(uname -s)_/Lin/Rsrc/loader/
+
+	compile exe.img (required for DevBootLoader):
+		cd BlackBox/Dev/Rsrc
+		make clean
+		make
+		cp exe.img ../../_$(uname -s)_/Dev/Rsrc/
 
 	compile self:
 		cd BlackBox
@@ -40,5 +46,6 @@ How to run (after build):
 	cd BlackBox
 	./run-BlackBox
 		or ./run-BlackBox1
+		or ./run-BlackBox2
 
-Alexander V. Shiryaev, 2019
+Alexander V. Shiryaev, 2025
