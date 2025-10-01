@@ -2,7 +2,8 @@ Oberon Microsystems BlackBox Component Builder (http://www.oberon.ch/)
 Port for OpenBSD/i386, GNU/Linux/i386, FreeBSD/i386
 
 Tested on:
-	OpenBSD 6.2
+	Arch Linux
+	OpenBSD 7.7
 	Fedora Core 17
 	Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
 	FreeBSD 11.0
@@ -17,18 +18,18 @@ How to build:
 
 	cd BlackBox
 	./clean
-	./switch-target `uname -s` [ GUI ]
+	./switch-target $(uname -s) [ GUI ]
 
-	compile loader executable:
-		cd BlackBox/Lin/Rsrc/loader
+	compile `exe.img` (required for DevBootLinker):
+		cd BlackBox/Dev/Rsrc
 		make clean
 		make
-		mv loader ../../../_`uname -s`_/Lin/Rsrc/loader/
+		cp exe.img ../../_$(uname -s)_/Dev/Rsrc/
 
 	compile self:
 		cd BlackBox
 		./build
-		./pack-dev0
+		./pack-dev
 
 How to run (after build):
 	GUI only:
@@ -37,7 +38,6 @@ How to run (after build):
 
 	cd BlackBox
 	./run-BlackBox
-		or ./run-BlackBox1
 
 Files:
 	original:

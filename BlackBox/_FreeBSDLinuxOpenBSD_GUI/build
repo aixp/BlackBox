@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./run-dev0 <<DATA
+./run-dev <<DATA
 ConsCompiler.Compile('Lin/Mod', 'Dl.txt')
 ConsCompiler.Compile('Lin/Mod', 'Libc.txt')
 ConsCompiler.Compile('Lin/Mod', 'Iconv.txt')
@@ -41,7 +41,7 @@ DevCompiler.CompileThis In Out Integers
 DevCompiler.CompileThis Config Init
 
 ### Dev:
-DevCompiler.CompileThis DevMarkers DevCommanders DevSelectors DevCPM DevCPT DevCPH DevCPB DevCPE DevCPS DevCPP DevCPL486 DevCPC486 DevCPV486 DevCompiler DevElfLinker16 DevLinker
+DevCompiler.CompileThis DevMarkers DevCommanders DevSelectors DevCPM DevCPT DevCPH DevCPB DevCPE DevCPS DevCPP DevCPL486 DevCPC486 DevCPV486 DevCompiler DevElfLinker16 DevLinker DevBootLinker
 DevCompiler.CompileThis ConsInterp ConsCompiler
 DevCompiler.CompileThis DevAlienTool DevDebug DevDependencies DevHeapSpy DevInspector DevLinkChk DevMsgSpy DevRBrowser DevReferences DevSearch DevSubTool DevCmds DevBrowser
 DevCompiler.CompileThis HostPackedFiles DevPacker

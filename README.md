@@ -3,7 +3,8 @@
 
 ## Tested on
 
-* OpenBSD 6.2
+* Arch Linux
+* OpenBSD 7.7
 * Fedora Core 17
 * Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
 * FreeBSD 11.0
@@ -28,15 +29,6 @@ cd BlackBox
 
 Configurations available: `CLI`, `GUI`
 
-Compile DevElfLinker16 ELF `.so` loader executable:
-
-```sh
-cd BlackBox/Lin/Rsrc/loader
-make clean
-make
-mv loader ../../../_$(uname -s)_/Lin/Rsrc/loader/
-```
-
 Compile `exe.img` (required for DevBootLinker):
 
 ```sh
@@ -53,14 +45,14 @@ cd BlackBox
 ./build
 ```
 
-Create the standalone development bundle (`dev0`):
+Create the standalone development bundle (`dev`):
 
 ```sh
 cd BlackBox
-./pack-dev0
+./pack-dev
 ```
 
-`dev0` is a self-contained executable including compiler, linker, and other essential tools required to bootstrap the build process.
+`dev` is a self-contained executable including compiler, linker, and other essential tools required to bootstrap the build process.
 
 ## Install runtime dependencies
 
@@ -70,29 +62,17 @@ Ubuntu:
 sudo apt-get install libgtk2.0-0:i386
 ```
 
+OpenBSD:
+
+```sh
+doas pkg_add libiconv gtk+2
+```
+
 ## Run
-
-There are 3 methods to run the framework:
-
-1. DevElfLinker16-based:
 
 ```sh
 cd BlackBox
 ./run-BlackBox
-```
-
-2. Dev2Linker-based:
-
-```sh
-cd BlackBox
-./run-BlackBox1
-```
-
-3. DevBootLinker-based:
-
-```sh
-cd BlackBox
-./run-BlackBox2
 ```
 
 ## Authors

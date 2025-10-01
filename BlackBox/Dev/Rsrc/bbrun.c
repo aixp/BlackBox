@@ -10,6 +10,7 @@
 #include <sys/mman.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <assert.h>
 
 /* #define BB_FILE "bb.boot" */
 #define BB_FILE argv[0]
@@ -97,7 +98,7 @@ typedef struct ImpList {
 typedef struct ModSpec {
     ImpList* imp;
     String name;
-    int start, hs, ms, ds, cs, vs, mad, dad;
+    int start, hs, ds, ms, cs, vs, dad, mad, cad, vad;
 } ModSpec;
 
 typedef struct BootInfo {
@@ -119,38 +120,56 @@ int newRecFP, newArrFP;
 
 static void donothing(char* fmt, ...) {}
 
-static void *AllocMem (size_t size, bool mark_exec) {
-    // Allocate memory (zero-initialized)
-    void *mem = calloc(1, size);
-    if (!mem) {
-        perror("calloc");
+static void *AllocMem (size_t size) {
+    size_t pagesize = getpagesize();
+
+    size_t len = (size + pagesize - 1) & ~(pagesize - 1);
+
+    void *mem = mmap(NULL, len, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (mem == MAP_FAILED) {
+        perror("mmap");
         return NULL;
     }
 
-    if (mark_exec)  {
-        // Make entire memory region executable
-        size_t pagesize = getpagesize();
-        uintptr_t start = (uintptr_t)mem & ~(pagesize - 1); // page-aligned start
-        uintptr_t end = (uintptr_t)mem + size;
-        size_t len = end - start;
-        // Round up to full pages
-        len = (len + pagesize - 1) & ~(pagesize - 1);
-
-        if (mprotect((void *)start, len, PROT_READ | PROT_WRITE | PROT_EXEC) != 0) {
-            perror("mprotect");
-            free(mem);
-            return NULL;
-        }
-    }
+    // NOTE:
+    // Memory returned is page-aligned (guaranteed by mmap)
+    // Memory is zero-filled (guaranteed for MAP_ANONYMOUS)
+    // To free this memory, use: munmap(mem, len)
 
     return mem;
+}
+
+static bool FreeMem (void *mem, size_t size) {
+    if (mem != NULL) {
+        size_t pagesize = getpagesize();
+        if (!munmap(mem, (size + pagesize - 1) & ~(pagesize - 1))) {
+            perror("munmap");
+            return false;
+        }
+    }
+    return true;
 }
 
 static void DumpMod()
 {
     dprintf("\n\n---- Mod info:\n");
-    dprintf("        hs, ms, ds, cs, vs = %d, %d, %d, %d, %d\n", mod.hs, mod.ms, mod.ds, mod.cs, mod.vs);
-    dprintf("        mad, dad = %d, %d\n\n", mod.mad, mod.dad);
+    dprintf("        hs = %d\n", mod.hs);
+    dprintf("        dad = %p, ds = %d\n", (void *)mod.dad, mod.ds);
+    dprintf("        mad = %p, ms = %d\n", (void *)mod.mad, mod.ms);
+    dprintf("        cad = %p, cs = %d\n", (void *)mod.cad, mod.cs);
+    dprintf("        vad = %p, vs = %d\n\n", (void *)mod.vad, mod.vs);
+}
+
+static void DumpModule (const Module *m) {
+
+    dprintf("Module %s\n", m->name);
+    dprintf("    opts = 0x%08x\n", m->opts);
+    dprintf("    ext = %d\n", m->ext);
+    dprintf("    term = %p\n", (void *)m->term);
+    dprintf("    nofimps = %d, nofptrs = %d\n", m->nofimps, m->nofptrs);
+    dprintf("    csize = %d, dsize = %d, rsize = %d\n", m->csize, m->dsize, m->rsize);
+    dprintf("    code = %p, data = %p, refs = %p\n", (void *)m->code, (void *)m->data, (void *)m->refs);
+    dprintf("    procBase = %p, varBase = %p\n", (void *)m->procBase, (void *)m->varBase);
 }
 
 static void RegisterModule()
@@ -299,7 +318,7 @@ static void Fixup (int adr)
             if (link > 0)
             {
                 dprintf("c");
-                linkadr = mod.mad + mod.ms + link;
+                linkadr = mod.cad + link;
             }
             else
             {
@@ -359,7 +378,7 @@ static int ReadBootHeader()
     return 1;
 }
 
-static int ReadHeader ()
+static bool ReadHeader ()
 {
     int ofTag, i, nofImps, processor;
     // char str[80];
@@ -370,7 +389,7 @@ static int ReadHeader ()
     if (ofTag != 0x6F4F4346)
     {
         printf("wrong object file version\n");
-        return 0;
+        return false;
     }
     processor = Read4();
     mod.hs = Read4();
@@ -389,7 +408,7 @@ static int ReadHeader ()
     mod.imp = NULL;
     for (i = 0; i < nofImps; i++)
     {
-        imp = (ImpList*)AllocMem(sizeof(ImpList), false);
+        imp = (ImpList*)AllocMem(sizeof(ImpList)); assert(imp != NULL);
         ReadName(imp->name);
         if (mod.imp == NULL)
             mod.imp = imp;
@@ -405,17 +424,55 @@ static int ReadHeader ()
             n++;
             if (!LoadDll(n)){
                 printf("Could not load lib: %s\n", imp->name);
-                return 0;
+                return false;
             }
         }
     }
     dprintf("Pos: %ld\n", ftell(f));
-    return 1;
+    return true;
 }
 
-static int ReadModule ()
+static bool AllocModMem () {
+    assert(mod.ds != 0);
+    assert(mod.ms != 0);
+    assert(mod.cs != 0);
+    mod.dad = (int) AllocMem(mod.ds);
+    mod.mad = (int) AllocMem(mod.ms);
+    mod.cad = (int) AllocMem(mod.cs);
+    if (mod.vs != 0) {
+        mod.vad = (int) AllocMem(mod.vs);
+    } else {
+        mod.vad = 0;
+    }
+    if ((mod.dad == 0) || (mod.mad == 0) || (mod.cad == 0) || ((mod.vad == 0) && (mod.vs != 0)))
+    {
+        bool ok;
+        ok = FreeMem((void *)mod.dad, mod.ds); assert(ok); mod.dad = 0;
+        ok = FreeMem((void *)mod.mad, mod.ms); assert(ok); mod.mad = 0;
+        ok = FreeMem((void *)mod.cad, mod.cs); assert(ok); mod.cad = 0;
+        ok = FreeMem((void *)mod.vad, mod.vs); assert(ok); mod.vad = 0;
+        return false;
+    }
+    return true;
+}
+
+static bool FixModMemPermissions () {
+    assert(mod.ms != 0);
+    assert(mod.cs != 0);
+    if (mprotect((void *)mod.mad, mod.ms, PROT_READ) != 0) {
+        perror("mprotect");
+        return false;
+    }
+    if (mprotect((void *)mod.cad, mod.cs, PROT_READ | PROT_EXEC) != 0) {
+        perror("mprotect");
+        return false;
+    }
+    return true;
+}
+
+static bool ReadModule ()
 {
-    char *dp, *mp;
+    char *dp, *mp, *cp;
     unsigned int cnt;
     ImpList* imp;
     int x, fp, opt, ofp, imptab, a;
@@ -426,25 +483,20 @@ static int ReadModule ()
     int isLib;
     char* im;
 
-    mod.dad = (int) AllocMem(mod.ds, false);
-    mod.mad = (int) AllocMem(mod.ms + mod.cs + mod.vs, true);
-    if ((mod.dad == 0) || (mod.mad == 0))
-    {
+    if (!AllocModMem()) {
         printf("BootLoader: Couldn't initalize heap\n");
-        free((void*)mod.dad);
-        free((void*)mod.mad);
-        return 0;
+        return false;
     }
     dp = (char*) mod.dad;
     mp = (char*) mod.mad;
+    cp = (char*) mod.cad;
     fseek(f, mod.start + mod.hs, SEEK_SET);
     dprintf("ReadModule after fseek pos: %ld\n", ftell(f));
     cnt = fread(mp, 1, mod.ms, f);
     dprintf("Read meta bulk (%d bytes. New pos: %ld)\n", cnt, ftell(f));
     cnt = fread(dp, 1, mod.ds, f);
     dprintf("Read desc bulk (%d bytes. New pos: %ld)\n", cnt, ftell(f));
-    mp = (char*)(mod.mad + mod.ms);
-    cnt = fread(mp, 1, mod.cs, f);
+    cnt = fread(cp, 1, mod.cs, f);
     dprintf("Read code bulk (%d bytes. New pos: %ld)\n", cnt, ftell(f));
     DumpMod();
     dprintf("before fixup: pos = %ld\n", ftell(f));
@@ -470,8 +522,8 @@ static int ReadModule ()
     Fixup(newArrAdr);
     Fixup(mod.mad);
     Fixup(mod.dad);
-    Fixup(mod.mad + mod.ms);
-    Fixup(mod.mad + mod.ms + mod.cs);
+    Fixup(mod.cad);
+    Fixup(mod.vad);
     dprintf("after fixup: pos = %ld\n", ftell(f));
     imp = mod.imp;
     imptab = (int)((Module*)(mod.dad))->imports;
@@ -484,7 +536,7 @@ static int ReadModule ()
             desc = ThisModule(imp->name);
             if (desc == NULL){
                 printf("invalid import list\n");
-                return 0;
+                return false;
             }
         }
         while (x != 0) {
@@ -502,7 +554,7 @@ static int ReadModule ()
                         if (opt % 2 == 1) ofp = obj->offs;
                         if ((opt > 1) && ((obj->id / 16) % 16 != mExported)){
                             printf("object not found (%s)\n", imp->name);
-                            return 0;
+                            return false;
                         }
                         Fixup((int)obj->ostruct);
                         break;
@@ -515,12 +567,12 @@ static int ReadModule ()
 
                     if (ofp != fp){
                         printf("illigal foot print (%s)\n", imp->name);
-                        return 0;
+                        return false;
                     }
                 } else {
                     if (obj == NULL) printf("obj == NULL\n");
                     printf("descriptor not found (%s, x: %d, id: %d)\n", name, x, obj->id);
-                    return 0;
+                    return false;
                 }
             }else{
                 if ((x == mVar)  || (x == mProc)){
@@ -530,7 +582,7 @@ static int ReadModule ()
                     if (a != 0) Fixup(a);
                     else{
                         printf("ReadModule: Object not found: %s\n", name);
-                        return 0;
+                        return false;
                     }
                 } else {
                     if (x == mTyp) {
@@ -538,7 +590,7 @@ static int ReadModule ()
                         x = RNum();
                         if (x != 0) {
                             printf("ReadModule: Object not found: %s\n", name);
-                            return 0;
+                            return false;
                         }
                     }
                 }
@@ -549,25 +601,53 @@ static int ReadModule ()
         imp = imp->next;
     }
 
+    if (!FixModMemPermissions()) {
+        return false;
+    }
+
     mod.start = ftell(f);
-    return 1;
+    return true;
+}
+
+/*
+    Reserve space for 0x80000000 cross border
+    This space must not be accessed by GC
+
+    ref.: https://forum.oberoncore.ru/viewtopic.php?f=134&t=6959#p118177
+*/
+static void ReserveCrossBorder () {
+    size_t pagesize = (size_t)getpagesize();
+    void *addr_0 = (void *)(0x80000000UL - pagesize);
+    void *addr_1 = (void *)0x80000000UL;
+    void *p;
+    p = mmap(addr_0, pagesize, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    if ((p != MAP_FAILED) && (p != addr_0)) {
+        munmap(p, pagesize);
+    }
+    p = mmap(addr_1, pagesize, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    if ((p != MAP_FAILED) && (p != addr_1)) {
+        munmap(p, pagesize);
+    }
 }
 
 int main (int argc, char *argv[])
 {
-    int i, ok;
+    int i;
+    bool ok;
     BodyProc body;
     // int callBackAdr;
     Module *k, *m;
 
+    ReserveCrossBorder();
+
     modlist = NULL;
-    dprintf("initializing BlackBox for Linux...\n");
+    dprintf("initializing BlackBox...\n");
     f = fopen(BB_FILE, "rb");
     if (f != NULL)
     {
         if (ReadBootHeader())
         {
-            i = 0; ok = 1;
+            i = 0; ok = true;
             while ((i < nofMods) && (ok)){
                 ok = ReadHeader();
                 if (ok) {
@@ -593,15 +673,20 @@ int main (int argc, char *argv[])
                         printf("no main module");
                     else
                     {
-                        /* assign the boot info to first variable in Kernel */
-                        bootInfo = AllocMem(sizeof(BootInfo), false);
-                        bootInfo->modList = modlist;
-                        bootInfo->argc = argc;
-                        bootInfo->argv = argv;
-                        *((int*)(k->varBase)) = (int)bootInfo;
-                        dprintf("before body\n");
+                        if ((void *)k->varBase != NULL) {
+                            /* assign the boot info to first variable in Kernel */
+                            bootInfo = AllocMem(sizeof(BootInfo)); assert(bootInfo != NULL);
+                            bootInfo->modList = modlist;
+                            bootInfo->argc = argc;
+                            bootInfo->argv = argv;
+                            *((int*)(k->varBase)) = (int)bootInfo;
+                        } else {
+                            printf("vars is empty => bootInfo not assigned\n");
+                        }
                         body = (BodyProc)(m->code);
                         k->opts = k->opts | init; /* include init in opts */
+                        DumpModule(k);
+                        dprintf("before body\n");
                         body();
                         dprintf("after body\n");
                     }

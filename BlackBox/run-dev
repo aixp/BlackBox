@@ -7,12 +7,7 @@ rn=`readlink -f "${0}"`
 pd=`dirname "${rn}"`
 sd=`readlink -f .`
 
-exe="BlackBox2.run"
-
-# fix Ubuntu-specific problems:
-unset UBUNTU_MENUPROXY
-unset GTK_MODULES
-export LIBOVERLAY_SCROLLBAR=0
+exe="dev.run"
 
 # export LD_DEBUG=all
 exec env \

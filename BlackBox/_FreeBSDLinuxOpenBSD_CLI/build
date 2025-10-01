@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./run-dev0 <<DATA
+./run-dev <<DATA
 ConsCompiler.Compile('Lin/Mod', 'Dl.txt')
 ConsCompiler.Compile('Lin/Mod', 'Libc.txt')
 ConsCompiler.Compile('Lin/Mod', 'Iconv.txt')
@@ -36,7 +36,7 @@ DevCompiler.CompileThis StdLog
 DevCompiler.CompileThis Out
 DevCompiler.CompileThis ConsLog
 
-DevCompiler.CompileThis DevMarkers DevCommanders DevSelectors DevCPM DevCPT DevCPH DevCPB DevCPE DevCPS DevCPP DevCPL486 DevCPC486 DevCPV486 DevCompiler DevElfLinker16 DevLinker
+DevCompiler.CompileThis DevMarkers DevCommanders DevSelectors DevCPM DevCPT DevCPH DevCPB DevCPE DevCPS DevCPP DevCPL486 DevCPC486 DevCPV486 DevCompiler DevElfLinker16 DevLinker DevBootLinker
 DevCompiler.CompileThis ConsCompiler
 
 DevCompiler.CompileThis StdInterpreter
@@ -51,7 +51,7 @@ DevCompiler.CompileThis ConsInterp
 
 DevCompiler.CompileThis Init Config
 
-DevElfLinker.LinkDll libBB.so := Kernel+ Files HostFiles StdLoader
+#DevElfLinker.LinkDll libBB.so := Kernel+ Files HostFiles StdLoader
 
 DevCompiler.CompileThis HostPackedFiles DevPacker
 
@@ -68,12 +68,11 @@ DevCompiler.CompileThis ObxHello0 ObxPi ObxRandom ObxTrap
 ### Dev2
 
 DevCompiler.CompileThis Dev2LnkBase Dev2LnkLoad Dev2LnkWritePe Dev2LnkWriteElf Dev2LnkWriteElfStatic Dev2Linker Dev2Linker1
-Dev2Linker1.LinkElf `uname -s` BlackBox1.run := Kernel$+ Files HostFiles StdLoader
+#Dev2Linker1.LinkElf `uname -s` BlackBox1.run := Kernel$+ Files HostFiles StdLoader
 
 ### DevBootLinker
 
-DevCompiler.CompileThis DevBootLinker
-DevBootLinker.Link BlackBox2.run := Kernel+$ Files HostFiles StdLoader ~
+DevBootLinker.Link BlackBox.run := Kernel+$ Files HostFiles StdLoader ~
 DATA
 
-chmod +x BlackBox1.run BlackBox2.run
+chmod +x BlackBox.run
