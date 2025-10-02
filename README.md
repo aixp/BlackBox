@@ -7,7 +7,7 @@
 * OpenBSD 7.7
 * Fedora Core 17
 * Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
-* FreeBSD 11.0
+* FreeBSD 14.3
 
 ## Install build dependencies
 

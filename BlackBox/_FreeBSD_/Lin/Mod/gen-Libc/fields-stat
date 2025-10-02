@@ -1,10 +1,12 @@
-			(* FreeBSD 9.0 /usr/include/sys/stat.h *)
+			(* FreeBSD 14.3 /usr/include/sys/stat.h *)
 				st_dev*: dev_t; (* inode's device *)
 				st_ino*: ino_t; (* inode's number *)
-				st_mode*: mode_t; (* inode protection mode *)
 				st_nlink*: nlink_t; (* number of hard links *)
+				st_mode*: mode_t; (* inode protection mode *)
+				st_bsdflags*: int16_t; (* misc system flags *)
 				st_uid*: uid_t; (* user ID of the file's owner *)
 				st_gid*: gid_t; (* group ID of the file's group *)
+				st_padding1: int32_t;
 				st_rdev*: dev_t; (* device type *)
 
 (*
@@ -12,24 +14,23 @@
 				st_mtim: timespec_t; (* time of last data modification *)
 				st_ctim: timespec_t; (* time of last file status change *)
 *)
+				st_atim_ext: int32_t;
 				st_atime*: time_t;
 				st_atimensec*: long;
+				st_mtim_ext: int32_t;
 				st_mtime*: time_t;
 				st_mtimensec*: long;
+				st_ctim_ext: int32_t;
 				st_ctime*: time_t;
 				st_ctimensec*: long;
+
+				st_btim_ext: int32_t;
+				st_birthtim: timespec_t; (* time of file creation *)
 
 				st_size*: off_t; (* file size, in bytes *)
 				st_blocks*: blkcnt_t; (* blocks allocated for file *)
 				st_blksize*: blksize_t; (* optimal blocksize for I/O *)
 				st_flags*: fflags_t; (* user defined flags for file *)
-				st_gen*: uint32_t; (* file generation number *)
-				st_lspare*: int32_t;
-
-(*
-				st_birthtim: timespec_t; (* time of file creation *)
-*)
-				__st_birthtime*: time_t;
-				__st_birthtimensec*: long;
-
-				___pad: ARRAY [untagged] 2 OF INTEGER; (* FreeBSD 9.0: sizeof(struct stat) = 96 B *)
+				st_gen*: uint64_t; (* file generation number *)
+				st_filerev*: uint64_t; (* file revision, incr on changes *)
+				st_spare*: ARRAY [untagged] 9 OF uint64_t;
