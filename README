@@ -64,7 +64,6 @@ Files:
 		OpenBUGS (http://www.openbugs.net/):
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
-			Docu/OpenBUGS-License.odc
 		linref:
 			Dev/Mod/BootLinker.odc
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
