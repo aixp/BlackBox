@@ -45,7 +45,7 @@ Files:
 			Comm/Mod/Streams.odc
 			Comm/Docu/*
 			Dev/Mod/*
-				all except ElfLinker16
+				all except ElfLinker16 and BootLinker
 			Dev/Docu/*
 				all except ElfLinker
 			Dev/Rsrc/*
