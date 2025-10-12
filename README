@@ -6,7 +6,7 @@ Tested on:
 	OpenBSD 7.7
 	Fedora Core 17
 	Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
-	FreeBSD 11.0
+	FreeBSD 14.3
 
 Status:
 	non-GUI part: stable, but TODO list is not empty
@@ -65,6 +65,8 @@ Files:
 			Dev/Mod/ElfLinker16.odc
 			Dev/Docu/ElfLinker.odc
 			Docu/OpenBUGS-License.odc
+		linref:
+			Dev/Mod/BootLinker.odc
 		http://forum.oberoncore.ru/viewtopic.php?f=34&t=1159&sid=3e82517160caa46c64331178c1b61e95:
 			_FreeBSDLinuxOpenBSD_/System/Mod/Kernel_so_init.odc
 		http://oberoncore.ru/projects/bb16ru-kras/:
@@ -206,5 +208,3 @@ Notes:
 			BB_PRIMARY_DIR
 			BB_SECONDARY_DIR (was: /USE command line option)
 			BB_PACKED_NAME
-
-Alexander V. Shiryaev, 2019

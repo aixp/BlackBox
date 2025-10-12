@@ -74,7 +74,3 @@ doas pkg_add libiconv gtk+2
 cd BlackBox
 ./run-BlackBox
 ```
-
-## Authors
-
-Alexander Shiryaev, 2025
