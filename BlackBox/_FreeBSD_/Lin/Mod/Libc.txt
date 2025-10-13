@@ -399,7 +399,7 @@ MODULE LinLibc ["libc.so.7"];
 				sc_esp*: int;
 				sc_ss*: int;
 				sc_len*: int; (* sizeof(mcontext_t) *)
-				
+
 				(*
 				 * XXX - See <machine/ucontext.h> and <machine/npx.h> for
 				 *       the following fields.
@@ -450,20 +450,12 @@ MODULE LinLibc ["libc.so.7"];
 				st_padding1: int32_t;
 				st_rdev*: dev_t; (* device type *)
 
-(*
-				st_atim: timespec_t; (* time of last access *)
-				st_mtim: timespec_t; (* time of last data modification *)
-				st_ctim: timespec_t; (* time of last file status change *)
-*)
 				st_atim_ext: int32_t;
-				st_atime*: time_t;
-				st_atimensec*: long;
+				st_atim*: timespec_t; (* time of last access *)
 				st_mtim_ext: int32_t;
-				st_mtime*: time_t;
-				st_mtimensec*: long;
+				st_mtim*: timespec_t; (* time of last data modification *)
 				st_ctim_ext: int32_t;
-				st_ctime*: time_t;
-				st_ctimensec*: long;
+				st_ctim*: timespec_t; (* time of last file status change *)
 
 				st_btim_ext: int32_t;
 				st_birthtim: timespec_t; (* time of file creation *)
