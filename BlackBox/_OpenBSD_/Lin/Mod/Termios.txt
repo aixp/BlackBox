@@ -1,7 +1,7 @@
 MODULE LinTermios ["libc.so.100"];
 
 	(*
-		A. V. Shiryaev, 2012.11, 2013.08, 2015.09
+		Alexander Shiryaev, 2012.11, 2013.08, 2015.09
 
 		OpenBSD 7.7
 		32-bit

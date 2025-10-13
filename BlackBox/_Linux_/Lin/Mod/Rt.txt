@@ -1,7 +1,7 @@
 MODULE LinRt ["librt.so.1"];
 
 	(*
-		A. V. Shiryaev, 2013.12
+		Alexander Shiryaev, 2013.12
 
 		GNU/Linux
 		32-bit
