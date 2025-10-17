@@ -436,8 +436,9 @@ static bool AllocModMem () {
     assert(mod.ds != 0);
     assert(mod.ms != 0);
     assert(mod.cs != 0);
+    int ms = sizeof(int) + mod.ms;
     mod.dad = (int) AllocMem(mod.ds);
-    mod.mad = (int) AllocMem(mod.ms);
+    mod.mad = (int) AllocMem(ms);
     mod.cad = (int) AllocMem(mod.cs);
     if (mod.vs != 0) {
         mod.vad = (int) AllocMem(mod.vs);
@@ -448,18 +449,20 @@ static bool AllocModMem () {
     {
         bool ok;
         ok = FreeMem((void *)mod.dad, mod.ds); assert(ok); mod.dad = 0;
-        ok = FreeMem((void *)mod.mad, mod.ms); assert(ok); mod.mad = 0;
+        ok = FreeMem((void *)mod.mad, ms); assert(ok); mod.mad = 0;
         ok = FreeMem((void *)mod.cad, mod.cs); assert(ok); mod.cad = 0;
         ok = FreeMem((void *)mod.vad, mod.vs); assert(ok); mod.vad = 0;
         return false;
     }
+    *((int*)mod.mad) = ms;
+    mod.mad += sizeof(int);
     return true;
 }
 
 static bool FixModMemPermissions () {
     assert(mod.ms != 0);
     assert(mod.cs != 0);
-    if (mprotect((void *)mod.mad, mod.ms, PROT_READ) != 0) {
+    if (mprotect((void *)(mod.mad - sizeof(int)), sizeof(int) + mod.ms, PROT_READ) != 0) {
         perror("mprotect");
         return false;
     }
