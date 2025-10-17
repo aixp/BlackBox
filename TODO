@@ -1,6 +1,4 @@
 By priority:
-	Kernel.InvalModMem (W^X)
-
 	FreeBSD Kernel.Time: clock -> clock_gettime
 
 	switch-target -> switch-dev0, switch-target?
