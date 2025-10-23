@@ -313,7 +313,6 @@ MODULE LinLibc ["libc.so.7"];
 		rlim_t* = LONGINT;
 		sigjmp_buf* = ARRAY [untagged] 12 OF INTEGER;
 		intFlags* = SET;
-		FILE = ARRAY [untagged] 59 OF INTEGER;
 		fflags_t* = SET;
 		sigset_t* = ARRAY [untagged] 16 OF BYTE;
 		PtrSigset_t* = POINTER [untagged] TO sigset_t;

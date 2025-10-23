@@ -10,7 +10,7 @@ MODULE LinDl ["libc.so.7"];
 	CONST
 		NULL* = 0H;
 
-		(* from FreeBSD 9.0 /usr/include/dlfcn.h *)
+		(* from FreeBSD 14.3 /usr/include/dlfcn.h *)
 			RTLD_LAZY* = 1;
 			RTLD_NOW* = 2;
 

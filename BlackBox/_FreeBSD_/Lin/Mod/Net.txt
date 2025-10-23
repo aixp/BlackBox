@@ -1,7 +1,7 @@
 MODULE LinNet ["libc.so.7"];
 
 	(*
-		FreeBSD 11.0
+		FreeBSD 14.3
 		i386
 	*)
 
@@ -15,90 +15,333 @@ MODULE LinNet ["libc.so.7"];
 		INADDR_ANY* = 0;
 
 		(* socket domains *)
-			AF_UNSPEC* = 0; (* unspecified *)
-			AF_UNIX* = 1; (* standardized name for AF_LOCAL *)
-			AF_INET* = 2; (* internetwork: UDP, TCP, etc. *)
-			AF_INET6* = 28; (* IPv6 *)
+		AF_APPLETALK* = 16;
+		PF_APPLETALK* = AF_APPLETALK;
+		AF_ARP* = 35;
+		PF_ARP* = AF_ARP;
+		AF_ATM* = 30;
+		PF_ATM* = AF_ATM;
+		AF_BLUETOOTH* = 36;
+		PF_BLUETOOTH* = AF_BLUETOOTH;
+		AF_CCITT* = 10;
+		PF_CCITT* = AF_CCITT;
+		AF_CHAOS* = 5;
+		PF_CHAOS* = AF_CHAOS;
+		AF_CNT* = 21;
+		PF_CNT* = AF_CNT;
+		AF_COIP* = 20;
+		PF_COIP* = AF_COIP;
+		AF_DATAKIT* = 9;
+		PF_DATAKIT* = AF_DATAKIT;
+		AF_DECnet* = 12;
+		PF_DECnet* = AF_DECnet;
+		AF_DIVERT* = 44;
+		PF_DIVERT* = AF_DIVERT;
+		AF_DLI* = 13;
+		PF_DLI* = AF_DLI;
+		AF_ECMA* = 8;
+		PF_ECMA* = AF_ECMA;
+		AF_HYLINK* = 15;
+		PF_HYLINK* = AF_HYLINK;
+		AF_IEEE80211* = 37;
+		PF_IEEE80211* = AF_IEEE80211;
+		AF_IMPLINK* = 3;
+		PF_IMPLINK* = AF_IMPLINK;
+		AF_INET* = 2;
+		PF_INET* = AF_INET;
+		AF_INET6* = 28;
+		PF_INET6* = AF_INET6;
+		AF_INET6_SDP* = 42;
+		PF_INET6_SDP* = AF_INET6_SDP;
+		AF_INET_SDP* = 40;
+		PF_INET_SDP* = AF_INET_SDP;
+		AF_IPX* = 23;
+		PF_IPX* = AF_IPX;
+		AF_ISDN* = 26;
+		PF_ISDN* = AF_ISDN;
+		AF_ISO* = 7;
+		PF_ISO* = AF_ISO;
+		PF_KEY* = 27;
+		AF_LAT* = 14;
+		PF_LAT* = AF_LAT;
+		AF_LINK* = 18;
+		PF_LINK* = AF_LINK;
+		AF_UNIX* = 1;
+		AF_LOCAL* = AF_UNIX;
+		PF_LOCAL* = AF_LOCAL;
+		AF_MAX* = 44;
+		PF_MAX* = AF_MAX;
+		AF_NATM* = 29;
+		PF_NATM* = AF_NATM;
+		AF_NETBIOS* = 6;
+		PF_NETBIOS* = AF_NETBIOS;
+		AF_NETGRAPH* = 32;
+		PF_NETGRAPH* = AF_NETGRAPH;
+		AF_NETLINK* = 38;
+		PF_NETLINK* = AF_NETLINK;
+		PF_OSI* = AF_ISO;
+		PF_PIP* = 25;
+		AF_PUP* = 4;
+		PF_PUP* = AF_PUP;
+		AF_ROUTE* = 17;
+		PF_ROUTE* = AF_ROUTE;
+		PF_RTIP* = 22;
+		AF_SCLUSTER* = 34;
+		PF_SCLUSTER* = AF_SCLUSTER;
+		AF_SIP* = 24;
+		PF_SIP* = AF_SIP;
+		AF_SLOW* = 33;
+		PF_SLOW* = AF_SLOW;
+		AF_SNA* = 11;
+		PF_SNA* = AF_SNA;
+		PF_UNIX* = PF_LOCAL;
+		AF_UNSPEC* = 0;
+		PF_UNSPEC* = AF_UNSPEC;
+		PF_XTP* = 19;
 
 		(* socket types *)
-			SOCK_STREAM* = 1; (* stream socket *)
-			SOCK_DGRAM* = 2; (* datagram socket *)
-			SOCK_RAW* = 3; (* raw-protocol interface *)
-			SOCK_SEQPACKET* = 5; (* sequenced packet stream *)
+		SOCK_CLOEXEC* = 10000000H;
+		SOCK_DGRAM* = 2;
+		SOCK_MAXADDRLEN* = 255;
+		SOCK_NONBLOCK* = 20000000H;
+		SOCK_RAW* = 3;
+		SOCK_RDM* = 4;
+		SOCK_SEQPACKET* = 5;
+		SOCK_STREAM* = 1;
 
 		(* socket protocols *)
-			IPPROTO_IP* = 0; (* dummy for IP *)
-			IPPROTO_ICMP* = 1; (* control message protocol *)
-			IPPROTO_TCP* = 6; (* tcp *)
-			IPPROTO_UDP* = 17; (* user datagram protocol *)
+		IPPROTO_3PC* = 34;
+		IPPROTO_ADFS* = 68;
+		IPPROTO_AH* = 51;
+		IPPROTO_AHIP* = 61;
+		IPPROTO_APES* = 99;
+		IPPROTO_ARGUS* = 13;
+		IPPROTO_AX25* = 93;
+		IPPROTO_BHA* = 49;
+		IPPROTO_BLT* = 30;
+		IPPROTO_BRSATMON* = 76;
+		IPPROTO_CARP* = 112;
+		IPPROTO_CFTP* = 62;
+		IPPROTO_CHAOS* = 16;
+		IPPROTO_CMTP* = 38;
+		IPPROTO_CPHB* = 73;
+		IPPROTO_CPNX* = 72;
+		IPPROTO_DCCP* = 33;
+		IPPROTO_DDP* = 37;
+		IPPROTO_DGP* = 86;
+		IPPROTO_DIVERT* = 258;
+		IPPROTO_DONE* = 257;
+		IPPROTO_DSTOPTS* = 60;
+		IPPROTO_EGP* = 8;
+		IPPROTO_EMCON* = 14;
+		IPPROTO_ENCAP* = 98;
+		IPPROTO_EON* = 80;
+		IPPROTO_ESP* = 50;
+		IPPROTO_ETHERIP* = 97;
+		IPPROTO_FRAGMENT* = 44;
+		IPPROTO_GGP* = 3;
+		IPPROTO_GMTP* = 100;
+		IPPROTO_GRE* = 47;
+		IPPROTO_HELLO* = 63;
+		IPPROTO_HIP* = 139;
+		IPPROTO_HMP* = 20;
+		IPPROTO_HOPOPTS* = 0;
+		IPPROTO_ICMP* = 1;
+		IPPROTO_ICMPV6* = 58;
+		IPPROTO_IDP* = 22;
+		IPPROTO_IDPR* = 35;
+		IPPROTO_IDRP* = 45;
+		IPPROTO_IGMP* = 2;
+		IPPROTO_IGP* = 85;
+		IPPROTO_IGRP* = 88;
+		IPPROTO_IL* = 40;
+		IPPROTO_INLSP* = 52;
+		IPPROTO_INP* = 32;
+		IPPROTO_IP* = 0;
+		IPPROTO_IPCOMP* = 108;
+		IPPROTO_IPCV* = 71;
+		IPPROTO_IPEIP* = 94;
+		IPPROTO_IPV4* = 4;
+		IPPROTO_IPIP* = IPPROTO_IPV4;
+		IPPROTO_IPPC* = 67;
+		IPPROTO_IPV6* = 41;
+		IPPROTO_IRTP* = 28;
+		IPPROTO_KRYPTOLAN* = 65;
+		IPPROTO_LARP* = 91;
+		IPPROTO_LEAF1* = 25;
+		IPPROTO_LEAF2* = 26;
+		IPPROTO_MAX* = 256;
+		IPPROTO_MEAS* = 19;
+		IPPROTO_MH* = 135;
+		IPPROTO_MHRP* = 48;
+		IPPROTO_MICP* = 95;
+		IPPROTO_MOBILE* = 55;
+		IPPROTO_MPLS* = 137;
+		IPPROTO_MTP* = 92;
+		IPPROTO_MUX* = 18;
+		IPPROTO_ND* = 77;
+		IPPROTO_NHRP* = 54;
+		IPPROTO_NONE* = 59;
+		IPPROTO_NSP* = 31;
+		IPPROTO_NVPII* = 11;
+		IPPROTO_OLD_DIVERT* = 254;
+		IPPROTO_OSPFIGP* = 89;
+		IPPROTO_PFSYNC* = 240;
+		IPPROTO_PGM* = 113;
+		IPPROTO_PIGP* = 9;
+		IPPROTO_PIM* = 103;
+		IPPROTO_PRM* = 21;
+		IPPROTO_PUP* = 12;
+		IPPROTO_PVP* = 75;
+		IPPROTO_RAW* = 255;
+		IPPROTO_RCCMON* = 10;
+		IPPROTO_RDP* = 27;
+		IPPROTO_RESERVED_253* = 253;
+		IPPROTO_RESERVED_254* = 254;
+		IPPROTO_ROUTING* = 43;
+		IPPROTO_RSVP* = 46;
+		IPPROTO_RVD* = 66;
+		IPPROTO_SATEXPAK* = 64;
+		IPPROTO_SATMON* = 69;
+		IPPROTO_SCCSP* = 96;
+		IPPROTO_SCTP* = 132;
+		IPPROTO_SDRP* = 42;
+		IPPROTO_SEND* = 259;
+		IPPROTO_SHIM6* = 140;
+		IPPROTO_SKIP* = 57;
+		IPPROTO_SPACER* = 32767;
+		IPPROTO_SRPC* = 90;
+		IPPROTO_ST* = 7;
+		IPPROTO_SVMTP* = 82;
+		IPPROTO_SWIPE* = 53;
+		IPPROTO_TCF* = 87;
+		IPPROTO_TCP* = 6;
+		IPPROTO_TLSP* = 56;
+		IPPROTO_TP* = 29;
+		IPPROTO_TPXX* = 39;
+		IPPROTO_TRUNK1* = 23;
+		IPPROTO_TRUNK2* = 24;
+		IPPROTO_TTP* = 84;
+		IPPROTO_UDP* = 17;
+		IPPROTO_UDPLITE* = 136;
+		IPPROTO_VINES* = 83;
+		IPPROTO_VISA* = 70;
+		IPPROTO_VMTP* = 81;
+		IPPROTO_WBEXPAK* = 79;
+		IPPROTO_WBMON* = 78;
+		IPPROTO_WSN* = 74;
+		IPPROTO_XNET* = 15;
+		IPPROTO_XTP* = 36;
 
 		(* socket options *)
-			SO_DEBUG* = {0}; (* turn on debugging info recording *)
-			SO_ACCEPTCONN* = {1}; (* socket has had listen() *)
-			SO_REUSEADDR* = {2}; (* allow local address reuse *)
-			SO_KEEPALIVE* = {3}; (* keep connections alive *)
-			SO_DONTROUTE* = {4}; (* just use interface addresses *)
-			SO_BROADCAST* = {5}; (* permit sending of broadcast msgs *)
-			SO_LINGER* = {7}; (* linger on close if data present *)
-			SO_OOBINLINE* = {8}; (* leave received OOB data in line *)
-			SO_NO_OFFLOAD* = {14}; (* socket cannot be offloaded *)
-			SO_NO_DDP* = {15}; (* disable direct data placement *)
-			SO_SNDBUF* = {0,12}; (* send buffer size *)
-			SO_RCVBUF* = {1,12}; (* receive buffer size *)
-			SO_SNDLOWAT* = {0,1,12}; (* send low-water mark *)
-			SO_RCVLOWAT* = {2,12}; (* receive low-water mark *)
-			SO_SNDTIMEO* = {0,2,12}; (* send timeout *)
-			SO_RCVTIMEO* = {1,2,12}; (* receive timeout *)
-			SO_ERROR* = {0..2,12}; (* get error status and clear *)
-			SO_TYPE* = {3,12}; (* get socket type *)
+		SO_ACCEPTCONN* = {1};
+		SO_ACCEPTFILTER* = {12};
+		SO_BINTIME* = {13};
+		SO_BROADCAST* = {5};
+		SO_DEBUG* = {0};
+		SO_DOMAIN* = {0,3,4,12};
+		SO_DONTROUTE* = {4};
+		SO_ERROR* = {0..2,12};
+		SO_FIB* = {2,4,12};
+		SO_KEEPALIVE* = {3};
+		SO_LABEL* = {0,3,12};
+		SO_LINGER* = {7};
+		SO_LISTENINCQLEN* = {0,1,4,12};
+		SO_LISTENQLEN* = {1,4,12};
+		SO_LISTENQLIMIT* = {0,4,12};
+		SO_MAX_PACING_RATE* = {3,4,12};
+		SO_NOSIGPIPE* = {11};
+		SO_NO_DDP* = {15};
+		SO_NO_OFFLOAD* = {14};
+		SO_OOBINLINE* = {8};
+		SO_PEERLABEL* = {4,12};
+		SO_PROTOCOL* = {1,2,4,12};
+		SO_PROTOTYPE* = SO_PROTOCOL;
+		SO_RCVBUF* = {1,12};
+		SO_RCVLOWAT* = {2,12};
+		SO_RCVTIMEO* = {1,2,12};
+		SO_RERROR* = {17};
+		SO_REUSEADDR* = {2};
+		SO_REUSEPORT* = {9};
+		SO_REUSEPORT_LB* = {16};
+		SO_SETFIB* = SO_FIB;
+		SO_SNDBUF* = {0,12};
+		SO_SNDLOWAT* = {0,1,12};
+		SO_SNDTIMEO* = {0,2,12};
+		SO_SPLICE* = {0,1,5,12};
+		SO_TIMESTAMP* = {10};
+		SO_TS_BINTIME* = {0};
+		SO_TS_CLOCK* = {0..2,4,12};
+		SO_TS_MONOTONIC* = {0,1};
+		SO_TS_CLOCK_MAX* = SO_TS_MONOTONIC;
+		SO_TS_REALTIME_MICRO* = {};
+		SO_TS_DEFAULT* = SO_TS_REALTIME_MICRO;
+		SO_TS_REALTIME* = {1};
+		SO_TYPE* = {3,12};
+		SO_USELOOPBACK* = {6};
+		SO_USER_COOKIE* = {0,2,4,12};
+		SO_VENDOR* = {31};
 
-		SHUT_RD* = 0; (* shut down the reading side *)
-		SHUT_WR* = 1; (* shut down the writing side *)
-		SHUT_RDWR* = 2; (* shut down both sides *)
+		SHUT_RD* = 0;
+		SHUT_RDWR* = 2;
+		SHUT_WR* = 1;
 
-		SOL_SOCKET* = 0FFFFH; (* {0..15} *) (* options for socket level *)
+		SOL_SOCKET* = 0FFFFH;
 
-		MSG_OOB* = {0}; (* process out-of-band data *)
-		MSG_PEEK* = {1}; (* peek at incoming message *)
-		MSG_DONTROUTE* = {2}; (* send without using routing tables *)
-		MSG_EOR* = {3}; (* data completes record *)
-		MSG_TRUNC* = {4}; (* data discarded before delivery *)
-		MSG_CTRUNC* = {5}; (* control data lost before delivery *)
-		MSG_WAITALL* = {6}; (* wait for full request or error *)
+		MSG_CMSG_CLOEXEC* = {18};
+		MSG_COMPAT* = {15};
+		MSG_CTRUNC* = {5};
+		MSG_DONTROUTE* = {2};
+		MSG_DONTWAIT* = {7};
+		MSG_EOF* = {8};
+		MSG_EOR* = {3};
+		MSG_NBIO* = {14};
+		MSG_NOSIGNAL* = {17};
+		MSG_NOTIFICATION* = {13};
+		MSG_OOB* = {0};
+		MSG_PEEK* = {1};
+		MSG_TRUNC* = {4};
+		MSG_WAITALL* = {6};
+		MSG_WAITFORONE* = {19};
 
 		SOMAXCONN* = 128;
 
 		(* addrinfo.ai_flags *)
-			AI_PASSIVE* = {0}; (* get address to use bind() *)
-			AI_CANONNAME* = {1}; (* fill ai_canonname *)
-			AI_NUMERICHOST* = {2}; (* prevent host name resolution *)
-			AI_NUMERICSERV* = {3}; (* prevent service name resolution *)
-			AI_ALL* = {8}; (* IPv6 and IPv4-mapped (with AI_V4MAPPED) *)
-			AI_V4MAPPED_CFG* = {9}; (* accept IPv4-mapped if kernel supports *)
-			AI_ADDRCONFIG* = {10}; (* only if any address is assigned *)
-			AI_V4MAPPED* = {11}; (* accept IPv4-mapped IPv6 address *)
+		AI_ADDRCONFIG* = {10};
+		AI_ALL* = {8};
+		AI_CANONNAME* = {1};
+		AI_DEFAULT* = {9,10};
+		AI_MASK* = {0..3,8,10,11};
+		AI_NUMERICHOST* = {2};
+		AI_NUMERICSERV* = {3};
+		AI_PASSIVE* = {0};
+		AI_V4MAPPED* = {11};
+		AI_V4MAPPED_CFG* = {9};
 
 		(* getaddrinfo/getnameinfo/gai_strerror error codes *)
-			EAI_AGAIN* = 2; (* temporary failure in name resolution *)
-			EAI_BADFLAGS* = 3; (* invalid value for ai_flags *)
-			EAI_FAIL* = 4; (* non-recoverable failure in name resolution *)
-			EAI_FAMILY* = 5; (* ai_family not supported *)
-			EAI_MEMORY* = 6; (* memory allocation failure *)
-			EAI_NONAME* = 8; (* hostname nor servname provided, or not known *)
-			EAI_SERVICE* = 9; (* servname not supported for ai_socktype *)
-			EAI_SOCKTYPE* = 10; (* ai_socktype not supported *)
-			EAI_SYSTEM* = 11; (* system error returned in errno *)
-			EAI_BADHINTS* = 12; (* invalid value for hints *)
-			EAI_PROTOCOL* = 13; (* resolved protocol is unknown *)
-			EAI_OVERFLOW* = 14; (* argument buffer overflow *)
-			EAI_MAX* = 15;
+		EAI_ADDRFAMILY* = 1;
+		EAI_AGAIN* = 2;
+		EAI_BADFLAGS* = 3;
+		EAI_BADHINTS* = 12;
+		EAI_FAIL* = 4;
+		EAI_FAMILY* = 5;
+		EAI_MAX* = 15;
+		EAI_MEMORY* = 6;
+		EAI_NODATA* = 7;
+		EAI_NONAME* = 8;
+		EAI_OVERFLOW* = 14;
+		EAI_PROTOCOL* = 13;
+		EAI_SERVICE* = 9;
+		EAI_SOCKTYPE* = 10;
+		EAI_SYSTEM* = 11;
 
-		(* FreeBSD 11.0 /usr/include/sys/select.h *)
+		(* FreeBSD 14.3 /usr/include/sys/select.h *)
 			FD_SETSIZE = 1024;
-			_NFDBITS = 8 * 4;
+			_NFDBITS = 32;
+
 
 	TYPE
-		u_int8_t = SHORTCHAR;
+		uint8_t = SHORTCHAR;
 		int8_t = SHORTCHAR;
 		uint16_t = SHORTINT;
 		(* PtrVoid, int, intFlags, short, socklen_t, size_t, ssize_t, in_addr_t, in_port_t, time_t, suseconds_t, nfds_t, sa_family_t *)
@@ -143,7 +386,7 @@ MODULE LinNet ["libc.so.7"];
 
 		Ptrsockaddr* = POINTER [untagged] TO sockaddr;
 		sockaddr* = RECORD [untagged]
-			(* FreeBSD 11.0 /usr/include/sys/socket.h *)
+			(* FreeBSD 14.3 /usr/include/sys/socket.h *)
 				sa_len*: SHORTCHAR; (* total length *)
 				sa_family*: sa_family_t; (* address family *)
 				sa_data*: ARRAY [untagged] 14 OF SHORTCHAR; (* actually longer; address value *)
@@ -151,18 +394,18 @@ MODULE LinNet ["libc.so.7"];
 
 		Ptrsockaddr_storage = POINTER [untagged] TO sockaddr_storage;
 		sockaddr_storage* = RECORD [untagged]
-			(* FreeBSD 11.0 /usr/include/sys/_sockaddr_storage.h *)
+			(* FreeBSD 14.3 /usr/include/sys/_sockaddr_storage.h *)
 				ss_len*: SHORTCHAR; (* address length *)
 				ss_family*: sa_family_t; (* address family *)
-				__ss_pad1: ARRAY [untagged] 8 - 2 OF SHORTCHAR;
+				__ss_pad1: ARRAY [untagged] 8 - 1 - 1 OF SHORTCHAR;
 				__ss_align: LONGINT; (* force desired struct alignment *)
-				__ss_pad2: ARRAY [untagged] 128 - 1 - 1 - (8 - 2) - 8 OF SHORTCHAR;
+				__ss_pad2: ARRAY [untagged] 128 - 1 - 1 - (8 - 1 - 1) - 8 OF SHORTCHAR;
 		END;
 
 		Ptrsockaddr_in* = POINTER [untagged] TO sockaddr_in;
 		sockaddr_in* = RECORD [untagged]
-			(* FreeBSD 11.0 /usr/include/netinet/in.h *)
-				sin_len*: SHORTCHAR;
+			(* FreeBSD 14.3 /usr/include/netinet/in.h *)
+				sin_len*: uint8_t;
 				sin_family*: sa_family_t;
 				sin_port*: in_port_t;
 				sin_addr*: in_addr;
@@ -171,7 +414,7 @@ MODULE LinNet ["libc.so.7"];
 
 		Ptraddrinfo* = POINTER [untagged] TO addrinfo;
 		addrinfo* = RECORD [untagged]
-			(* FreeBSD 11.0 /usr/include/netdb.h *)
+			(* FreeBSD 14.3 /usr/include/netdb.h *)
 				ai_flags*: intFlags;
 				ai_family*: int;
 				ai_socktype*: int;
@@ -195,7 +438,7 @@ MODULE LinNet ["libc.so.7"];
 				revents*: short;
 		END;
 
-		(* FreeBSD 11.0 /usr/include/sys/select.h *)
+		(* FreeBSD 14.3 /usr/include/sys/select.h *)
 			__fd_mask = SET;
 			fd_set* = ARRAY [untagged] (FD_SETSIZE + (_NFDBITS - 1)) DIV _NFDBITS OF __fd_mask;
 
@@ -207,7 +450,9 @@ MODULE LinNet ["libc.so.7"];
 		PROCEDURE [ccall] getsockname* (s: SOCKET; VAR name: sockaddr; VAR namelen: socklen_t): int;
 		PROCEDURE [ccall] listen* (s: SOCKET; backlog: int): int;
 		PROCEDURE [ccall] recv* (s: SOCKET; buf: PtrVoid; len: size_t; flags: intFlags): ssize_t;
+		PROCEDURE [ccall] recvfrom* (s: SOCKET; buf: PtrVoid; len: size_t; flags: intFlags; VAR from: sockaddr; VAR fromlen: socklen_t): ssize_t;
 		PROCEDURE [ccall] send* (s: SOCKET; msg: PtrVoid; len: size_t; flags: intFlags): ssize_t;
+		PROCEDURE [ccall] sendto* (s: SOCKET; msg: PtrVoid; len: size_t; flags: intFlags; VAR to: sockaddr; tolen: socklen_t): ssize_t;
 		PROCEDURE [ccall] shutdown* (s: SOCKET; how: int): int;
 		PROCEDURE [ccall] getsockopt* (s: SOCKET; level: int; optname: intFlags; optval: PtrVoid; VAR [nil] optlen: socklen_t): int;
 		PROCEDURE [ccall] setsockopt* (s: SOCKET; level: int; optname: intFlags; optval: PtrVoid; optlen: socklen_t): int;
