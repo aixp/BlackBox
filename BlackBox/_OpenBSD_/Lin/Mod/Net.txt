@@ -1,7 +1,7 @@
-MODULE LinNet ["libc.so.100"];
+MODULE LinNet ["libc.so.102"];
 
 	(*
-		OpenBSD 7.7
+		OpenBSD 7.8
 		i386
 	*)
 
@@ -15,166 +15,216 @@ MODULE LinNet ["libc.so.100"];
 		INADDR_ANY* = 0;
 
 		(* socket domains *)
-			AF_UNSPEC* = 0; (* unspecified *)
-			AF_LOCAL* = 1; (* local to host (pipes, portals) *)
-			AF_UNIX* = AF_LOCAL; (* backward compatibility *)
-			AF_INET* = 2; (* internetwork: UDP, TCP, etc. *)
-			AF_IMPLINK* = 3; (* arpanet imp addresses *)
-			AF_PUP* = 4; (* pup protocols: e.g. BSP *)
-			AF_CHAOS* = 5; (* mit CHAOS protocols *)
-			AF_NS* = 6; (* XEROX NS protocols *)
-			AF_ISO* = 7; (* ISO protocols *)
-			AF_ECMA* = 8; (* european computer manufacturers *)
-			AF_DATAKIT* = 9; (* datakit protocols *)
-			AF_CCITT* = 10; (* CCITT protocols, X.25 etc *)
-			AF_SNA* = 11; (* IBM SNA *)
-			AF_DECnet* = 12; (* DECnet *)
-			AF_DLI* = 13; (* DEC Direct data link interface *)
-			AF_LAT* = 14; (* LAT *)
-			AF_HYLINK* = 15; (* NSC Hyperchannel *)
-			AF_APPLETALK* = 16; (* Apple Talk *)
-			AF_ROUTE* = 17; (* Internal Routing Protocol *)
-			AF_LINK* = 18; (* Link layer interface *)
-			AF_COIP* = 20; (* connection-oriented IP, aka ST II *)
-			AF_CNT* = 21; (* Computer Network Technology *)
-			AF_IPX* = 23; (* Novell Internet Protocol *)
-			AF_INET6* = 24; (* IPv6 *)
-			AF_ISDN* = 26; (* Integrated Services Digital Network *)
-			AF_E164* = AF_ISDN; (* CCITT E.164 recommendation *)
-			AF_NATM* = 27; (* native ATM access *)
-			AF_ENCAP* = 28;
-			AF_SIP* = 29; (* Simple Internet Protocol *)
-			AF_KEY* = 30;
-			AF_BLUETOOTH* = 32; (* Bluetooth *)
-			AF_MPLS* = 33; (* MPLS *)
-			AF_MAX* = 36;
+		AF_APPLETALK* = 16;
+		PF_APPLETALK* = AF_APPLETALK;
+		AF_BLUETOOTH* = 32;
+		PF_BLUETOOTH* = AF_BLUETOOTH;
+		PF_BPF* = 31;
+		AF_CCITT* = 10;
+		PF_CCITT* = AF_CCITT;
+		AF_CHAOS* = 5;
+		PF_CHAOS* = AF_CHAOS;
+		AF_CNT* = 21;
+		PF_CNT* = AF_CNT;
+		AF_COIP* = 20;
+		PF_COIP* = AF_COIP;
+		AF_DATAKIT* = 9;
+		PF_DATAKIT* = AF_DATAKIT;
+		AF_DECnet* = 12;
+		PF_DECnet* = AF_DECnet;
+		AF_DLI* = 13;
+		PF_DLI* = AF_DLI;
+		AF_ECMA* = 8;
+		PF_ECMA* = AF_ECMA;
+		AF_ENCAP* = 28;
+		PF_ENCAP* = AF_ENCAP;
+		AF_FRAME* = 36;
+		PF_FRAME* = AF_FRAME;
+		AF_HYLINK* = 15;
+		PF_HYLINK* = AF_HYLINK;
+		AF_IMPLINK* = 3;
+		PF_IMPLINK* = AF_IMPLINK;
+		AF_INET* = 2;
+		PF_INET* = AF_INET;
+		AF_INET6* = 24;
+		PF_INET6* = AF_INET6;
+		AF_IPX* = 23;
+		PF_IPX* = AF_IPX;
+		AF_ISDN* = 26;
+		PF_ISDN* = AF_ISDN;
+		AF_ISO* = 7;
+		PF_ISO* = AF_ISO;
+		AF_KEY* = 30;
+		PF_KEY* = AF_KEY;
+		AF_LAT* = 14;
+		PF_LAT* = AF_LAT;
+		AF_LINK* = 18;
+		PF_LINK* = AF_LINK;
+		AF_UNIX* = 1;
+		AF_LOCAL* = AF_UNIX;
+		PF_LOCAL* = AF_LOCAL;
+		AF_MAX* = 37;
+		PF_MAX* = AF_MAX;
+		AF_MPLS* = 33;
+		PF_MPLS* = AF_MPLS;
+		AF_NATM* = 27;
+		PF_NATM* = AF_NATM;
+		AF_NS* = 6;
+		PF_NS* = AF_NS;
+		PF_OSI* = AF_ISO;
+		PF_PFLOW* = 34;
+		PF_PIP* = 25;
+		PF_PIPEX* = 35;
+		AF_PUP* = 4;
+		PF_PUP* = AF_PUP;
+		AF_ROUTE* = 17;
+		PF_ROUTE* = AF_ROUTE;
+		PF_RTIP* = 22;
+		AF_SIP* = 29;
+		PF_SIP* = AF_SIP;
+		AF_SNA* = 11;
+		PF_SNA* = AF_SNA;
+		PF_UNIX* = AF_UNIX;
+		AF_UNSPEC* = 0;
+		PF_UNSPEC* = AF_UNSPEC;
+		PF_XTP* = 19;
 
 		(* socket types *)
-			SOCK_STREAM* = 1; (* stream socket *)
-			SOCK_DGRAM* = 2; (* datagram socket *)
-			SOCK_RAW* = 3; (* raw-protocol interface *)
-			SOCK_RDM* = 4; (* reliably-delivered message *)
-			SOCK_SEQPACKET* = 5; (* sequenced packet stream *)
+		SOCK_CLOEXEC* = 8000H;
+		SOCK_CLOFORK* = 0800H;
+		SOCK_DGRAM* = 2;
+		SOCK_DNS* = 1000H;
+		SOCK_NONBLOCK* = 4000H;
+		SOCK_RAW* = 3;
+		SOCK_RDM* = 4;
+		SOCK_SEQPACKET* = 5;
+		SOCK_STREAM* = 1;
 
 		(* socket protocols *)
-			IPPROTO_IP* = 0; (* dummy for IP *)
-			IPPROTO_HOPOPTS* = IPPROTO_IP; (* Hop-by-hop option header *)
-			IPPROTO_ICMP* = 1; (* control message protocol *)
-			IPPROTO_IGMP* = 2; (* group mgmt protocol *)
-			IPPROTO_GGP* = 3; (* gateway^2 (deprecated) *)
-			IPPROTO_IPIP* = 4; (* IP inside IP *)
-			IPPROTO_IPV4* = IPPROTO_IPIP; (* IP inside IP *)
-			IPPROTO_TCP* = 6; (* tcp *)
-			IPPROTO_EGP* = 8; (* exterior gateway protocol *)
-			IPPROTO_PUP* = 12; (* pup *)
-			IPPROTO_UDP* = 17; (* user datagram protocol *)
-			IPPROTO_IDP* = 22; (* xns idp *)
-			IPPROTO_TP* = 29; (* tp-4 w/ class negotiation *)
-			IPPROTO_IPV6* = 41; (* IPv6 in IPv6 *)
-			IPPROTO_ROUTING* = 43; (* Routing header *)
-			IPPROTO_FRAGMENT* = 44; (* Fragmentation/reassembly header *)
-			IPPROTO_RSVP* = 46; (* resource reservation *)
-			IPPROTO_GRE* = 47; (* GRE encap, RFCs 1701/1702 *)
-			IPPROTO_ESP* = 50; (* Encap. Security Payload *)
-			IPPROTO_AH* = 51; (* Authentication header *)
-			IPPROTO_MOBILE* = 55; (* IP Mobility, RFC 2004 *)
-			IPPROTO_ICMPV6* = 58; (* ICMP for IPv6 *)
-			IPPROTO_NONE* = 59; (* No next header *)
-			IPPROTO_DSTOPTS* = 60; (* Destination options header *)
-			IPPROTO_EON* = 80; (* ISO cnlp *)
-			IPPROTO_ETHERIP* = 97; (* Ethernet in IPv4 *)
-			IPPROTO_ENCAP* = 98; (* encapsulation header *)
-			IPPROTO_PIM* = 103; (* Protocol indep. multicast *)
-			IPPROTO_IPCOMP* = 108; (* IP Payload Comp. Protocol *)
-			IPPROTO_CARP* = 112; (* CARP *)
-			IPPROTO_MPLS* = 137; (* unicast MPLS packet *)
-			IPPROTO_PFSYNC* = 240; (* PFSYNC *)
-			IPPROTO_RAW* = 255; (* raw IP packet *)
-			IPPROTO_MAX* = 256;
-			IPPROTO_DIVERT* = 258; (* Divert sockets *)
-			IPPROTO_DONE* = 257;
-			IPPROTO_DIVERT_RESP* = 01H; (* {0} *) (* divert response packets *)
-			IPPROTO_DIVERT_INIT* = 02H; (* {1} *) (* divert packets initial direction *)
+		IPPROTO_AH* = 51;
+		IPPROTO_CARP* = 112;
+		IPPROTO_DIVERT* = 258;
+		IPPROTO_DONE* = 257;
+		IPPROTO_DSTOPTS* = 60;
+		IPPROTO_EGP* = 8;
+		IPPROTO_ENCAP* = 98;
+		IPPROTO_EON* = 80;
+		IPPROTO_ESP* = 50;
+		IPPROTO_ETHERIP* = 97;
+		IPPROTO_FRAGMENT* = 44;
+		IPPROTO_GGP* = 3;
+		IPPROTO_GRE* = 47;
+		IPPROTO_IP* = 0;
+		IPPROTO_HOPOPTS* = IPPROTO_IP;
+		IPPROTO_ICMP* = 1;
+		IPPROTO_ICMPV6* = 58;
+		IPPROTO_IDP* = 22;
+		IPPROTO_IGMP* = 2;
+		IPPROTO_IPCOMP* = 108;
+		IPPROTO_IPIP* = 4;
+		IPPROTO_IPV4* = IPPROTO_IPIP;
+		IPPROTO_IPV6* = 41;
+		IPPROTO_MAX* = 256;
+		IPPROTO_MAXID* = 259;
+		IPPROTO_MOBILE* = 55;
+		IPPROTO_MPLS* = 137;
+		IPPROTO_NONE* = 59;
+		IPPROTO_PFSYNC* = 240;
+		IPPROTO_PIM* = 103;
+		IPPROTO_PUP* = 12;
+		IPPROTO_RAW* = 255;
+		IPPROTO_ROUTING* = 43;
+		IPPROTO_RSVP* = 46;
+		IPPROTO_SCTP* = 132;
+		IPPROTO_TCP* = 6;
+		IPPROTO_TP* = 29;
+		IPPROTO_UDP* = 17;
+		IPPROTO_UDPLITE* = 136;
 
 		(* socket options *)
-			SO_DEBUG* = {0}; (* turn on debugging info recording *)
-			SO_ACCEPTCONN* = {1}; (* socket has had listen() *)
-			SO_REUSEADDR* = {2}; (* allow local address reuse *)
-			SO_KEEPALIVE* = {3}; (* keep connections alive *)
-			SO_DONTROUTE* = {4}; (* just use interface addresses *)
-			SO_BROADCAST* = {5}; (* permit sending of broadcast msgs *)
-			SO_USELOOPBACK* = {6}; (* bypass hardware when possible *)
-			SO_LINGER* = {7}; (* linger on close if data present *)
-			SO_OOBINLINE* = {8}; (* leave received OOB data in line *)
-			SO_REUSEPORT* = {9}; (* allow local address & port reuse *)
-			SO_TIMESTAMP* = {11}; (* timestamp received dgram traffic *)
-			SO_BINDANY* = {12}; (* allow bind to any address *)
-			SO_ZEROIZE* = {13}; (* zero out all mbufs sent over socket *)
-			SO_SNDBUF* = {0,12}; (* send buffer size *)
-			SO_RCVBUF* = {1,12}; (* receive buffer size *)
-			SO_SNDLOWAT* = {0,1,12}; (* send low-water mark *)
-			SO_RCVLOWAT* = {2,12}; (* receive low-water mark *)
-			SO_SNDTIMEO* = {0,2,12}; (* send timeout *)
-			SO_RCVTIMEO* = {1,2,12}; (* receive timeout *)
-			SO_ERROR* = {0..2,12}; (* get error status and clear *)
-			SO_TYPE* = {3,12}; (* get socket type *)
-			SO_NETPROC* = {5,12}; (* multiplex; network processing *)
-			SO_RTABLE* = {0,5,12}; (* routing table to be used *)
-			SO_PEERCRED* = {1,5,12}; (* get connect-time credentials *)
-			SO_SPLICE* = {0,1,5,12}; (* splice data to other socket *)
+		SO_ACCEPTCONN* = {1};
+		SO_BINDANY* = {12};
+		SO_BROADCAST* = {5};
+		SO_DEBUG* = {0};
+		SO_DOMAIN* = {2,5,12};
+		SO_DONTROUTE* = {4};
+		SO_ERROR* = {0..2,12};
+		SO_KEEPALIVE* = {3};
+		SO_LINGER* = {7};
+		SO_OOBINLINE* = {8};
+		SO_PEERCRED* = {1,5,12};
+		SO_PROTOCOL* = {0,2,5,12};
+		SO_RCVBUF* = {1,12};
+		SO_RCVLOWAT* = {2,12};
+		SO_RCVTIMEO* = {1,2,12};
+		SO_REUSEADDR* = {2};
+		SO_REUSEPORT* = {9};
+		SO_RTABLE* = {0,5,12};
+		SO_SNDBUF* = {0,12};
+		SO_SNDLOWAT* = {0,1,12};
+		SO_SNDTIMEO* = {0,2,12};
+		SO_SPLICE* = {0,1,5,12};
+		SO_TIMESTAMP* = {11};
+		SO_TYPE* = {3,12};
+		SO_USELOOPBACK* = {6};
+		SO_ZEROIZE* = {13};
 
 		SHUT_RD* = 0;
-		SHUT_WR* = 1;
 		SHUT_RDWR* = 2;
+		SHUT_WR* = 1;
 
-		SOL_SOCKET* = 0FFFFH; (* {0..15} *) (* options for socket level *)
+		SOL_SOCKET* = 0FFFFH;
 
-		MSG_OOB* = {0}; (* process out-of-band data *)
-		MSG_PEEK* = {1}; (* peek at incoming message *)
-		MSG_DONTROUTE* = {2}; (* send without using routing tables *)
-		MSG_EOR* = {3}; (* data completes record *)
-		MSG_TRUNC* = {4}; (* data discarded before delivery *)
-		MSG_CTRUNC* = {5}; (* control data lost before delivery *)
-		MSG_WAITALL* = {6}; (* wait for full request or error *)
-		MSG_DONTWAIT* = {7}; (* this message should be nonblocking *)
-		MSG_BCAST* = {8}; (* this message rec'd as broadcast *)
-		MSG_MCAST* = {9}; (* this message rec'd as multicast *)
-		MSG_NOSIGNAL* = {10}; (* do not send SIGPIPE *)
-		MSG_CMSG_CLOEXEC* = {11}; (* set FD_CLOEXEC on received fds *)
+		MSG_BCAST* = {8};
+		MSG_CMSG_CLOEXEC* = {11};
+		MSG_CMSG_CLOFORK* = {13};
+		MSG_CTRUNC* = {5};
+		MSG_DONTROUTE* = {2};
+		MSG_DONTWAIT* = {7};
+		MSG_EOR* = {3};
+		MSG_MCAST* = {9};
+		MSG_NOSIGNAL* = {10};
+		MSG_OOB* = {0};
+		MSG_PEEK* = {1};
+		MSG_TRUNC* = {4};
+		MSG_WAITALL* = {6};
+		MSG_WAITFORONE* = {12};
 
 		SOMAXCONN* = 128;
 
 		(* addrinfo.ai_flags *)
-			AI_PASSIVE* = {0}; (* socket address is intended for bind() *)
-			AI_CANONNAME* = {1}; (* request for canonical name *)
-			AI_NUMERICHOST* = {2}; (* don't ever try hostname lookup *)
-			AI_EXT* = {3}; (* enable non-portable extensions *)
-			AI_NUMERICSERV* = {4}; (* don't ever try servname lookup *)
-			AI_FQDN* = {5}; (* return the FQDN that was resolved *)
-			AI_ADDRCONFIG* = {6}; (* return configured address families only *)
+		AI_ADDRCONFIG* = {6};
+		AI_CANONNAME* = {1};
+		AI_EXT* = {3};
+		AI_FQDN* = {5};
+		AI_MASK* = {0..2,4..6};
+		AI_NUMERICHOST* = {2};
+		AI_NUMERICSERV* = {4};
+		AI_PASSIVE* = {0};
 
 		(* getaddrinfo/getnameinfo/gai_strerror error codes *)
-			EAI_BADFLAGS* = -1; (* invalid value for ai_flags *)
-			EAI_NONAME* = -2; (* name or service is not known *)
-			EAI_AGAIN* = -3; (* temporary failure in name resolution *)
-			EAI_FAIL* = -4; (* non-recoverable failure in name resolution *)
-			EAI_NODATA* = -5; (* no address associated with name *)
-			EAI_FAMILY* = -6; (* ai_family not supported *)
-			EAI_SOCKTYPE* = -7; (* ai_socktype not supported *)
-			EAI_SERVICE* = -8; (* service not supported for ai_socktype *)
-			EAI_ADDRFAMILY* = -9; (* address family for name not supported *)
-			EAI_MEMORY* = -10; (* memory allocation failure *)
-			EAI_SYSTEM* = -11; (* system error (code indicated in errno) *)
-			EAI_BADHINTS* = -12; (* invalid value for hints *)
-			EAI_PROTOCOL* = -13; (* resolved protocol is unknown *)
-			EAI_OVERFLOW* = -14; (* argument buffer overflow *)
+		EAI_ADDRFAMILY* = -9;
+		EAI_AGAIN* = -3;
+		EAI_BADFLAGS* = -1;
+		EAI_BADHINTS* = -12;
+		EAI_FAIL* = -4;
+		EAI_FAMILY* = -6;
+		EAI_MEMORY* = -10;
+		EAI_NODATA* = -5;
+		EAI_NONAME* = -2;
+		EAI_OVERFLOW* = -14;
+		EAI_PROTOCOL* = -13;
+		EAI_SERVICE* = -8;
+		EAI_SOCKTYPE* = -7;
+		EAI_SYSTEM* = -11;
 
-		(* OpenBSD 6.0 /usr/include/sys/select.h *)
+		(* OpenBSD 7.8 /usr/include/sys/select.h *)
 			FD_SETSIZE = 1024;
 			__NBBY = 8;
 
+
 	TYPE
-		u_int8_t = SHORTCHAR;
+		uint8_t = SHORTCHAR;
 		int8_t = SHORTCHAR;
 		uint16_t = SHORTINT;
 		(* PtrVoid, int, intFlags, short, socklen_t, size_t, ssize_t, in_addr_t, in_port_t, time_t, suseconds_t, nfds_t, sa_family_t *)
@@ -219,7 +269,7 @@ MODULE LinNet ["libc.so.100"];
 
 		Ptrsockaddr* = POINTER [untagged] TO sockaddr;
 		sockaddr* = RECORD [untagged]
-			(* OpenBSD /usr/include/sys/socket.h *)
+			(* OpenBSD 7.8 /usr/include/sys/socket.h *)
 				sa_len*: SHORTCHAR; (* total length *)
 				sa_family*: sa_family_t; (* address family *)
 				sa_data*: ARRAY [untagged] 14 OF SHORTCHAR; (* actually longer; address value *)
@@ -227,7 +277,7 @@ MODULE LinNet ["libc.so.100"];
 
 		Ptrsockaddr_storage = POINTER [untagged] TO sockaddr_storage;
 		sockaddr_storage* = RECORD [untagged]
-			(* OpenBSD 6.0 /usr/include/sys/socket.h *)
+			(* OpenBSD 7.8 /usr/include/sys/socket.h *)
 				ss_len*: SHORTCHAR; (* total length *)
 				ss_family*: sa_family_t; (* address family *)
 				__ss_pad1: ARRAY [untagged] 6 OF SHORTCHAR; (* align to quad *)
@@ -237,8 +287,8 @@ MODULE LinNet ["libc.so.100"];
 
 		Ptrsockaddr_in* = POINTER [untagged] TO sockaddr_in;
 		sockaddr_in* = RECORD [untagged]
-			(* OpenBSD /usr/include/netinet/in.h *)
-				sin_len*: u_int8_t;
+			(* OpenBSD 7.8 /usr/include/netinet/in.h *)
+				sin_len*: uint8_t;
 				sin_family*: sa_family_t;
 				sin_port*: in_port_t;
 				sin_addr*: in_addr;
@@ -247,7 +297,7 @@ MODULE LinNet ["libc.so.100"];
 
 		Ptraddrinfo* = POINTER [untagged] TO addrinfo;
 		addrinfo* = RECORD [untagged]
-			(* OpenBSD 6.0 /usr/include/netdb.h *)
+			(* OpenBSD 7.8 /usr/include/netdb.h *)
 				ai_flags*: intFlags; (* input flags *)
 				ai_family*: int; (* protocol family for socket *)
 				ai_socktype*: int; (* socket type *)
@@ -271,7 +321,7 @@ MODULE LinNet ["libc.so.100"];
 				revents*: short;
 		END;
 
-		(* OpenBSD 6.0 /usr/include/sys/select.h *)
+		(* OpenBSD 7.8 /usr/include/sys/select.h *)
 			__fd_mask = SET;
 			fd_set* = ARRAY [untagged] (FD_SETSIZE + (SIZE(__fd_mask) * __NBBY - 1)) DIV (SIZE(__fd_mask) * __NBBY) OF __fd_mask;
 

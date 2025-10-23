@@ -6,32 +6,41 @@ MODULE LinIoctl ["libc.so.6"];
 	*)
 
 	CONST
-		TIOCM_LE* = {0};
-		TIOCM_DTR* = {1};
-		TIOCM_RTS* = {2};
-		TIOCM_ST* = {3};
-		TIOCM_SR* = {4};
-		TIOCM_CTS* = {5};
 		TIOCM_CAR* = {6};
+		TIOCM_CTS* = {5};
 		TIOCM_RNG* = {7};
+		TIOCM_RTS* = {2};
 		TIOCM_DSR* = {8};
+		TIOCM_DTR* = {1};
+		TIOCM_CD* = TIOCM_CAR;
+		TIOCM_LE* = {0};
+		TIOCM_RI* = TIOCM_RNG;
+		TIOCM_SR* = {4};
+		TIOCM_ST* = {3};
 
-		FIOCLEX* = 21585;
-		FIONCLEX* = 21584;
-		FIONREAD* = 21531;
-		FIONBIO* = 21537;
-		FIOASYNC* = 21586;
-		TIOCMGET* = 21525;
-		TIOCMSET* = 21528;
-		TIOCEXCL* = 21516;
-		TIOCNXCL* = 21517;
-		TIOCOUTQ* = 21521;
-		TIOCSBRK* = 21543;
-		TIOCCBRK* = 21544;
-		TIOCMBIS* = 21526;
-		TIOCMBIC* = 21527;
+		FIONBIO* = 5421H;
+		FIOGETOWN* = 8903H;
+		FIOASYNC* = 5452H;
+		FIOSETOWN* = 8901H;
+		FIONCLEX* = 5450H;
+		FIOCLEX* = 5451H;
+		FIONREAD* = 541BH;
+		FIOQSIZE* = 5460H;
 
-	PROCEDURE [ccall] ioctl0* ["ioctl"] (d: INTEGER; req: INTEGER): INTEGER;
-	PROCEDURE [ccall] ioctl1* ["ioctl"] (d: INTEGER; req: INTEGER; VAR arg: INTEGER): INTEGER;
+		TIOCMGET* = 5415H;
+		TIOCMSET* = 5418H;
+		TIOCEXCL* = 540CH;
+		TIOCNXCL* = 540DH;
+		TIOCOUTQ* = 5411H;
+		TIOCSBRK* = 5427H;
+		TIOCCBRK* = 5428H;
+		TIOCMBIS* = 5416H;
+		TIOCMBIC* = 5417H;
+
+	TYPE
+		int* = INTEGER;
+
+	PROCEDURE [ccall] ioctl0* ["ioctl"] (d: int; request: INTEGER): int;
+	PROCEDURE [ccall] ioctl1* ["ioctl"] (d: int; request: INTEGER; VAR arg: INTEGER): int;
 
 END LinIoctl.

@@ -6,7 +6,7 @@ DEFS = defs-errno defs-basictypes
 
 all: Libc.txt ${DEFS} strerrnocase.txt
 
-Libc.txt: Libc.txt.templ ${DEFS} libver osname machine custom fields-dirent fields-sigaction fields-siginfo fields-stack fields-stat fields-tm fields-ucontext fields-timespec
+Libc.txt: Libc.txt.templ ${DEFS} subsystem libver osname machine custom fields-dirent fields-sigaction fields-siginfo fields-stack fields-stat fields-tm fields-ucontext fields-timespec
 	../untempl_h.py -m 32 Libc.txt.templ Libc.txt
 
 defs-errno.txt: defs-errno.txt.templ

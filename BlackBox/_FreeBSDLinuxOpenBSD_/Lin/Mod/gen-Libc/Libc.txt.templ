@@ -1,4 +1,4 @@
-MODULE LinLibc ["libc.so%%libver%%"];
+MODULE %%subsystem%%Libc ["libc.so%%libver%%"];
 
 	(*
 		%%osname%%
@@ -246,4 +246,4 @@ MODULE LinLibc ["libc.so%%libver%%"];
 	PROCEDURE [ccall] popen* (command, type: PtrSTR): PtrFILE;
 	PROCEDURE [ccall] pclose* (stream: PtrFILE): int;
 
-END LinLibc.
+END %%subsystem%%Libc.

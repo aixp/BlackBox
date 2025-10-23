@@ -1,43 +1,45 @@
-MODULE LinIoctl ["libc.so.100"];
+MODULE LinIoctl ["libc.so.102"];
 
 	(*
-		OpenBSD 7.7
+		OpenBSD 7.8
 		i386
 	*)
 
 	CONST
-		TIOCM_LE* = {0}; (* line enable *)
-		TIOCM_DTR* = {1}; (* data terminal ready *)
-		TIOCM_RTS* = {2}; (* request to send *)
-		TIOCM_ST* = {3}; (* secondary transmit *)
-		TIOCM_SR* = {4}; (* secondary receive *)
-		TIOCM_CTS* = {5}; (* clear to send *)
-		TIOCM_CAR* = {6}; (* carrier detect *)
-		TIOCM_RNG* = {7}; (* ring *)
-		TIOCM_DSR* = {8}; (* data set ready *)
+		TIOCM_CAR* = {6};
+		TIOCM_CD* = TIOCM_CAR;
+		TIOCM_CTS* = {5};
+		TIOCM_DSR* = {8};
+		TIOCM_DTR* = {1};
+		TIOCM_LE* = {0};
+		TIOCM_RNG* = {7};
+		TIOCM_RI* = TIOCM_RNG;
+		TIOCM_RTS* = {2};
+		TIOCM_SR* = {4};
+		TIOCM_ST* = {3};
 
+		FIOASYNC* = -2147195267;
 		FIOCLEX* = 536897025;
+		FIOGETOWN* = 1074030203;
+		FIONBIO* = -2147195266;
 		FIONCLEX* = 536897026;
 		FIONREAD* = 1074030207;
-		FIONBIO* = -2147195266;
-		FIOASYNC* = -2147195267;
 		FIOSETOWN* = -2147195268;
-		FIOGETOWN* = 1074030203;
+
 		TIOCMGET* = 1074033770;
 		TIOCMSET* = -2147191699;
 		TIOCEXCL* = 536900621;
 		TIOCNXCL* = 536900622;
-		TIOCFLUSH* = -2147191792;
-		TIOCDRAIN* = 536900702;
 		TIOCOUTQ* = 1074033779;
 		TIOCSBRK* = 536900731;
 		TIOCCBRK* = 536900730;
-		TIOCSDTR* = 536900729;
-		TIOCCDTR* = 536900728;
 		TIOCMBIS* = -2147191700;
 		TIOCMBIC* = -2147191701;
 
-	PROCEDURE [ccall] ioctl0* ["ioctl"] (d: INTEGER; req: INTEGER): INTEGER;
-	PROCEDURE [ccall] ioctl1* ["ioctl"] (d: INTEGER; req: INTEGER; VAR arg: INTEGER): INTEGER;
+	TYPE
+		int* = INTEGER;
+
+	PROCEDURE [ccall] ioctl0* ["ioctl"] (d: int; request: INTEGER): int;
+	PROCEDURE [ccall] ioctl1* ["ioctl"] (d: int; request: INTEGER; VAR arg: INTEGER): int;
 
 END LinIoctl.
