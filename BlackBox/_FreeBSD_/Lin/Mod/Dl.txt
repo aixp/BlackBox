@@ -23,10 +23,10 @@ MODULE LinDl ["libc.so.7"];
 		HANDLE* = PtrVoid;
 		PtrSTR* = POINTER TO ARRAY [untagged] OF SHORTCHAR;
 
-	PROCEDURE [ccall] dlopen* (file: PtrSTR; mode: INTEGER): HANDLE;
-	PROCEDURE [ccall] dlclose* (handle: HANDLE): INTEGER;
-	PROCEDURE [ccall] dlsym* (handle: HANDLE; symbol: PtrSTR): HANDLE;
+	PROCEDURE [ccall16] dlopen* (file: PtrSTR; mode: INTEGER): HANDLE;
+	PROCEDURE [ccall16] dlclose* (handle: HANDLE): INTEGER;
+	PROCEDURE [ccall16] dlsym* (handle: HANDLE; symbol: PtrSTR): HANDLE;
 
-	PROCEDURE [ccall] dlerror* (): PtrSTR;
+	PROCEDURE [ccall16] dlerror* (): PtrSTR;
 
 END LinDl.

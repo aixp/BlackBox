@@ -1,7 +1,7 @@
 MODULE LinDl ["libc.so.102"];
 
 	(*
-		Alexander Shiryaev, 2012.09, 2013.08
+		Alexander Shiryaev, 2012.09, 2013.08, 2025.10
 
 		OpenBSD 7.8
 		32-bit
@@ -10,7 +10,7 @@ MODULE LinDl ["libc.so.102"];
 	CONST
 		NULL* = 0H;
 
-		(* from OpenBSD 6.2 /usr/include/dlfcn.h *)
+		(* from OpenBSD 7.8 /usr/include/dlfcn.h *)
 			RTLD_LAZY* = 1;
 			(* DL_LAZY* = RTLD_LAZY; *) (* compat *)
 			RTLD_NOW* = 2;
@@ -24,10 +24,10 @@ MODULE LinDl ["libc.so.102"];
 		HANDLE* = PtrVoid;
 		PtrSTR* = POINTER TO ARRAY [untagged] OF SHORTCHAR;
 
-	PROCEDURE [ccall] dlopen* (file: PtrSTR; mode: INTEGER): HANDLE;
-	PROCEDURE [ccall] dlclose* (handle: HANDLE): INTEGER;
-	PROCEDURE [ccall] dlsym* (handle: HANDLE; symbol: PtrSTR): HANDLE;
+	PROCEDURE [ccall16] dlopen* (file: PtrSTR; mode: INTEGER): HANDLE;
+	PROCEDURE [ccall16] dlclose* (handle: HANDLE): INTEGER;
+	PROCEDURE [ccall16] dlsym* (handle: HANDLE; symbol: PtrSTR): HANDLE;
 
-	PROCEDURE [ccall] dlerror* (): PtrSTR;
+	PROCEDURE [ccall16] dlerror* (): PtrSTR;
 
 END LinDl.
