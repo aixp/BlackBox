@@ -4,10 +4,10 @@
 ## Tested on
 
 * Arch Linux
-* OpenBSD 7.8
+* OpenBSD 7.8 (i386)
 * Fedora Core 17
 * Ubuntu 12.04 LTS, 12.10, 13.10, 14.04
-* FreeBSD 14.3
+* FreeBSD 14.3 (i386)
 
 ## Install build dependencies
 
@@ -66,6 +66,12 @@ OpenBSD:
 
 ```sh
 doas pkg_add libiconv gtk+2
+```
+
+FreeBSD:
+
+```sh
+pkg install gtk2
 ```
 
 ## Run
