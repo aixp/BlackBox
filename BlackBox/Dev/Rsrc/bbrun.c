@@ -418,7 +418,7 @@ static bool ReadHeader ()
         last->next = NULL;
         dprintf("Import %d: %s\n", i, imp->name);
         if ((imp->name[0] == '$') && (imp->name[1] == '$'))
-            strcpy(imp->name, "Kernel");
+            strlcpy(imp->name, "Kernel", sizeof(imp->name));
         if (imp->name[0] == '$'){
             n = imp->name;
             n++;
