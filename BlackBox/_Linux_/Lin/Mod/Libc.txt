@@ -414,18 +414,14 @@ MODULE LinLibc ["libc.so.6"];
 		Ptrucontext_t* = POINTER TO ucontext_t;
 		ucontext_t = RECORD [untagged]
 			(* IP, SP, FP *)
-				uc_flags*: INTEGER;	(* unsigned long int *)
-				uc_link*: Ptrucontext_t;
-				uc_stack*: stack_t;
-				uc_mcontext*: RECORD [untagged] (* mcontext_t *)
-					gregs*: gregset_t;
-					fpregs*: fpregset_t;
-					oldmask*: INTEGER; (* unsigned long int *)
-					cr2*: INTEGER; (* unsigned long int *)
-				END;
+			(* /usr/include/sys/ucontext.h *)
+				uc_flags*: INTEGER (* unsigned long int *);
+				uc_link: Ptrucontext_t;
+				uc_stack: stack_t;
+				uc_mcontext-: mcontext_t;
 				uc_sigmask: sigset_t;
-				__fpregs_mem*: fpstate;
-
+				__fpregs_mem: _libc_fpstate;
+				_ssp: ARRAY [untagged] 4 OF INTEGER (* unsigned long int *)
 		END;
 
 		sigaction_t* = RECORD [untagged]
@@ -513,6 +509,14 @@ MODULE LinLibc ["libc.so.6"];
 		(* Ubuntu 18.04 /usr/include/i386-linux-gnu/bits/stat.h *)
 			_STAT_VER_LINUX* = 3;
 
+		(* /usr/include/sys/ucontext.h *)
+			__NGREG = 19;
+
+		(* /usr/include/ucontext.h *)
+		REG_EBP* = 6;
+		REG_ESP* = 7;
+		REG_EIP* = 14;
+
 	TYPE
 		off64_t* = LONGINT;
 		blkcnt64_t* = LONGINT;
@@ -538,30 +542,40 @@ MODULE LinLibc ["libc.so.6"];
 				st_ino*: ino64_t;
 			END;
 
-		(* Ubuntu 17.10 /usr/include/i386-linux-gnu/bits/types/sigval_t.h: *)
+		(* /usr/include/bits/types/sigval_t.h *)
+		(* /usr/include/bits/types/__sigval_t.h *)
 			sigval_t* = RECORD [union]
 				sival_int*: int;
 				sival_ptr*: PtrVoid
 			END;
 
-		(* Ubuntu 17.10 /usr/include/i386-linux-gnu/sys/ucontext.h: *)
+		(* /usr/include/sys/ucontext.h  *)
 			greg_t* = int;
-			gregset_t* = ARRAY [untagged] 19 OF greg_t;
-			fpregset_t* = POINTER [untagged] TO fpstate;
-			fpreg* = RECORD [untagged]
-				significand*: ARRAY [untagged] 4 OF SHORTINT; (* unsigned short int *)
-				exponent*: SHORTINT; (* unsigned short int *)
+			gregset_t* = ARRAY [untagged] __NGREG OF greg_t;
+			fpregset_t* = POINTER [untagged] TO _libc_fpstate;
+
+			_libc_fpreg = RECORD [untagged]
+				significand: ARRAY [untagged] 4 OF SHORTINT (* unsigned short int *);
+				exponent: SHORTINT (* unsigned short int *)
 			END;
-			fpstate* = RECORD [untagged]
-				cw*: INTEGER; (* unsigned long int *)
-				sw*: INTEGER; (* unsigned long int *)
-				tag*: INTEGER; (* unsigned long int *)
-				ipoff*: INTEGER; (* unsigned long int *)
-				cssel*: INTEGER; (* unsigned long int *)
-				dataoff*: INTEGER; (* unsigned long int *)
-				datasel*: INTEGER; (* unsigned long int *)
-				_st: ARRAY [untagged] 8 OF fpreg;
-				status*: INTEGER; (* unsigned long int *)
+
+			_libc_fpstate = RECORD [untagged]
+				cw: INTEGER (* unsigned long int *);
+				sw: INTEGER (* unsigned long int *);
+				tag: INTEGER (* unsigned long int *);
+				ipoff: INTEGER (* unsigned long int *);
+				cssel: INTEGER (* unsigned long int *);
+				dataoff: INTEGER (* unsigned long int *);
+				datasel: INTEGER (* unsigned long int *);
+				_st: ARRAY [untagged] 8 OF _libc_fpreg;
+				status: INTEGER (* unsigned long int *)
+			END;
+
+			mcontext_t* = RECORD [untagged]
+				gregs-: gregset_t;
+				fpregs: fpregset_t;
+				oldmask: INTEGER (* unsigned long int *);
+				cr2: INTEGER (* unsigned long int *)
 			END;
 
 	VAR
@@ -579,36 +593,7 @@ MODULE LinLibc ["libc.so.6"];
 	PROCEDURE [ccall] fseeko64* (stream: PtrFILE; off: off64_t; whence: int): int;
 
 	PROCEDURE [ccall] sigsetjmp* ["__sigsetjmp"] (VAR env: sigjmp_buf; savemask: int): int;
-
-
-	(* ANSI C 89 *)
-		PROCEDURE [ccall] clock* (): clock_t;
-
-	(* POSIX.1 *)
-		PROCEDURE [ccall] clock_gettime* (clock_id: clockid_t; VAR tp: timespec_t): int;
-
-	PROCEDURE [ccall] mmap* (adr: PtrVoid; len: size_t; prot: intFlags; flags: intFlags; fd: int; offset: off_t): PtrVoid;
-	(* BSD *)
-		PROCEDURE [ccall] munmap* (adr: PtrVoid; len: size_t): int;
-		PROCEDURE [ccall] mprotect* (adr: PtrVoid; len: size_t; prot: intFlags): int;
-
-(*
-	PROCEDURE [ccall] calloc* (nmemb: size_t; size: size_t): PtrVoid;
-	(* ANSI C 89 *)
-		PROCEDURE [ccall] malloc* (size: size_t): PtrVoid;
-*)
-		PROCEDURE [ccall] free* (ptr: PtrVoid);
-
-	(* AT&T *)
-		PROCEDURE [ccall] time* (VAR [nil] t: time_t): time_t;
-	PROCEDURE [ccall] gmtime* (VAR [nil] t: time_t): tm;
-	PROCEDURE [ccall] localtime* (VAR [nil] t: time_t): tm;
-
-	(* POSIX.1 *)
-(*
-		PROCEDURE [ccall] sigsetjmp* (VAR env: sigjmp_buf; savemask: int): int;
-*)
-		PROCEDURE [ccall] siglongjmp* (VAR env: sigjmp_buf; val: int);
+	PROCEDURE [ccall] siglongjmp* (VAR env: sigjmp_buf; val: int);
 
 	(* POSIX.1 *)
 		PROCEDURE [ccall] sigemptyset* (set: PtrSigset_t): int;
@@ -622,6 +607,67 @@ MODULE LinLibc ["libc.so.6"];
 	(* BSD *)
 		PROCEDURE [ccall] sigaltstack* (VAR [nil] ss: stack_t; VAR [nil] oss: stack_t): int;
 
+	(* POSIX.1 *)
+		PROCEDURE [ccall] clock_gettime* (clock_id: clockid_t; VAR tp: timespec_t): int;
+
+	(* AT&T UNIX *)
+		PROCEDURE [ccall] time* (VAR [nil] tloc: time_t): time_t;
+
+	(* AT&T UNIX *)
+		PROCEDURE [ccall] gmtime* (VAR [nil] clock: time_t): tm;
+		PROCEDURE [ccall] localtime* (VAR [nil] clock: time_t): tm;
+		PROCEDURE [ccall] mktime* (VAR tm: tmDesc): time_t;
+
+	(* POSIX.1 *)
+		PROCEDURE [ccall] opendir* (filename: PtrSTR): PtrDIR;
+		PROCEDURE [ccall] readdir* (dirp: PtrDIR): PtrDirent;
+
+
+	(* ANSI C 89 *)
+		PROCEDURE [ccall] clock* (): clock_t;
+
+(*
+	(* POSIX.1 *)
+		PROCEDURE [ccall] clock_gettime* (clock_id: clockid_t; VAR tp: timespec_t): int;
+*)
+
+	PROCEDURE [ccall] mmap* (adr: PtrVoid; len: size_t; prot: intFlags; flags: intFlags; fd: int; offset: off_t): PtrVoid;
+	(* BSD *)
+		PROCEDURE [ccall] munmap* (adr: PtrVoid; len: size_t): int;
+		PROCEDURE [ccall] mprotect* (adr: PtrVoid; len: size_t; prot: intFlags): int;
+
+(*
+	PROCEDURE [ccall] calloc* (nmemb: size_t; size: size_t): PtrVoid;
+	(* ANSI C 89 *)
+		PROCEDURE [ccall] malloc* (size: size_t): PtrVoid;
+*)
+		PROCEDURE [ccall] free* (ptr: PtrVoid);
+
+(*
+	(* AT&T *)
+		PROCEDURE [ccall] time* (VAR [nil] t: time_t): time_t;
+	PROCEDURE [ccall] gmtime* (VAR [nil] t: time_t): tm;
+	PROCEDURE [ccall] localtime* (VAR [nil] t: time_t): tm;
+*)
+
+	(* POSIX.1 *)
+(*
+		PROCEDURE [ccall] sigsetjmp* (VAR env: sigjmp_buf; savemask: int): int;
+		PROCEDURE [ccall] siglongjmp* (VAR env: sigjmp_buf; val: int);
+
+	(* POSIX.1 *)
+		PROCEDURE [ccall] sigemptyset* (set: PtrSigset_t): int;
+		PROCEDURE [ccall] sigfillset* (set: PtrSigset_t): int;
+		PROCEDURE [ccall] sigaddset* (set: PtrSigset_t; signo: int): int;
+		PROCEDURE [ccall] sigprocmask* (how: int; set: PtrSigset_t; oset: PtrSigset_t): int;
+
+	(* POSIX.1 *)
+		PROCEDURE [ccall] sigaction* (sig: int; VAR [nil] act: sigaction_t; VAR [nil] oact: sigaction_t): int;
+
+	(* BSD *)
+		PROCEDURE [ccall] sigaltstack* (VAR [nil] ss: stack_t; VAR [nil] oss: stack_t): int;
+*)
+
 	(* ANSI C 89 *)
 		PROCEDURE [ccall] getenv* (s: PtrSTR): PtrSTR;
 
@@ -632,7 +678,8 @@ MODULE LinLibc ["libc.so.6"];
 		PROCEDURE [ccall] fread* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;
 		PROCEDURE [ccall] fwrite* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;
 		PROCEDURE [ccall] fflush* (s: PtrFILE): int;
-		PROCEDURE [ccall] printf* (s: PtrSTR): int;
+		PROCEDURE [ccall] printf0* ["printf"] (format: PtrSTR): int;
+		PROCEDURE [ccall] printfs* ["printf"] (format, s: PtrSTR): int;
 	(* ANSI C 89, XPG4 *)
 		PROCEDURE [ccall] fseek* (stream: PtrFILE; offset: long; whence: int): int;
 
@@ -642,8 +689,10 @@ MODULE LinLibc ["libc.so.6"];
 	(* POSIX.1 *)
 		PROCEDURE [ccall] rename* (from, to: PtrSTR): int;
 		PROCEDURE [ccall] mkdir* (path: PtrSTR; mode: mode_t): int;
+(*
 		PROCEDURE [ccall] opendir* (filename: PtrSTR): PtrDIR;
 		PROCEDURE [ccall] readdir* (dirp: PtrDIR): PtrDirent;
+*)
 		PROCEDURE [ccall] closedir* (dirp: PtrDIR): int;
 	(* ANSI C 89, XPG4.2 *)
 		PROCEDURE [ccall] remove* (path: PtrSTR): int;

@@ -1,7 +1,7 @@
 MODULE LinNet ["libc.so.6"];
 
 	(*
-		GNU/Linux
+		GNU/Linux (glibc 2.42)
 		i386
 	*)
 

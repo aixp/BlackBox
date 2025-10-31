@@ -375,41 +375,13 @@ MODULE LinLibc ["libc.so.7"];
 		Ptrucontext_t* = POINTER TO ucontext_t;
 		ucontext_t = RECORD [untagged]
 			(* IP, SP, FP *)
-			(* FreeBSD 9.0 /usr/include/machine/signal.h *)
-				sc_mask*: sigset_t; (* signal mask to restore *)
-				sc_onstack*: int; (* sigstack state to restore *)
-				sc_gs*: int;  (* machine state (struct trapframe) *)
-				sc_fs*: int;
-				sc_es*: int;
-				sc_ds*: int;
-				sc_edi*: int;
-				sc_esi*: int;
-				sc_ebp*: int;
-				sc_isp*: int;
-				sc_ebx*: int;
-				sc_edx*: int;
-				sc_ecx*: int;
-				sc_eax*: int;
-				sc_trapno*: int;
-				sc_err*: int;
-				sc_eip*: int;
-				sc_cs*: int;
-				sc_efl*: int;
-				sc_esp*: int;
-				sc_ss*: int;
-				sc_len*: int; (* sizeof(mcontext_t) *)
-
-				(*
-				 * XXX - See <machine/ucontext.h> and <machine/npx.h> for
-				 *       the following fields.
-				 *)
-				sc_fpformat: int;
-				sc_ownedfp: int;
-				sc_spare1: ARRAY [untagged] 1 OF int;
-				sc_fpstate: ARRAY [untagged] 128 OF int; (* FIXME: __aligned(16) *)
-				sc_fsbase: int;
-				sc_gsbase: int;
-				sc_spare2: ARRAY 6 OF int;
+			(* FreeBSD 14.3 /usr/include/sys/_ucontext.h *)
+				uc_sigmask: sigset_t (* __sigset_t *);
+				uc_mcontext-: mcontext_t;
+				uc_link: Ptrucontext_t;
+				uc_stack: stack_t (* __stack_t *);
+				uc_flags: int;
+				__spare__: ARRAY [untagged] 4 OF int
 		END;
 
 		sigaction_t* = RECORD [untagged]
@@ -505,6 +477,47 @@ MODULE LinLibc ["libc.so.7"];
 	(* POSIX.1 *)
 		PROCEDURE [ccall] stat* (path: PtrSTR; VAR sp: stat_t): int;
 *)
+	TYPE
+		(* FreeBSD 14.3 /usr/include/x86/_types.h *)
+			__register_t = int32_t;
+		(* FreeBSD 14.3 /usr/include/x86/ucontext.h *)
+			mcontext_t* = RECORD [untagged]
+				mc_onstack: __register_t; (* XXX - sigcontext compat. *)
+				mc_gs: __register_t; (* machine state (struct trapframe) *)
+				mc_fs: __register_t;
+				mc_es: __register_t;
+				mc_ds: __register_t;
+				mc_edi: __register_t;
+				mc_esi: __register_t;
+				mc_ebp-: __register_t;
+				mc_isp: __register_t;
+				mc_ebx: __register_t;
+				mc_edx: __register_t;
+				mc_ecx: __register_t;
+				mc_eax: __register_t;
+				mc_trapno: __register_t;
+				mc_err: __register_t;
+				mc_eip-: __register_t;
+				mc_cs: __register_t;
+				mc_eflags: __register_t;
+				mc_esp-: __register_t;
+				mc_ss: __register_t;
+
+				mc_len: int; (* sizeof(mcontext_t) *)
+				mc_fpformat: int;
+				mc_ownedfp: int;
+				mc_flags: __register_t;
+				mc_fpstate: ARRAY [untagged] 128 OF int; (* FIXME: __aligned(16) *)
+
+				mc_fsbase: __register_t;
+				mc_gsbase: __register_t;
+
+				mc_xfpustate: __register_t;
+				mc_xfpustate_len: __register_t;
+
+				mc_spare2: ARRAY [untagged] 2 OF int
+			END;
+
 (*
 	VAR
 		errno*: INTEGER;
@@ -518,35 +531,6 @@ MODULE LinLibc ["libc.so.7"];
 
 	(* POSIX.1 *)
 		PROCEDURE [ccall] sigsetjmp* (VAR env: sigjmp_buf; savemask: int): int;
-
-
-	(* ANSI C 89 *)
-		PROCEDURE [ccall] clock* (): clock_t;
-
-	(* POSIX.1 *)
-		PROCEDURE [ccall] clock_gettime* (clock_id: clockid_t; VAR tp: timespec_t): int;
-
-	PROCEDURE [ccall] mmap* (adr: PtrVoid; len: size_t; prot: intFlags; flags: intFlags; fd: int; offset: off_t): PtrVoid;
-	(* BSD *)
-		PROCEDURE [ccall] munmap* (adr: PtrVoid; len: size_t): int;
-		PROCEDURE [ccall] mprotect* (adr: PtrVoid; len: size_t; prot: intFlags): int;
-
-(*
-	PROCEDURE [ccall] calloc* (nmemb: size_t; size: size_t): PtrVoid;
-	(* ANSI C 89 *)
-		PROCEDURE [ccall] malloc* (size: size_t): PtrVoid;
-*)
-		PROCEDURE [ccall] free* (ptr: PtrVoid);
-
-	(* AT&T *)
-		PROCEDURE [ccall] time* (VAR [nil] t: time_t): time_t;
-	PROCEDURE [ccall] gmtime* (VAR [nil] t: time_t): tm;
-	PROCEDURE [ccall] localtime* (VAR [nil] t: time_t): tm;
-
-	(* POSIX.1 *)
-(*
-		PROCEDURE [ccall] sigsetjmp* (VAR env: sigjmp_buf; savemask: int): int;
-*)
 		PROCEDURE [ccall] siglongjmp* (VAR env: sigjmp_buf; val: int);
 
 	(* POSIX.1 *)
@@ -561,6 +545,67 @@ MODULE LinLibc ["libc.so.7"];
 	(* BSD *)
 		PROCEDURE [ccall] sigaltstack* (VAR [nil] ss: stack_t; VAR [nil] oss: stack_t): int;
 
+	(* POSIX.1 *)
+		PROCEDURE [ccall] clock_gettime* (clock_id: clockid_t; VAR tp: timespec_t): int;
+
+	(* AT&T UNIX *)
+		PROCEDURE [ccall] time* (VAR [nil] tloc: time_t): time_t;
+
+	(* AT&T UNIX *)
+		PROCEDURE [ccall] gmtime* (VAR [nil] clock: time_t): tm;
+		PROCEDURE [ccall] localtime* (VAR [nil] clock: time_t): tm;
+		PROCEDURE [ccall] mktime* (VAR tm: tmDesc): time_t;
+
+	(* POSIX.1 *)
+		PROCEDURE [ccall] opendir* (filename: PtrSTR): PtrDIR;
+		PROCEDURE [ccall] readdir* (dirp: PtrDIR): PtrDirent;
+
+
+	(* ANSI C 89 *)
+		PROCEDURE [ccall] clock* (): clock_t;
+
+(*
+	(* POSIX.1 *)
+		PROCEDURE [ccall] clock_gettime* (clock_id: clockid_t; VAR tp: timespec_t): int;
+*)
+
+	PROCEDURE [ccall] mmap* (adr: PtrVoid; len: size_t; prot: intFlags; flags: intFlags; fd: int; offset: off_t): PtrVoid;
+	(* BSD *)
+		PROCEDURE [ccall] munmap* (adr: PtrVoid; len: size_t): int;
+		PROCEDURE [ccall] mprotect* (adr: PtrVoid; len: size_t; prot: intFlags): int;
+
+(*
+	PROCEDURE [ccall] calloc* (nmemb: size_t; size: size_t): PtrVoid;
+	(* ANSI C 89 *)
+		PROCEDURE [ccall] malloc* (size: size_t): PtrVoid;
+*)
+		PROCEDURE [ccall] free* (ptr: PtrVoid);
+
+(*
+	(* AT&T *)
+		PROCEDURE [ccall] time* (VAR [nil] t: time_t): time_t;
+	PROCEDURE [ccall] gmtime* (VAR [nil] t: time_t): tm;
+	PROCEDURE [ccall] localtime* (VAR [nil] t: time_t): tm;
+*)
+
+	(* POSIX.1 *)
+(*
+		PROCEDURE [ccall] sigsetjmp* (VAR env: sigjmp_buf; savemask: int): int;
+		PROCEDURE [ccall] siglongjmp* (VAR env: sigjmp_buf; val: int);
+
+	(* POSIX.1 *)
+		PROCEDURE [ccall] sigemptyset* (set: PtrSigset_t): int;
+		PROCEDURE [ccall] sigfillset* (set: PtrSigset_t): int;
+		PROCEDURE [ccall] sigaddset* (set: PtrSigset_t; signo: int): int;
+		PROCEDURE [ccall] sigprocmask* (how: int; set: PtrSigset_t; oset: PtrSigset_t): int;
+
+	(* POSIX.1 *)
+		PROCEDURE [ccall] sigaction* (sig: int; VAR [nil] act: sigaction_t; VAR [nil] oact: sigaction_t): int;
+
+	(* BSD *)
+		PROCEDURE [ccall] sigaltstack* (VAR [nil] ss: stack_t; VAR [nil] oss: stack_t): int;
+*)
+
 	(* ANSI C 89 *)
 		PROCEDURE [ccall] getenv* (s: PtrSTR): PtrSTR;
 
@@ -571,7 +616,8 @@ MODULE LinLibc ["libc.so.7"];
 		PROCEDURE [ccall] fread* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;
 		PROCEDURE [ccall] fwrite* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;
 		PROCEDURE [ccall] fflush* (s: PtrFILE): int;
-		PROCEDURE [ccall] printf* (s: PtrSTR): int;
+		PROCEDURE [ccall] printf0* ["printf"] (format: PtrSTR): int;
+		PROCEDURE [ccall] printfs* ["printf"] (format, s: PtrSTR): int;
 	(* ANSI C 89, XPG4 *)
 		PROCEDURE [ccall] fseek* (stream: PtrFILE; offset: long; whence: int): int;
 
@@ -581,8 +627,10 @@ MODULE LinLibc ["libc.so.7"];
 	(* POSIX.1 *)
 		PROCEDURE [ccall] rename* (from, to: PtrSTR): int;
 		PROCEDURE [ccall] mkdir* (path: PtrSTR; mode: mode_t): int;
+(*
 		PROCEDURE [ccall] opendir* (filename: PtrSTR): PtrDIR;
 		PROCEDURE [ccall] readdir* (dirp: PtrDIR): PtrDirent;
+*)
 		PROCEDURE [ccall] closedir* (dirp: PtrDIR): int;
 	(* ANSI C 89, XPG4.2 *)
 		PROCEDURE [ccall] remove* (path: PtrSTR): int;

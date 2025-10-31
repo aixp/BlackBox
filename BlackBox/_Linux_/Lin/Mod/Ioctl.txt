@@ -1,7 +1,7 @@
 MODULE LinIoctl ["libc.so.6"];
 
 	(*
-		GNU/Linux
+		GNU/Linux (glibc 2.42)
 		i386
 	*)
 
@@ -19,13 +19,7 @@ MODULE LinIoctl ["libc.so.6"];
 		TIOCM_ST* = {3};
 
 		FIONBIO* = 5421H;
-		FIOGETOWN* = 8903H;
-		FIOASYNC* = 5452H;
-		FIOSETOWN* = 8901H;
-		FIONCLEX* = 5450H;
-		FIOCLEX* = 5451H;
 		FIONREAD* = 541BH;
-		FIOQSIZE* = 5460H;
 
 		TIOCMGET* = 5415H;
 		TIOCMSET* = 5418H;

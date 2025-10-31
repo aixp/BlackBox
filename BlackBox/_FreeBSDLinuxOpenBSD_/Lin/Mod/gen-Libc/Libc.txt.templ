@@ -143,8 +143,10 @@ MODULE %%subsystem%%Libc ["libc.so%%libver%%"];
 	(* ANSI C 89 *)
 		PROCEDURE [ccall] clock* (): clock_t;
 
+(*
 	(* POSIX.1 *)
 		PROCEDURE [ccall] clock_gettime* (clock_id: clockid_t; VAR tp: timespec_t): int;
+*)
 
 	PROCEDURE [ccall] mmap* (adr: PtrVoid; len: size_t; prot: intFlags; flags: intFlags; fd: int; offset: off_t): PtrVoid;
 	(* BSD *)
@@ -158,15 +160,16 @@ MODULE %%subsystem%%Libc ["libc.so%%libver%%"];
 *)
 		PROCEDURE [ccall] free* (ptr: PtrVoid);
 
+(*
 	(* AT&T *)
 		PROCEDURE [ccall] time* (VAR [nil] t: time_t): time_t;
 	PROCEDURE [ccall] gmtime* (VAR [nil] t: time_t): tm;
 	PROCEDURE [ccall] localtime* (VAR [nil] t: time_t): tm;
+*)
 
 	(* POSIX.1 *)
 (*
 		PROCEDURE [ccall] sigsetjmp* (VAR env: sigjmp_buf; savemask: int): int;
-*)
 		PROCEDURE [ccall] siglongjmp* (VAR env: sigjmp_buf; val: int);
 
 	(* POSIX.1 *)
@@ -180,6 +183,7 @@ MODULE %%subsystem%%Libc ["libc.so%%libver%%"];
 
 	(* BSD *)
 		PROCEDURE [ccall] sigaltstack* (VAR [nil] ss: stack_t; VAR [nil] oss: stack_t): int;
+*)
 
 	(* ANSI C 89 *)
 		PROCEDURE [ccall] getenv* (s: PtrSTR): PtrSTR;
@@ -191,7 +195,8 @@ MODULE %%subsystem%%Libc ["libc.so%%libver%%"];
 		PROCEDURE [ccall] fread* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;
 		PROCEDURE [ccall] fwrite* (ptr: PtrVoid; size: size_t; nmemb: size_t; stream: PtrFILE): size_t;
 		PROCEDURE [ccall] fflush* (s: PtrFILE): int;
-		PROCEDURE [ccall] printf* (s: PtrSTR): int;
+		PROCEDURE [ccall] printf0* ["printf"] (format: PtrSTR): int;
+		PROCEDURE [ccall] printfs* ["printf"] (format, s: PtrSTR): int;
 	(* ANSI C 89, XPG4 *)
 		PROCEDURE [ccall] fseek* (stream: PtrFILE; offset: long; whence: int): int;
 
@@ -201,8 +206,10 @@ MODULE %%subsystem%%Libc ["libc.so%%libver%%"];
 	(* POSIX.1 *)
 		PROCEDURE [ccall] rename* (from, to: PtrSTR): int;
 		PROCEDURE [ccall] mkdir* (path: PtrSTR; mode: mode_t): int;
+(*
 		PROCEDURE [ccall] opendir* (filename: PtrSTR): PtrDIR;
 		PROCEDURE [ccall] readdir* (dirp: PtrDIR): PtrDirent;
+*)
 		PROCEDURE [ccall] closedir* (dirp: PtrDIR): int;
 	(* ANSI C 89, XPG4.2 *)
 		PROCEDURE [ccall] remove* (path: PtrSTR): int;
